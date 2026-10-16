@@ -5,6 +5,8 @@
   },
   "nav": {
     "search": "Buscar",
+    "main": "Principal",
+    "skip": "Saltar al contenido",
     "design": "Diseño",
     "newRun": "Nueva run",
     "myRuns": "Mis runs",

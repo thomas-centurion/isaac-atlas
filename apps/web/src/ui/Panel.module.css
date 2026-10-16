@@ -14,5 +14,7 @@
 }
 
 .title {
+  font-size: 0.8rem;
+  color: var(--blood-text);
   margin-bottom: var(--space-4);
 }

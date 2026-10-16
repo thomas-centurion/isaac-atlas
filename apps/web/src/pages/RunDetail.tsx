@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { formatSeed, getCharacter } from '@isaac-atlas/shared';
 import { ApiRequestError } from '../api/client';
 import { useDeleteRun, useRun } from '../api/runs';
@@ -22,6 +23,7 @@ export function RunDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { data: run, isPending, error } = useRun(id);
+  usePageTitle(run ? formatSeed(run.seed) : undefined);
   const { data: me } = useMe();
   const remove = useDeleteRun();
   const [confirming, setConfirming] = useState(false);

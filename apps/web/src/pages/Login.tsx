@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { loginSchema } from '@isaac-atlas/shared';
 import { SocialLogin } from '../auth/SocialLogin';
 import styles from '../auth/auth.module.css';
@@ -13,6 +14,7 @@ import { TextField } from '../ui/TextField';
 
 export function Login() {
   const { t } = useTranslation();
+  usePageTitle(t('auth.loginTitle'));
   const { data: me } = useMe();
   const login = useLogin();
   const location = useLocation();
@@ -34,7 +36,7 @@ export function Login() {
   };
 
   return (
-    <Panel title={t('auth.loginTitle')} className={styles.page}>
+    <Panel as="h1" title={t('auth.loginTitle')} className={styles.page}>
       {oauthError ? <Notice tone="error">{errorMessage(t, oauthError)}</Notice> : null}
       {invalid ? <Notice tone="error">{errorMessage(t, 'validation')}</Notice> : null}
       {login.error ? <Notice tone="error">{errorMessage(t, login.error)}</Notice> : null}

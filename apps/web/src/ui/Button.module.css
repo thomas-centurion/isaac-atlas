@@ -36,7 +36,7 @@
 
 .primary {
   --bg: var(--blood);
-  --bg-hover: var(--blood-bright);
+  --bg-hover: var(--blood-hover);
 }
 
 .secondary {

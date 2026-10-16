@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { formatSeed, getCharacter, isValidSeedFormat } from '@isaac-atlas/shared';
 import { ApiRequestError } from '../api/client';
 import { useSeedSummary } from '../api/runs';
@@ -21,6 +22,7 @@ export function SeedPage() {
   const lang = useLang();
   const { seed } = useParams();
   const { data, isPending, error } = useSeedSummary(seed);
+  usePageTitle(data ? formatSeed(data.seed) : undefined);
   const [copied, setCopied] = useState(false);
 
   if (!seed || !isValidSeedFormat(seed)) return <Notice tone="error">{t('seed.notFound')}</Notice>;

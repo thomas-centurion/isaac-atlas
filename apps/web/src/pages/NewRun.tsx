@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import {
   DIFFICULTIES,
   FINAL_BOSSES,
@@ -35,6 +36,7 @@ type PickerKind = 'item' | 'trinket';
 
 export function NewRun() {
   const { t } = useTranslation();
+  usePageTitle(t('run.newTitle'));
   const lang = useLang();
   const navigate = useNavigate();
   const create = useCreateRun();
@@ -81,7 +83,7 @@ export function NewRun() {
 
   return (
     <form onSubmit={onSubmit} noValidate>
-      <Panel title={t('run.newTitle')}>
+      <Panel as="h1" title={t('run.newTitle')}>
         <p>{t('run.draftNote')}</p>
         {create.error ? <Notice tone="error">{errorMessage(t, create.error)}</Notice> : null}
 

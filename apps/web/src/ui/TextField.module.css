@@ -21,7 +21,7 @@
   box-shadow:
     inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
     0 0 0 var(--px) var(--line-dark),
-    0 0 0 calc(var(--px) * 2) var(--line);
+    0 0 0 calc(var(--px) * 2) var(--line-strong);
   margin: calc(var(--px) * 2);
 }
 
@@ -64,5 +64,5 @@
   color: var(--ink-dim);
 }
 .error {
-  color: var(--blood-bright);
+  color: var(--blood-text);
 }

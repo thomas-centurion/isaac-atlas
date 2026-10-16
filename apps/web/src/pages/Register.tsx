@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { registerSchema } from '@isaac-atlas/shared';
 import { SocialLogin } from '../auth/SocialLogin';
 import styles from '../auth/auth.module.css';
@@ -13,6 +14,7 @@ import { TextField } from '../ui/TextField';
 
 export function Register() {
   const { t } = useTranslation();
+  usePageTitle(t('auth.registerTitle'));
   const { data: me } = useMe();
   const register = useRegister();
   const [values, setValues] = useState({ email: '', username: '', password: '' });
@@ -45,7 +47,7 @@ export function Register() {
   const showGeneral = register.error && !(Object.keys(fieldErrors(register.error)).length > 0);
 
   return (
-    <Panel title={t('auth.registerTitle')} className={styles.page}>
+    <Panel as="h1" title={t('auth.registerTitle')} className={styles.page}>
       {showGeneral ? <Notice tone="error">{errorMessage(t, register.error)}</Notice> : null}
 
       <form onSubmit={onSubmit} noValidate>

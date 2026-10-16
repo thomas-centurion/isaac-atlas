@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { AUTH_PROVIDERS, authProviderSchema } from '@isaac-atlas/shared';
 import { ProviderButtons } from '../auth/ProviderButtons';
 import styles from '../auth/auth.module.css';
@@ -12,6 +13,7 @@ import { Panel } from '../ui/Panel';
 
 export function Account() {
   const { t } = useTranslation();
+  usePageTitle(t('account.title'));
   const { data: me } = useMe();
   const unlink = useUnlink();
   const resend = useResendVerification();
@@ -26,7 +28,7 @@ export function Account() {
 
   return (
     <>
-      <Panel title={t('account.title')}>
+      <Panel as="h1" title={t('account.title')}>
         {linked.success ? (
           <Notice tone="success">
             {t('account.linked', { provider: t(`auth.providers.${linked.data}`) })}

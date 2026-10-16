@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { filtersFromParams, filtersToParams, hasActiveFilters } from '@isaac-atlas/shared';
 import { SORT_MODES, type SearchFilters, type SortMode } from '@isaac-atlas/shared';
 import { useDaily, useRunSearch } from '../api/runs';
@@ -15,6 +16,7 @@ import styles from './Search.module.css';
 /** Página principal: buscar seeds por personaje, ítems iniciales y sinergias. Los filtros viven en la URL. */
 export function Search() {
   const { t } = useTranslation();
+  usePageTitle(t('nav.search'));
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => filtersFromParams(params), [params]);
   const focusRef = useRef<HTMLInputElement>(null);

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import styles from '../auth/auth.module.css';
 import { errorMessage } from '../auth/errors';
 import { useVerifyEmail } from '../auth/useAuth';
@@ -9,6 +10,7 @@ import { Panel } from '../ui/Panel';
 
 export function VerifyEmail() {
   const { t } = useTranslation();
+  usePageTitle(t('auth.verifyTitle'));
   const [params] = useSearchParams();
   const token = params.get('token');
   const { mutate, isSuccess, error } = useVerifyEmail();
@@ -22,7 +24,7 @@ export function VerifyEmail() {
   }, [token, mutate]);
 
   return (
-    <Panel title={t('auth.verifyTitle')} className={styles.page}>
+    <Panel as="h1" title={t('auth.verifyTitle')} className={styles.page}>
       {isSuccess ? <Notice tone="success">{t('auth.verified')}</Notice> : null}
       {error || !token ? (
         <Notice tone="error">{errorMessage(t, error ?? 'invalid_token')}</Notice>

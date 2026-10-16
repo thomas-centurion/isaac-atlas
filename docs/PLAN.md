@@ -186,6 +186,14 @@ GET    /api/daily                    GET    /api/users/:username
 - **Cookie de sesión:** detrás de un proxy TLS necesita `TRUST_PROXY` bien configurado; si no, no se emite (se descubrió al probar el contenedor).
 - Fuera de alcance (quedó documentado): borrado de cuenta/export de datos, edición de runs desde la web (la API ya lo soporta), importar unlocks desde Steam, comentarios y retos semanales.
 
+## 7f. Pulido antes de publicar
+
+- **Pantallas angostas / overlay de Steam:** verificado sin desbordes horizontales a 320 y 375 px en las 10 páginas. Arreglos: grilla del layout con columna `minmax(0, 1fr)`, encabezado compacto bajo 560 px (el menú pasó de ~250 a ~116 px de alto) y barra de piso que se parte.
+- **Segundo plano:** con la página abierta y sin tocar nada durante 8 s: 0 timers, 0 `requestAnimationFrame`, 0 requests, 0 cambios en el DOM, 0 tareas largas. Las animaciones se pausan con la pestaña oculta y respetan `prefers-reduced-motion`.
+- **Accesibilidad:** contraste WCAG AA calculado sobre toda la paleta. Dos fallas corregidas: texto rojo sobre panel (3.84 → `--blood-text`, 5.3) y bordes de campos de formulario (1.76 → `--line-strong`, 3.6; mínimo 3). Además: título de pestaña por página, un solo `h1` por página, enlace "saltar al contenido", foco al contenido al cambiar de ruta (no al cambiar filtros), etiqueta del menú traducida. Auditado en vivo: 0 controles sin nombre accesible, 0 imágenes sin `alt`, 0 ids duplicados.
+- **CI** (`.github/workflows/ci.yml`): formato, lint, tipos, tests contra Mongo real, build, auditoría de producción y construcción de la imagen Docker. `npm run check` hace lo mismo en local.
+- **Auditoría de dependencias:** `react-router` tiene un aviso moderado sobre hidratación SSR; no usamos SSR, no es explotable. Subir a v7 es un cambio mayor sin beneficio hoy. Los demás avisos son de herramientas de desarrollo.
+
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 
 - **Fase 1**: ruta de instalación del juego para extraer recursos con el ResourceExtractor.

@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
 import { useLogout, useMe } from '../auth/useAuth';
@@ -8,18 +9,35 @@ import styles from './Layout.module.css';
 export function Layout() {
   const { t, i18n } = useTranslation();
   usePageVisibility();
+  const mainRef = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+  const previousPath = useRef(pathname);
+
+  // En una SPA el navegador no mueve el foco al cambiar de página: un usuario de teclado o lector de
+  // pantalla se quedaría en el link que acaba de tocar. Se lleva al contenido (solo si cambia la
+  // ruta, no los filtros de la URL, para no robar el foco mientras se escribe).
+  useEffect(() => {
+    // Comparar con la ruta anterior (y no con un "es el primer render") también evita mover el foco
+    // en la carga inicial cuando React StrictMode ejecuta los efectos dos veces en desarrollo.
+    if (previousPath.current === pathname) return;
+    previousPath.current = pathname;
+    mainRef.current?.focus({ preventScroll: false });
+  }, [pathname]);
   const { data: user } = useMe();
   const logout = useLogout();
   const current: Language = i18n.language.startsWith('es') ? 'es' : 'en';
 
   return (
     <div className={styles.shell}>
+      <a href="#main" className={styles.skip}>
+        {t('nav.skip')}
+      </a>
       <header className={styles.header}>
         <div className={styles.brand}>
           <span className={styles.logo}>{t('app.name')}</span>
           <span className={styles.tagline}>{t('app.tagline')}</span>
         </div>
-        <nav className={styles.nav} aria-label="Principal">
+        <nav className={styles.nav} aria-label={t('nav.main')}>
           <NavLink to="/" end className={({ isActive }) => (isActive ? styles.active : undefined)}>
             {t('nav.search')}
           </NavLink>
@@ -86,7 +104,7 @@ export function Layout() {
         </div>
       </header>
 
-      <main className={styles.main}>
+      <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
         <Outlet />
       </main>
 

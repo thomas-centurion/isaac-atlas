@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { EMPTY_FILTERS } from '@isaac-atlas/shared';
 import { ApiRequestError } from '../api/client';
 import { useProfile, useRunSearch } from '../api/runs';
@@ -18,6 +19,7 @@ export function Profile() {
   const lang = useLang();
   const { username } = useParams();
   const profile = useProfile(username);
+  usePageTitle(profile.data?.username);
   const filters = useMemo(
     () => ({ ...EMPTY_FILTERS, author: username, sort: 'new' as const }),
     [username],

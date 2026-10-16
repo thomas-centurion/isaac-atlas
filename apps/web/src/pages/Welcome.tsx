@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { usernameSchema } from '@isaac-atlas/shared';
 import styles from '../auth/auth.module.css';
 import { errorMessage } from '../auth/errors';
@@ -13,6 +14,7 @@ import { TextField } from '../ui/TextField';
 /** Onboarding: las cuentas creadas con Google/Steam eligen su username acá. */
 export function Welcome() {
   const { t } = useTranslation();
+  usePageTitle(t('auth.welcomeTitle'));
   const navigate = useNavigate();
   const { data: me } = useMe();
   const setUsername = useSetUsername();
@@ -34,7 +36,7 @@ export function Welcome() {
   };
 
   return (
-    <Panel title={t('auth.welcomeTitle')} className={styles.page}>
+    <Panel as="h1" title={t('auth.welcomeTitle')} className={styles.page}>
       <p>{t('auth.welcomeBody')}</p>
       {setUsername.error ? (
         <Notice tone="error">{errorMessage(t, setUsername.error)}</Notice>

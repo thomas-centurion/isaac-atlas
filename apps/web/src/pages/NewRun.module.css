@@ -12,6 +12,7 @@
 
 .floorBar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
@@ -21,7 +22,8 @@
   font-family: var(--font-display);
   font-size: 0.6rem;
   color: var(--gold);
-  min-width: 16ch;
+  flex: 1 1 14ch;
+  min-width: 0;
   text-align: center;
 }
 

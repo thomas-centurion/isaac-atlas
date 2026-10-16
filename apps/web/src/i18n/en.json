@@ -5,6 +5,8 @@
   },
   "nav": {
     "search": "Search",
+    "main": "Main",
+    "skip": "Skip to content",
     "design": "Design",
     "newRun": "New run",
     "myRuns": "My runs",

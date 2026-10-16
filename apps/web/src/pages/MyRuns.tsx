@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useMyRuns } from '../api/runs';
 import { RunCard } from '../runs/RunCard';
 import { Notice } from '../ui/Notice';
@@ -8,10 +9,11 @@ import styles from './MyRuns.module.css';
 
 export function MyRuns() {
   const { t } = useTranslation();
+  usePageTitle(t('run.myRuns'));
   const { data: runs, isPending, error } = useMyRuns();
 
   return (
-    <Panel title={t('run.myRuns')}>
+    <Panel as="h1" title={t('run.myRuns')}>
       <p>
         <Link to="/runs/new">{t('run.newCta')}</Link>
       </p>

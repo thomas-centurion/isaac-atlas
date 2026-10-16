@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { useAdminReports, useResolveReport } from '../api/runs';
 import { useMe } from '../auth/useAuth';
 import { RunCard } from '../runs/RunCard';
@@ -13,6 +14,7 @@ import styles from './Admin.module.css';
 /** Cola de moderación: reportes abiertos. Resolver afecta a todos los reportes de esa run. */
 export function Admin() {
   const { t } = useTranslation();
+  usePageTitle(t('admin.title'));
   const { data: me, isPending } = useMe();
   const isAdmin = me?.role === 'admin';
   const reports = useAdminReports(isAdmin);
@@ -24,7 +26,7 @@ export function Admin() {
   if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
-    <Panel title={t('admin.title')}>
+    <Panel as="h1" title={t('admin.title')}>
       <p>{t('admin.intro')}</p>
       {reports.isPending ? <p>{t('run.loading')}</p> : null}
       {reports.error || resolve.error ? <Notice tone="error">{t('errors.internal')}</Notice> : null}

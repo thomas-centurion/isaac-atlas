@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Si llega un push nuevo a la misma rama, se cancela la corrida anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Formato, lint, tipos, tests y build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Los tests de la API usan un MongoDB real (índices únicos parciales, TTL, sesiones).
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand(\"ping\").ok'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check (formato, lint, tipos y tests)
+        run: npm run check
+
+      - name: Build
+        run: npm run build
+
+      # Solo dependencias de producción y solo severidad alta: los avisos de herramientas de
+      # desarrollo (vitest, esbuild) no llegan a lo que se despliega.
+      - name: Auditoría de dependencias de producción
+        run: npm audit --omit=dev --audit-level=high
+
+  docker:
+    name: La imagen Docker se construye
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      # El sprite sheet no está en git: la imagen se construye igual, sin sprites (ver docs/DEPLOY.md).
+      - run: docker build -t isaac-atlas:ci .

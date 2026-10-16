@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { isValidSeedFormat } from '@isaac-atlas/shared';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { catalog } from '../catalog';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -14,6 +15,7 @@ type Sort = 'hot' | 'top' | 'new';
 
 export function Design() {
   const { t } = useTranslation();
+  usePageTitle(t('design.title'));
   const [seed, setSeed] = useState('');
   const [sort, setSort] = useState<Sort>('hot');
   const seedError = seed && !isValidSeedFormat(seed) ? t('design.seedError') : undefined;

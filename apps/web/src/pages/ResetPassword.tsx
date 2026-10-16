@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { passwordSchema } from '@isaac-atlas/shared';
 import styles from '../auth/auth.module.css';
 import { errorMessage } from '../auth/errors';
@@ -12,6 +13,7 @@ import { TextField } from '../ui/TextField';
 
 export function ResetPassword() {
   const { t } = useTranslation();
+  usePageTitle(t('auth.resetTitle'));
   const [params] = useSearchParams();
   const token = params.get('token') ?? '';
   const reset = useResetPassword();
@@ -26,7 +28,7 @@ export function ResetPassword() {
   };
 
   return (
-    <Panel title={t('auth.resetTitle')} className={styles.page}>
+    <Panel as="h1" title={t('auth.resetTitle')} className={styles.page}>
       {reset.isSuccess ? (
         <>
           <Notice tone="success">{t('auth.resetDone')}</Notice>

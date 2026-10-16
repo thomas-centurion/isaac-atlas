@@ -12,6 +12,11 @@
   --ink-dim: #a89880;
   --blood: #b3261e;
   --blood-bright: #e04032;
+  /* Variantes accesibles (WCAG AA, ver docs/PLAN.md): texto rojo sobre fondos oscuros, hover de botones
+     rojos con texto claro, y borde de campos de formulario (3:1 contra el panel). */
+  --blood-text: #f27565;
+  --blood-hover: #bf2c25;
+  --line-strong: #8a7358;
   --gold: #e2b040;
   --tear: #6fb4e8;
   --good: #7fbf5a;
