@@ -21,7 +21,7 @@ export function Layout() {
         </div>
         <nav className={styles.nav} aria-label="Principal">
           <NavLink to="/" end className={({ isActive }) => (isActive ? styles.active : undefined)}>
-            {t('nav.home')}
+            {t('nav.search')}
           </NavLink>
           <NavLink
             to="/design"

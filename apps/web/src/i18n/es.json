@@ -4,7 +4,7 @@
     "tagline": "Bitácora de seeds y sinergias"
   },
   "nav": {
-    "home": "Inicio",
+    "search": "Buscar",
     "design": "Diseño",
     "newRun": "Nueva run",
     "myRuns": "Mis runs",
@@ -20,10 +20,32 @@
     "top": "Mejores",
     "new": "Nuevas"
   },
-  "home": {
-    "title": "Todas tus runs, en un solo lugar",
-    "body": "Registrá la seed, el personaje y los ítems clave de cada partida. Buscá seeds con la sinergia que querés jugar y votá las más destructivas.",
-    "cta": "Ver el sistema de diseño"
+  "search": {
+    "title": "Encontrá tu próxima seed",
+    "intro": "Filtrá por personaje, ítems con los que se empieza y sinergias, y jugá una seed que ya sabés que funciona.",
+    "filters": "Filtros",
+    "any": "Cualquiera",
+    "unlocks": "Desbloqueos",
+    "startsWith": "Empieza con",
+    "startsWithHint": "Ítems del primer piso.",
+    "hasItems": "Tiene",
+    "hasItemsHint": "En cualquier momento de la run.",
+    "excludeItems": "Sin",
+    "excludeItemsHint": "Ninguno de estos ítems.",
+    "clear": "Limpiar filtros",
+    "results": "Resultados",
+    "noMatches": "Ninguna run coincide con esos filtros.",
+    "noRunsYet": "Todavía no hay runs cargadas.",
+    "beFirst": "Cargá la primera",
+    "loadMore": "Cargar más"
+  },
+  "seed": {
+    "notFound": "No hay runs para esa seed.",
+    "runCount_one": "{{count}} run registrada",
+    "runCount_other": "{{count}} runs registradas",
+    "topItems": "Sinergias de esta seed",
+    "topItemsHint": "Ítems que más se repiten entre las runs (en cuántas aparece cada uno).",
+    "runs": "Runs"
   },
   "design": {
     "title": "Sistema de diseño",
@@ -132,7 +154,7 @@
     "kindTrinkets": "Trinkets",
     "searchItem": "Buscar ítem",
     "searchTrinket": "Buscar trinket",
-    "searchPlaceholder": "Nombre (EN o ES) o número…",
+    "searchPlaceholder": "Nombre o número…",
     "noResults": "Sin resultados",
     "noItemsYet": "Todavía no agregaste nada. Los ítems se asignan al piso actual.",
     "itemsRequired": "Agregá al menos un ítem.",
@@ -157,6 +179,7 @@
     "deleteYes": "Sí, borrar",
     "cancel": "Cancelar",
     "backToRuns": "Volver a mis runs",
+    "allRunsOfSeed": "Ver todas las runs de esta seed",
     "myRuns": "Mis runs",
     "newCta": "+ Nueva run",
     "emptyMine": "Todavía no cargaste ninguna run."

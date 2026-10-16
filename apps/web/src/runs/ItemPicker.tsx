@@ -9,10 +9,14 @@ interface ItemPickerProps {
   kind: SearchKind;
   onPick: (id: number) => void;
   inputRef?: RefObject<HTMLInputElement>;
+  /** Texto de la etiqueta (por defecto "Buscar ítem" / "Buscar trinket"). */
+  label?: string;
+  /** Tecla de atajo que se muestra junto a la etiqueta (el atajo en sí lo registra la página). */
+  shortcut?: string;
 }
 
 /** Combobox: escribís, flechas para moverte, Enter para agregar. El foco queda en el input. */
-export function ItemPicker({ kind, onPick, inputRef }: ItemPickerProps) {
+export function ItemPicker({ kind, onPick, inputRef, label, shortcut }: ItemPickerProps) {
   const { t } = useTranslation();
   const lang = useLang();
   const listId = useId();
@@ -52,8 +56,8 @@ export function ItemPicker({ kind, onPick, inputRef }: ItemPickerProps) {
   return (
     <div className={styles.picker}>
       <label htmlFor={`${listId}-input`} className={styles.label}>
-        {t(kind === 'item' ? 'run.searchItem' : 'run.searchTrinket')}
-        <kbd className={styles.kbd}>/</kbd>
+        {label ?? t(kind === 'item' ? 'run.searchItem' : 'run.searchTrinket')}
+        {shortcut ? <kbd className={styles.kbd}>{shortcut}</kbd> : null}
       </label>
       <input
         id={`${listId}-input`}

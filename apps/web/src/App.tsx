@@ -4,7 +4,8 @@ import { Layout } from './layout/Layout';
 import { Account } from './pages/Account';
 import { Design } from './pages/Design';
 import { ForgotPassword } from './pages/ForgotPassword';
-import { Home } from './pages/Home';
+import { Search } from './pages/Search';
+import { SeedPage } from './pages/SeedPage';
 import { Login } from './pages/Login';
 import { MyRuns } from './pages/MyRuns';
 import { NewRun } from './pages/NewRun';
@@ -18,7 +19,8 @@ export function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Search />} />
+        <Route path="seeds/:seed" element={<SeedPage />} />
         <Route path="design" element={<Design />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

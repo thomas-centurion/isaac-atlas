@@ -9,6 +9,7 @@ import { HttpError, errorHandler } from './http.js';
 import { originCheck } from './middleware.js';
 import { authRouter } from './routes/auth.js';
 import { runsRouter } from './routes/runs.js';
+import { seedsRouter } from './routes/seeds.js';
 
 interface AppDeps {
   /** Store de sesiones (connect-mongo en runtime). Sin store: MemoryStore, solo para tests simples. */
@@ -53,6 +54,7 @@ export function createApp({ sessionStore }: AppDeps = {}) {
   app.use('/api', originCheck);
   app.use('/api/auth', authRouter);
   app.use('/api/runs', runsRouter);
+  app.use('/api/seeds', seedsRouter);
   app.use('/api', (_req, _res, next) => next(new HttpError('not_found')));
 
   app.use(errorHandler);

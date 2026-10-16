@@ -28,7 +28,7 @@ export function VerifyEmail() {
         <Notice tone="error">{errorMessage(t, error ?? 'invalid_token')}</Notice>
       ) : null}
       {!isSuccess && !error && token ? <p>{t('auth.verifying')}</p> : null}
-      <Link to="/">{t('nav.home')}</Link>
+      <Link to="/">{t('nav.search')}</Link>
     </Panel>
   );
 }

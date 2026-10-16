@@ -67,6 +67,9 @@ export function RunDetail() {
           {run.outcome.lastFloor ? ` · ${t(`floors.${run.outcome.lastFloor}`)}` : ''}
           {run.outcome.finalBoss ? ` · ${t(`bosses.${run.outcome.finalBoss}`)}` : ''}
         </p>
+        <p>
+          <Link to={`/seeds/${run.seed}`}>{t('run.allRunsOfSeed')}</Link>
+        </p>
         <p className={styles.meta}>
           {t('run.by', { user: run.author.username })} ·{' '}
           {new Date(run.createdAt).toLocaleDateString(lang)}

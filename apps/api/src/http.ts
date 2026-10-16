@@ -1,5 +1,5 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
-import type { ZodSchema } from 'zod';
+import type { ZodTypeAny, z } from 'zod';
 import type { ApiError, ApiErrorCode } from '@isaac-atlas/shared';
 
 const STATUS: Record<ApiErrorCode, number> = {
@@ -42,7 +42,8 @@ export const asyncHandler =
     fn(req, res, next).catch(next);
   };
 
-export function parseBody<T>(schema: ZodSchema<T>, data: unknown): T {
+/** Valida `data` (body o query) con un esquema Zod; acepta esquemas con transformaciones. */
+export function parseBody<S extends ZodTypeAny>(schema: S, data: unknown): z.output<S> {
   const result = schema.safeParse(data);
   if (!result.success) {
     throw new HttpError(

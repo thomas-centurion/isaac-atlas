@@ -194,6 +194,7 @@ export function NewRun() {
         <ItemPicker
           kind={pickerKind}
           inputRef={searchRef}
+          shortcut="/"
           onPick={(id) =>
             dispatch(
               pickerKind === 'item'

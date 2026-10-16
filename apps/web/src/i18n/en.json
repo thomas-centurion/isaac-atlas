@@ -4,7 +4,7 @@
     "tagline": "Seed and synergy logbook"
   },
   "nav": {
-    "home": "Home",
+    "search": "Search",
     "design": "Design",
     "newRun": "New run",
     "myRuns": "My runs",
@@ -20,10 +20,32 @@
     "top": "Top",
     "new": "New"
   },
-  "home": {
-    "title": "All your runs, in one place",
-    "body": "Log the seed, character and key items of every run. Search for seeds with the synergy you want to play and vote for the most destructive ones.",
-    "cta": "See the design system"
+  "search": {
+    "title": "Find your next seed",
+    "intro": "Filter by character, starting items and synergies, and play a seed you already know works.",
+    "filters": "Filters",
+    "any": "Any",
+    "unlocks": "Unlocks",
+    "startsWith": "Starts with",
+    "startsWithHint": "Items from the first floor.",
+    "hasItems": "Has",
+    "hasItemsHint": "At any point of the run.",
+    "excludeItems": "Without",
+    "excludeItemsHint": "None of these items.",
+    "clear": "Clear filters",
+    "results": "Results",
+    "noMatches": "No run matches those filters.",
+    "noRunsYet": "There are no runs yet.",
+    "beFirst": "Log the first one",
+    "loadMore": "Load more"
+  },
+  "seed": {
+    "notFound": "There are no runs for that seed.",
+    "runCount_one": "{{count}} run logged",
+    "runCount_other": "{{count}} runs logged",
+    "topItems": "Synergies of this seed",
+    "topItemsHint": "Items that repeat the most across runs (in how many runs each one appears).",
+    "runs": "Runs"
   },
   "design": {
     "title": "Design system",
@@ -132,7 +154,7 @@
     "kindTrinkets": "Trinkets",
     "searchItem": "Search item",
     "searchTrinket": "Search trinket",
-    "searchPlaceholder": "Name (EN or ES) or number…",
+    "searchPlaceholder": "Name or number…",
     "noResults": "No results",
     "noItemsYet": "You have not added anything yet. Items are assigned to the current floor.",
     "itemsRequired": "Add at least one item.",
@@ -157,6 +179,7 @@
     "deleteYes": "Yes, delete",
     "cancel": "Cancel",
     "backToRuns": "Back to my runs",
+    "allRunsOfSeed": "See all runs of this seed",
     "myRuns": "My runs",
     "newCta": "+ New run",
     "emptyMine": "You have not logged any runs yet."

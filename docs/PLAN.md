@@ -158,6 +158,13 @@ GET    /api/daily                    GET    /api/users/:username
 - **API de runs:** crear, ver (público), `mine`, `PUT` y `DELETE` (solo el autor). La edición todavía no tiene UI.
 - Buscador de ítems 100 % en cliente (EN/ES sin tildes, sin artículos iniciales, por ID).
 
+## 7c. Decisiones de implementación (fase 5)
+
+- `GET /api/runs`: filtros `character`, `difficulty`, `result`, `fullUnlocks`, `seed`, `startItems` (todos entre los del piso 1), `items` (todos, en cualquier piso) y `exclude` (ninguno). Máximo 10 ítems por lista. Esquema compartido en `packages/shared/src/search.ts`.
+- Paginación por cursor opaco sobre `(createdAt, _id)`: estable con runs nuevas y con `createdAt` empatado. Orden fijo por fecha; `hot`/`top` llegan con los votos (fase 6).
+- `GET /api/seeds/:seed`: runs de esa seed, personajes y los ítems que más se repiten (cuenta runs, no copias).
+- Los filtros viven en la URL (`/?character=0&startItems=153&items=105`): se pueden compartir y funcionan con el botón atrás. `/` es ahora la página de búsqueda.
+
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 
 - **Fase 1**: ruta de instalación del juego para extraer recursos con el ResourceExtractor.
