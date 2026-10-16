@@ -10367,5 +10367,313 @@
       },
       "sprite": 908
     }
+  ],
+  "characters": [
+    {
+      "id": 0,
+      "key": "isaac",
+      "name": {
+        "en": "Isaac",
+        "es": "Isaac"
+      },
+      "tainted": false
+    },
+    {
+      "id": 1,
+      "key": "magdalene",
+      "name": {
+        "en": "Magdalene",
+        "es": "Magdalena"
+      },
+      "tainted": false
+    },
+    {
+      "id": 2,
+      "key": "cain",
+      "name": {
+        "en": "Cain",
+        "es": "Caín"
+      },
+      "tainted": false
+    },
+    {
+      "id": 3,
+      "key": "judas",
+      "name": {
+        "en": "Judas",
+        "es": "Judas"
+      },
+      "tainted": false
+    },
+    {
+      "id": 4,
+      "key": "blue-baby",
+      "name": {
+        "en": "Blue Baby",
+        "es": "Blue Baby"
+      },
+      "tainted": false
+    },
+    {
+      "id": 5,
+      "key": "eve",
+      "name": {
+        "en": "Eve",
+        "es": "Eva"
+      },
+      "tainted": false
+    },
+    {
+      "id": 6,
+      "key": "samson",
+      "name": {
+        "en": "Samson",
+        "es": "Sansón"
+      },
+      "tainted": false
+    },
+    {
+      "id": 7,
+      "key": "azazel",
+      "name": {
+        "en": "Azazel",
+        "es": "Azazel"
+      },
+      "tainted": false
+    },
+    {
+      "id": 8,
+      "key": "lazarus",
+      "name": {
+        "en": "Lazarus",
+        "es": "Lázaro"
+      },
+      "tainted": false
+    },
+    {
+      "id": 9,
+      "key": "eden",
+      "name": {
+        "en": "Eden",
+        "es": "Edén"
+      },
+      "tainted": false
+    },
+    {
+      "id": 10,
+      "key": "the-lost",
+      "name": {
+        "en": "The Lost",
+        "es": "El perdido"
+      },
+      "tainted": false
+    },
+    {
+      "id": 13,
+      "key": "lilith",
+      "name": {
+        "en": "Lilith",
+        "es": "Lilith"
+      },
+      "tainted": false
+    },
+    {
+      "id": 14,
+      "key": "keeper",
+      "name": {
+        "en": "Keeper",
+        "es": "Keeper"
+      },
+      "tainted": false
+    },
+    {
+      "id": 15,
+      "key": "apollyon",
+      "name": {
+        "en": "Apollyon",
+        "es": "Apolión"
+      },
+      "tainted": false
+    },
+    {
+      "id": 16,
+      "key": "the-forgotten",
+      "name": {
+        "en": "The Forgotten",
+        "es": "El Olvidado"
+      },
+      "tainted": false
+    },
+    {
+      "id": 18,
+      "key": "bethany",
+      "name": {
+        "en": "Bethany",
+        "es": "Bethany"
+      },
+      "tainted": false
+    },
+    {
+      "id": 19,
+      "key": "jacob",
+      "name": {
+        "en": "Jacob",
+        "es": "Jacob"
+      },
+      "tainted": false
+    },
+    {
+      "id": 21,
+      "key": "tainted-isaac",
+      "name": {
+        "en": "Isaac",
+        "es": "Isaac"
+      },
+      "tainted": true
+    },
+    {
+      "id": 22,
+      "key": "tainted-magdalene",
+      "name": {
+        "en": "Magdalene",
+        "es": "Magdalena"
+      },
+      "tainted": true
+    },
+    {
+      "id": 23,
+      "key": "tainted-cain",
+      "name": {
+        "en": "Cain",
+        "es": "Caín"
+      },
+      "tainted": true
+    },
+    {
+      "id": 24,
+      "key": "tainted-judas",
+      "name": {
+        "en": "Judas",
+        "es": "Judas"
+      },
+      "tainted": true
+    },
+    {
+      "id": 25,
+      "key": "tainted-blue-baby",
+      "name": {
+        "en": "Blue Baby",
+        "es": "Blue Baby"
+      },
+      "tainted": true
+    },
+    {
+      "id": 26,
+      "key": "tainted-eve",
+      "name": {
+        "en": "Eve",
+        "es": "Eva"
+      },
+      "tainted": true
+    },
+    {
+      "id": 27,
+      "key": "tainted-samson",
+      "name": {
+        "en": "Samson",
+        "es": "Sansón"
+      },
+      "tainted": true
+    },
+    {
+      "id": 28,
+      "key": "tainted-azazel",
+      "name": {
+        "en": "Azazel",
+        "es": "Azazel"
+      },
+      "tainted": true
+    },
+    {
+      "id": 29,
+      "key": "tainted-lazarus",
+      "name": {
+        "en": "Lazarus",
+        "es": "Lázaro"
+      },
+      "tainted": true
+    },
+    {
+      "id": 30,
+      "key": "tainted-eden",
+      "name": {
+        "en": "Eden",
+        "es": "Edén"
+      },
+      "tainted": true
+    },
+    {
+      "id": 31,
+      "key": "tainted-the-lost",
+      "name": {
+        "en": "The Lost",
+        "es": "El perdido"
+      },
+      "tainted": true
+    },
+    {
+      "id": 32,
+      "key": "tainted-lilith",
+      "name": {
+        "en": "Lilith",
+        "es": "Lilith"
+      },
+      "tainted": true
+    },
+    {
+      "id": 33,
+      "key": "tainted-keeper",
+      "name": {
+        "en": "Keeper",
+        "es": "Keeper"
+      },
+      "tainted": true
+    },
+    {
+      "id": 34,
+      "key": "tainted-apollyon",
+      "name": {
+        "en": "Apollyon",
+        "es": "Apolión"
+      },
+      "tainted": true
+    },
+    {
+      "id": 35,
+      "key": "tainted-the-forgotten",
+      "name": {
+        "en": "The Forgotten",
+        "es": "El Olvidado"
+      },
+      "tainted": true
+    },
+    {
+      "id": 36,
+      "key": "tainted-bethany",
+      "name": {
+        "en": "Bethany",
+        "es": "Bethany"
+      },
+      "tainted": true
+    },
+    {
+      "id": 37,
+      "key": "tainted-jacob",
+      "name": {
+        "en": "Jacob",
+        "es": "Jacob"
+      },
+      "tainted": true
+    }
   ]
 }

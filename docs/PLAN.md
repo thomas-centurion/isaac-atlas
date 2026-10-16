@@ -7,22 +7,22 @@ Pensada para dejarse abierta de fondo (segundo monitor u overlay de Steam) mient
 
 ## 1. Decisiones tomadas
 
-| Tema | Decisión |
-|---|---|
+| Tema              | Decisión                                                                                                                                                        |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Versión del juego | **Repentance+** únicamente. El modelo guarda `gameVersion` y cada ítem tiene `introducedIn`, así que agregar DLCs después = nuevo catálogo + mostrar el filtro. |
-| Auth | Email/contraseña + Google + Steam, con **Passport.js** y sesiones en cookie (ver §4). |
-| Sprites | Sprites originales del juego, con aviso de atribución (fan site sin fines de lucro). |
-| Idioma | Bilingüe **ES/EN** desde el día uno. Nombres de ítems canónicos en inglés. |
-| Estilos | CSS puro (CSS Modules + custom properties). Sin frameworks de estilos. |
-| Lectura pública | Buscar y ver runs no requiere cuenta. Subir runs y votar sí. |
+| Auth              | Email/contraseña + Google + Steam, con **Passport.js** y sesiones en cookie (ver §4).                                                                           |
+| Sprites           | Sprites originales del juego, con aviso de atribución (fan site sin fines de lucro).                                                                            |
+| Idioma            | Bilingüe **ES/EN** desde el día uno. Nombres de ítems canónicos en inglés.                                                                                      |
+| Estilos           | CSS puro (CSS Modules + custom properties). Sin frameworks de estilos.                                                                                          |
+| Lectura pública   | Buscar y ver runs no requiere cuenta. Subir runs y votar sí.                                                                                                    |
 
 ## 2. Realidades del juego que condicionan el diseño
 
 - **Una seed no es determinista por sí sola.** El resultado depende de seed + versión + personaje + dificultad + **unlocks del save**. Cada run guarda `fullUnlocks: boolean` y el buscador lo filtra (por defecto: saves completos).
 - **Primer piso vs. resto de la run.** Lo que aparece en Basement 1 depende de la seed; lo posterior depende del camino del jugador. Cada ítem se registra con `floor` y `source` (treasure, shop, devil, angel, boss, secret, curse, other). De ahí sale `startItems` → "empieza con Mutant Spider".
 - **Ítems innatos.** Los ítems iniciales del personaje (D6 de Isaac, etc.) se autocompletan al elegir personaje y se marcan como `source: "innate"`.
-- **Validación de seed.** 8 caracteres, alfabeto de 32 símbolos (sin I, O, U, 5), con checksum embebido. Se valida en `shared` (front y back). *Pendiente: verificar el algoritmo exacto del checksum antes de implementarlo.*
-- **Catálogo.** ~719 collectibles + ~189 trinkets (+ cartas/píldoras en una fase posterior). Se genera con un script a partir de los recursos del juego (`items.xml`, `items_metadata.xml`, `itempools.xml`, `gfx/items/`) extraídos con el *ResourceExtractor* que trae la propia instalación del juego. Salida: `catalog.json` + **un único sprite sheet** (CSS `background-position`).
+- **Validación de seed.** 8 caracteres, alfabeto de 32 símbolos (sin I, O, U, 5), con checksum embebido. Se valida en `shared` (front y back). _Pendiente: verificar el algoritmo exacto del checksum antes de implementarlo._
+- **Catálogo.** ~719 collectibles + ~189 trinkets (+ cartas/píldoras en una fase posterior). Se genera con un script a partir de los recursos del juego (`items.xml`, `items_metadata.xml`, `itempools.xml`, `gfx/items/`) extraídos con el _ResourceExtractor_ que trae la propia instalación del juego. Salida: `catalog.json` + **un único sprite sheet** (CSS `background-position`).
 
 ## 3. Arquitectura
 
@@ -37,6 +37,7 @@ isaac-atlas/                    npm workspaces
 ```
 
 **Frontend**
+
 - React Router (rutas), TanStack Query (estado de servidor: caché, paginación por cursor, votos optimistas), `useReducer` + context para el formulario de run.
 - i18n con `react-i18next`; textos en `locales/{es,en}.json`.
 - Búsqueda de ítems 100 % en cliente sobre el catálogo estático (fuzzy, con alias), navegación por teclado.
@@ -45,6 +46,7 @@ isaac-atlas/                    npm workspaces
 **Estética**: menús de papel rasgado del juego × web de los 2000. `border-image` para bordes rústicos, fuente pixel (Press Start 2P / Silkscreen), cursores `.png` propios, `image-rendering: pixelated`, layouts con CSS Grid, contador de visitas falso, transiciones tipo menú del juego.
 
 **Backend**
+
 - Express + Helmet + `express-rate-limit` + validación Zod en cada endpoint.
 - Mongoose sobre MongoDB (Docker en dev, Atlas M0 en prod).
 - Testing: Vitest + Supertest contra el Mongo real de Docker (base `isaac-atlas-test`), en lugar de `mongodb-memory-server`: más fiel (índices únicos parciales, TTL, connect-mongo) y sin descargar binarios. En CI hará falta un servicio Mongo.
@@ -58,13 +60,15 @@ isaac-atlas/                    npm workspaces
 - **Mismo sitio para front y API**: en dev, proxy de Vite `/api → :4000`; en prod, Express sirve el build del front (o ambos bajo el mismo dominio). Evita problemas de cookies de terceros.
 
 **Estrategias**
-| Proveedor | Implementación | Credenciales necesarias |
-|---|---|---|
-| Email/contraseña | `passport-local` + **argon2id** | — (envío de mails: consola/Ethereal en dev, Resend en prod) |
-| Google | `passport-google-oauth20` | Client ID/Secret de Google Cloud Console |
-| Steam | OpenID 2.0. `passport-steam` está sin mantenimiento → **strategy propia** chica (redirect + `check_authentication`) | Steam Web API key (solo para avatar/nombre, no para el login) |
+
+| Proveedor        | Implementación                                                                                                      | Credenciales necesarias                                       |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Email/contraseña | `passport-local` + **argon2id**                                                                                     | — (envío de mails: consola/Ethereal en dev, Resend en prod)   |
+| Google           | `passport-google-oauth20`                                                                                           | Client ID/Secret de Google Cloud Console                      |
+| Steam            | OpenID 2.0. `passport-steam` está sin mantenimiento → **strategy propia** chica (redirect + `check_authentication`) | Steam Web API key (solo para avatar/nombre, no para el login) |
 
 **Modelo de cuenta**
+
 ```ts
 User {
   username,                     // único, elegido en onboarding (los nombres de Google/Steam colisionan)
@@ -74,11 +78,13 @@ User {
   avatar, locale, createdAt
 }
 ```
+
 - Vinculación de proveedores desde el perfil estando logueado.
 - Autovinculación por email **solo** si el email viene verificado (Google sí; Steam no da email).
 - Flujos de email: verificación de cuenta y reseteo de contraseña con tokens de un solo uso (hash guardado, TTL index).
 
 **Decisiones de implementación (fase 3)**
+
 - Steam OpenID 2.0 propio (sin `passport-steam`): se verifica con `check_authentication` contra Steam, `return_to` exacto, `claimed_id` de `steamcommunity.com`, y un `state` aleatorio guardado en la sesión dentro del `return_to`.
 - Google con `passport-google-oauth20` y `state: true`. Sin credenciales, el botón no aparece (`GET /api/auth/providers`).
 - Anti pre-hijacking: si un login de Google/Steam llega con email verificado que coincide con una cuenta local sin verificar, se verifica y **se le borra la contraseña**.
@@ -109,9 +115,10 @@ Report  { userId, runId, reason, status }
 **Índices**: `{ gameVersion, character, "items.itemId" }`, `{ startItems }`, `{ seed }`, `{ "stats.hot": -1 }`, `{ "stats.wilson": -1 }`, `{ createdAt: -1 }`.
 
 **Ranking**
-- *Top*: límite inferior del intervalo de Wilson (no premia runs con pocos votos).
-- *Hot*: score con decaimiento temporal; se recalcula en cada voto y con un job periódico.
-- *Seed del día*: job diario que elige entre runs recientes bien rankeadas.
+
+- _Top_: límite inferior del intervalo de Wilson (no premia runs con pocos votos).
+- _Hot_: score con decaimiento temporal; se recalcula en cada voto y con un job periódico.
+- _Seed del día_: job diario que elige entre runs recientes bien rankeadas.
 
 ## 6. API (borrador)
 
@@ -130,17 +137,26 @@ GET    /api/daily                    GET    /api/users/:username
 
 ## 7. Fases
 
-| Fase | Contenido | Entregable |
-|---|---|---|
-| 0 | Monorepo, TS estricto, ESLint/Prettier, Docker Mongo, git | `npm run dev` levanta front + API + DB |
-| 1 | Script de catálogo + sprite sheet, validador de seed en `shared` | Catálogo navegable |
-| 2 | Sistema de diseño retro: tokens, fuentes, cursores, componentes base, i18n | Página de componentes |
-| 3 | Auth completa (local + Google + Steam, onboarding, vinculación) | Login funcional |
-| 4 | Formulario de run + modo "Run en curso" (borrador en `localStorage`, atajos) | Cargar runs |
-| 5 | Buscador + filtros + página de seed | Buscar seeds |
-| 6 | Votos, veredictos, ranking Hot/Top/New, Seed del día | Feed comunitario |
-| 7 | Perfil, reportes, rate limiting fino, deploy | Online |
-| Futuro | Import de unlocks vía Steam API, comentarios, retos semanales, filtros por DLC | — |
+| Fase   | Contenido                                                                      | Entregable                             |
+| ------ | ------------------------------------------------------------------------------ | -------------------------------------- |
+| 0      | Monorepo, TS estricto, ESLint/Prettier, Docker Mongo, git                      | `npm run dev` levanta front + API + DB |
+| 1      | Script de catálogo + sprite sheet, validador de seed en `shared`               | Catálogo navegable                     |
+| 2      | Sistema de diseño retro: tokens, fuentes, cursores, componentes base, i18n     | Página de componentes                  |
+| 3      | Auth completa (local + Google + Steam, onboarding, vinculación)                | Login funcional                        |
+| 4      | Formulario de run + modo "Run en curso" (borrador en `localStorage`, atajos)   | Cargar runs                            |
+| 5      | Buscador + filtros + página de seed                                            | Buscar seeds                           |
+| 6      | Votos, veredictos, ranking Hot/Top/New, Seed del día                           | Feed comunitario                       |
+| 7      | Perfil, reportes, rate limiting fino, deploy                                   | Online                                 |
+| Futuro | Import de unlocks vía Steam API, comentarios, retos semanales, filtros por DLC | —                                      |
+
+## 7b. Decisiones de implementación (fase 4)
+
+- **Ítems innatos pendientes.** `players.xml` no incluye los ítems iniciales de cada personaje (viven en el código del juego) y la wiki no se pudo leer de forma confiable, así que no se autocompletan (D6 de Isaac, etc.). Hoy se cargan a mano; cargar esa tabla de forma verificada queda como tarea de datos.
+- **Pisos 1-13** (numéricos, con nombres ES/EN para la ruta normal y la alternativa). `startItems` = ítems del piso 1, derivado en el servidor (el cliente no lo puede fijar).
+- **Personajes:** 17 normales + 17 Tainted desde `players.xml` (formas transitorias excluidas). ID de jugador = `characterId`.
+- **Borrador** de la run en `localStorage` (con recuperación parcial si está corrupto); se borra explícitamente al guardar.
+- **API de runs:** crear, ver (público), `mine`, `PUT` y `DELETE` (solo el autor). La edición todavía no tiene UI.
+- Buscador de ítems 100 % en cliente (EN/ES sin tildes, sin artículos iniciales, por ID).
 
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 

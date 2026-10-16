@@ -19,6 +19,7 @@ import {
   catalogSchema,
   spritePosition,
   type Catalog,
+  type CatalogCharacter,
   type CatalogItem,
   type CatalogTrinket,
   type ItemKind,
@@ -42,6 +43,7 @@ const parser = new XMLParser({
       'active',
       'familiar',
       'trinket',
+      'player',
       'item',
       'Pool',
       'Item',
@@ -138,8 +140,33 @@ for (const el of itemsXml.trinket ?? []) {
 }
 trinkets.sort((a, b) => a.id - b.id);
 
+// --- personajes (players.xml) ---
+// IDs 11, 12, 17, 20, 38, 39 y 40 son formas transitorias (Lazarus 2, Black Judas,
+// The Soul, Esaú, formas Tainted de Lazarus/Jacob/Soul): no se eligen al empezar una run.
+const TRANSIENT_PLAYER_IDS = new Set([11, 12, 17, 20, 38, 39, 40]);
+const TAINTED_FROM_ID = 21;
+// En el juego este personaje se llama "???" (y 4 y 25 comparten nombre); la comunidad dice Blue Baby.
+const BLUE_BABY_IDS = new Set([4, 25]);
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+const characters: CatalogCharacter[] = [];
+for (const el of readXml('players.xml').players.player ?? []) {
+  const id = +el.id;
+  const name = BLUE_BABY_IDS.has(id)
+    ? { en: 'Blue Baby', es: 'Blue Baby' }
+    : nameFor(el.name ?? '');
+  if (TRANSIENT_PLAYER_IDS.has(id) || !name) continue;
+  const tainted = id >= TAINTED_FROM_ID;
+  characters.push({ id, key: `${tainted ? 'tainted-' : ''}${slug(name.en)}`, name, tainted });
+}
+characters.sort((a, b) => a.id - b.id);
+
 // --- salida ---
-const catalog: Catalog = catalogSchema.parse({ gameVersion: 'rep+', items, trinkets });
+const catalog: Catalog = catalogSchema.parse({ gameVersion: 'rep+', items, trinkets, characters });
 const dataDir = join(root, 'packages/shared/src/data');
 mkdirSync(dataDir, { recursive: true });
 writeFileSync(join(dataDir, 'catalog.json'), JSON.stringify(catalog, null, 1) + '\n');

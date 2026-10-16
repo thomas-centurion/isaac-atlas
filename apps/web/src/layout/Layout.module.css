@@ -9,7 +9,11 @@
 
 .header {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  /* Fila 1: logo + idioma. Fila 2: navegación (con sesión iniciada son muchos links). */
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'brand langs'
+    'nav nav';
   align-items: center;
   gap: var(--space-4) var(--space-6);
   padding: var(--space-6) 0 var(--space-4);
@@ -18,6 +22,7 @@
 }
 
 .brand {
+  grid-area: brand;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -39,8 +44,11 @@
 }
 
 .nav {
+  grid-area: nav;
   display: flex;
-  gap: var(--space-4);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
 }
 
 .nav a {
@@ -71,6 +79,7 @@
 }
 
 .langs {
+  grid-area: langs;
   display: flex;
   gap: var(--space-2);
 }
@@ -133,11 +142,5 @@
   94%,
   98% {
     opacity: 0.55;
-  }
-}
-
-@media (max-width: 640px) {
-  .header {
-    grid-template-columns: 1fr;
   }
 }

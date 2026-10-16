@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export * from './seed';
 export * from './catalog';
+export * from './catalog-data';
 export * from './auth';
+export * from './runs';
 
 export const healthResponseSchema = z.object({
   status: z.literal('ok'),

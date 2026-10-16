@@ -3,13 +3,14 @@ import mongoose from 'mongoose';
 import { createApp } from './app.js';
 import { config } from './config.js';
 import { EmailToken } from './models/EmailToken.js';
+import { Run } from './models/Run.js';
 import { User } from './models/User.js';
 
 await mongoose.connect(config.MONGODB_URI);
 console.log(`[db] connected: ${mongoose.connection.name}`);
 
 // Crea los índices (únicos parciales, TTL) antes de aceptar tráfico.
-await Promise.all([User.init(), EmailToken.init()]);
+await Promise.all([User.init(), EmailToken.init(), Run.init()]);
 
 const sessionStore = MongoStore.create({
   client: mongoose.connection.getClient(),

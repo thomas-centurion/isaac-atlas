@@ -31,10 +31,22 @@ export const catalogTrinketSchema = z.object({
 });
 export type CatalogTrinket = z.infer<typeof catalogTrinketSchema>;
 
+export const catalogCharacterSchema = z.object({
+  /** ID del jugador en players.xml (estable entre versiones del juego). */
+  id: z.number().int().nonnegative(),
+  /** Slug estable para URLs y filtros: "isaac", "tainted-isaac". */
+  key: z.string(),
+  /** Nombre base; en las variantes Tainted la UI antepone "T.". */
+  name: localizedNameSchema,
+  tainted: z.boolean(),
+});
+export type CatalogCharacter = z.infer<typeof catalogCharacterSchema>;
+
 export const catalogSchema = z.object({
   gameVersion: z.literal('rep+'),
   items: z.array(catalogItemSchema),
   trinkets: z.array(catalogTrinketSchema),
+  characters: z.array(catalogCharacterSchema),
 });
 export type Catalog = z.infer<typeof catalogSchema>;
 

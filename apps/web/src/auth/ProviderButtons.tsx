@@ -6,6 +6,8 @@ import { providerLoginUrl, useProviders } from './useAuth';
 interface ProviderButtonsProps {
   /** Proveedores que no se muestran (p. ej. los ya vinculados). */
   exclude?: AuthProvider[];
+  /** Si se indica, solo se muestran estos proveedores. */
+  only?: AuthProvider[];
   link?: boolean;
 }
 
@@ -13,10 +15,12 @@ interface ProviderButtonsProps {
  * Los botones son <a> normales: el login OAuth/OpenID es una redirección completa
  * del navegador al proveedor, no una llamada fetch.
  */
-export function ProviderButtons({ exclude = [], link = false }: ProviderButtonsProps) {
+export function ProviderButtons({ exclude = [], only, link = false }: ProviderButtonsProps) {
   const { t } = useTranslation();
   const { data: providers } = useProviders();
-  const available = AUTH_PROVIDERS.filter((p) => providers?.[p] && !exclude.includes(p));
+  const available = AUTH_PROVIDERS.filter(
+    (p) => providers?.[p] && !exclude.includes(p) && (!only || only.includes(p)),
+  );
   if (available.length === 0) return null;
 
   return (

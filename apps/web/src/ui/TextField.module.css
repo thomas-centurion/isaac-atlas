@@ -25,6 +25,16 @@
   margin: calc(var(--px) * 2);
 }
 
+.select {
+  cursor: var(--cursor-pointer);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 4em;
+  font-family: var(--font-body);
+}
+
 .input::placeholder {
   color: var(--ink-dim);
   opacity: 0.6;

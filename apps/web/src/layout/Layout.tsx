@@ -32,6 +32,19 @@ export function Layout() {
           {user ? (
             <>
               <NavLink
+                to="/runs/new"
+                className={({ isActive }) => (isActive ? styles.active : undefined)}
+              >
+                {t('nav.newRun')}
+              </NavLink>
+              <NavLink
+                to="/runs"
+                end
+                className={({ isActive }) => (isActive ? styles.active : undefined)}
+              >
+                {t('nav.myRuns')}
+              </NavLink>
+              <NavLink
                 to="/account"
                 className={({ isActive }) => (isActive ? styles.active : undefined)}
               >

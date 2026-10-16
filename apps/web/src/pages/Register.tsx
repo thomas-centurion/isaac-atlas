@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { registerSchema } from '@isaac-atlas/shared';
-import { ProviderButtons } from '../auth/ProviderButtons';
+import { SocialLogin } from '../auth/SocialLogin';
 import styles from '../auth/auth.module.css';
 import { errorMessage, fieldErrors } from '../auth/errors';
 import { useMe, useRegister } from '../auth/useAuth';
@@ -69,8 +69,7 @@ export function Register() {
         </Button>
       </form>
 
-      <p className={styles.divider}>{t('auth.or')}</p>
-      <ProviderButtons />
+      <SocialLogin />
 
       <div className={styles.links}>
         <Link to="/login">{t('auth.haveAccount')}</Link>
