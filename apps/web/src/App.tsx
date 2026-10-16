@@ -1,20 +1,15 @@
-import { useEffect, useState } from 'react';
-import { healthResponseSchema, type HealthResponse } from '@isaac-atlas/shared';
+import { Route, Routes } from 'react-router-dom';
+import { Layout } from './layout/Layout';
+import { Design } from './pages/Design';
+import { Home } from './pages/Home';
 
 export function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => r.json())
-      .then((data) => setHealth(healthResponseSchema.parse(data)))
-      .catch(() => setHealth(null));
-  }, []);
-
   return (
-    <main>
-      <h1>Isaac Atlas</h1>
-      <p>API: {health ? `ok · db ${health.db}` : 'sin conexión'}</p>
-    </main>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="design" element={<Design />} />
+      </Route>
+    </Routes>
   );
 }

@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Isaac Atlas",
+    "tagline": "Seed and synergy logbook"
+  },
+  "nav": {
+    "home": "Home",
+    "design": "Design",
+    "language": "Language"
+  },
+  "verdict": {
+    "op": "OP",
+    "troll": "Troll",
+    "hard": "Hard"
+  },
+  "sort": {
+    "hot": "Hot",
+    "top": "Top",
+    "new": "New"
+  },
+  "home": {
+    "title": "All your runs, in one place",
+    "body": "Log the seed, character and key items of every run. Search for seeds with the synergy you want to play and vote for the most destructive ones.",
+    "cta": "See the design system"
+  },
+  "design": {
+    "title": "Design system",
+    "intro": "The site's base components. All plain CSS.",
+    "buttons": "Buttons",
+    "fields": "Fields",
+    "seedLabel": "Seed",
+    "seedHint": "8 characters, no I, O, U or 5",
+    "seedError": "That seed is not valid",
+    "badges": "Community tags",
+    "tabs": "Tabs",
+    "items": "Items",
+    "trinkets": "Trinkets"
+  },
+  "button": {
+    "primary": "Save run",
+    "secondary": "Cancel",
+    "danger": "Delete"
+  },
+  "footer": {
+    "visitors": "Visitor no.",
+    "legal": "Non-profit fan site. The Binding of Isaac and its sprites belong to Edmund McMillen and Nicalis, Inc."
+  }
+}

@@ -1,0 +1,113 @@
+@import '@fontsource/press-start-2p/400.css';
+@import '@fontsource/vt323/400.css';
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  cursor: var(--cursor-default);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.25;
+  /* Fondo: sótano con líneas de escaneo suaves, todo en CSS */
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 3px, rgb(0 0 0 / 0.18) 3px 4px),
+    radial-gradient(ellipse at 50% 0%, #2b1a14 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 0 0 var(--space-4);
+  text-shadow: 2px 2px 0 var(--line-dark);
+}
+h1 {
+  font-size: 1.1rem;
+  color: var(--gold);
+}
+h2 {
+  font-size: 0.8rem;
+  color: var(--blood-bright);
+}
+h3 {
+  font-size: 0.65rem;
+  color: var(--ink);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+a {
+  color: var(--tear);
+  cursor: var(--cursor-pointer);
+}
+a:hover {
+  color: var(--gold);
+}
+
+button,
+select,
+[role='tab'],
+label {
+  cursor: var(--cursor-pointer);
+}
+input {
+  cursor: text;
+}
+
+img,
+.pixelated {
+  image-rendering: pixelated;
+}
+
+::selection {
+  background: var(--blood);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px dashed var(--gold);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Pestaña en segundo plano: se pausan todas las animaciones (ver usePageVisibility) */
+:root[data-hidden='true'] *,
+:root[data-hidden='true'] *::before,
+:root[data-hidden='true'] *::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,58 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  color: var(--ink-dim);
+}
+
+.input {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--ink);
+  background: var(--bg-0);
+  border: 0;
+  padding: var(--space-2) var(--space-3);
+  box-shadow:
+    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
+    0 0 0 var(--px) var(--line-dark),
+    0 0 0 calc(var(--px) * 2) var(--line);
+  margin: calc(var(--px) * 2);
+}
+
+.input::placeholder {
+  color: var(--ink-dim);
+  opacity: 0.6;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow:
+    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
+    0 0 0 var(--px) var(--line-dark),
+    0 0 0 calc(var(--px) * 2) var(--gold);
+}
+
+.invalid {
+  box-shadow:
+    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
+    0 0 0 var(--px) var(--line-dark),
+    0 0 0 calc(var(--px) * 2) var(--blood-bright);
+}
+
+.hint,
+.error {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.hint {
+  color: var(--ink-dim);
+}
+.error {
+  color: var(--blood-bright);
+}

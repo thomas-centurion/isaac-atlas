@@ -1,0 +1,133 @@
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-6) 0 var(--space-4);
+  border-bottom: var(--px) solid var(--line-dark);
+  box-shadow: 0 var(--px) 0 0 var(--line);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--blood-bright);
+  text-shadow:
+    3px 3px 0 var(--line-dark),
+    0 0 12px rgb(224 64 50 / 0.5);
+  animation: flicker 4s steps(1) infinite;
+}
+
+.tagline {
+  color: var(--ink-dim);
+  font-size: 1rem;
+}
+
+.nav {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.nav a {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  color: var(--ink);
+  text-decoration: none;
+  padding: var(--space-2);
+}
+
+.nav a:hover {
+  color: var(--gold);
+}
+
+.nav a.active {
+  color: var(--gold);
+  box-shadow: inset 0 calc(var(--px) * -1) 0 0 var(--blood);
+}
+
+.langs {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.langs button {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  color: var(--ink-dim);
+  background: var(--bg-0);
+  border: 0;
+  padding: var(--space-2);
+  box-shadow: 0 0 0 var(--px) var(--line-dark);
+  margin: var(--px);
+}
+
+.langs button.langActive {
+  color: var(--gold);
+  background: var(--panel-raised);
+}
+
+.main {
+  padding: var(--space-6) 0;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0 var(--space-6);
+  border-top: var(--px) solid var(--line-dark);
+  box-shadow: 0 calc(var(--px) * -1) 0 0 var(--line);
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+}
+
+.footer p {
+  margin: 0;
+  max-width: 60ch;
+}
+
+/* Contador de visitas falso, estilo años 2000 */
+.counter span {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  color: var(--good);
+  background: #000;
+  padding: var(--space-1) var(--space-2);
+  box-shadow: 0 0 0 2px var(--line);
+  letter-spacing: 2px;
+}
+
+@keyframes flicker {
+  0%,
+  92%,
+  96%,
+  100% {
+    opacity: 1;
+  }
+  94%,
+  98% {
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+}

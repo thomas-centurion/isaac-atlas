@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Isaac Atlas",
+    "tagline": "Bitácora de seeds y sinergias"
+  },
+  "nav": {
+    "home": "Inicio",
+    "design": "Diseño",
+    "language": "Idioma"
+  },
+  "verdict": {
+    "op": "OP",
+    "troll": "Troll",
+    "hard": "Difícil"
+  },
+  "sort": {
+    "hot": "Populares",
+    "top": "Mejores",
+    "new": "Nuevas"
+  },
+  "home": {
+    "title": "Todas tus runs, en un solo lugar",
+    "body": "Registrá la seed, el personaje y los ítems clave de cada partida. Buscá seeds con la sinergia que querés jugar y votá las más destructivas.",
+    "cta": "Ver el sistema de diseño"
+  },
+  "design": {
+    "title": "Sistema de diseño",
+    "intro": "Los componentes base de la web. Todo en CSS puro.",
+    "buttons": "Botones",
+    "fields": "Campos",
+    "seedLabel": "Seed",
+    "seedHint": "8 caracteres, sin I, O, U ni 5",
+    "seedError": "Esa seed no es válida",
+    "badges": "Etiquetas de la comunidad",
+    "tabs": "Pestañas",
+    "items": "Ítems",
+    "trinkets": "Trinkets"
+  },
+  "button": {
+    "primary": "Guardar run",
+    "secondary": "Cancelar",
+    "danger": "Borrar"
+  },
+  "footer": {
+    "visitors": "Visitante n.º",
+    "legal": "Fan site sin fines de lucro. The Binding of Isaac y sus sprites pertenecen a Edmund McMillen y Nicalis, Inc."
+  }
+}

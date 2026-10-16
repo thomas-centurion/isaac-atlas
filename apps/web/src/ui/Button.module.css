@@ -1,0 +1,49 @@
+.button {
+  --bg: var(--panel-raised);
+  --bg-hover: var(--line);
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  color: var(--ink);
+  background: var(--bg);
+  border: 0;
+  padding: var(--space-3) var(--space-4);
+  /* Borde pixelado con esquinas cortadas, solo box-shadow */
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--line-dark),
+    0 var(--px) 0 0 var(--line-dark),
+    calc(var(--px) * -1) 0 0 0 var(--line-dark),
+    var(--px) 0 0 0 var(--line-dark),
+    inset 0 calc(var(--px) * -1) 0 0 rgb(0 0 0 / 0.35),
+    inset 0 var(--px) 0 0 rgb(255 255 255 / 0.12);
+  margin: var(--px);
+  text-shadow: 2px 2px 0 var(--line-dark);
+  transition: transform 80ms steps(2);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--bg-hover);
+  transform: translateY(-2px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.primary {
+  --bg: var(--blood);
+  --bg-hover: var(--blood-bright);
+}
+
+.secondary {
+  --bg: var(--panel-raised);
+}
+
+.danger {
+  --bg: #5a1612;
+  --bg-hover: var(--blood);
+}
