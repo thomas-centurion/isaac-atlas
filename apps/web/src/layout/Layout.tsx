@@ -44,6 +44,14 @@ export function Layout() {
               >
                 {t('nav.myRuns')}
               </NavLink>
+              {user.role === 'admin' ? (
+                <NavLink
+                  to="/admin"
+                  className={({ isActive }) => (isActive ? styles.active : undefined)}
+                >
+                  {t('nav.admin')}
+                </NavLink>
+              ) : null}
               <NavLink
                 to="/account"
                 className={({ isActive }) => (isActive ? styles.active : undefined)}

@@ -8,6 +8,7 @@ import {
   type RunResult,
   type VerdictKind,
 } from './runs';
+import { usernameSchema } from './auth';
 import { isValidSeedFormat, normalizeSeed } from './seed';
 
 export const MAX_FILTER_ITEMS = 10;
@@ -51,6 +52,8 @@ export const runSearchSchema = z.object({
     .optional(),
   /** Solo runs que la comunidad marcó como OP / Troll / Hard. */
   verdict: verdictKindSchema.optional(),
+  /** Solo runs de este usuario (perfil público). */
+  author: usernameSchema.optional(),
   sort: sortModeSchema.default(DEFAULT_SORT),
   cursor: z.string().max(200).optional(),
   limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
@@ -90,6 +93,7 @@ export interface SearchFilters {
   items: number[];
   exclude: number[];
   seed?: string;
+  author?: string;
   verdict?: VerdictKind;
   sort: SortMode;
 }
@@ -112,6 +116,7 @@ export function filtersToParams(filters: SearchFilters): URLSearchParams {
   if (filters.exclude.length) params.set('exclude', filters.exclude.join(','));
   if (filters.seed) params.set('seed', filters.seed);
   if (filters.verdict) params.set('verdict', filters.verdict);
+  if (filters.author) params.set('author', filters.author);
   // El orden por defecto no viaja en la URL.
   if (filters.sort !== DEFAULT_SORT) params.set('sort', filters.sort);
   return params;
@@ -131,6 +136,7 @@ export function filtersFromParams(params: URLSearchParams): SearchFilters {
     exclude,
     seed,
     verdict,
+    author,
     sort,
   } = parsed.data;
   return {
@@ -143,6 +149,7 @@ export function filtersFromParams(params: URLSearchParams): SearchFilters {
     exclude,
     ...(seed ? { seed } : {}),
     ...(verdict ? { verdict } : {}),
+    ...(author ? { author } : {}),
     sort,
   };
 }

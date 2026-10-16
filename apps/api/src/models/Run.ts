@@ -38,6 +38,8 @@ export interface RunAttrs {
   author: Types.ObjectId;
   /** Contadores desnormalizados: el ranking se lee con un solo documento, sin agregar votos. */
   stats: RunStatsAttrs;
+  /** Reportes abiertos: al llegar a REPORT_HIDE_THRESHOLD la run sale de las listas públicas. */
+  reportCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -82,6 +84,7 @@ const runSchema = new Schema<RunAttrs>(
     },
     notes: { type: String, default: '' },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    reportCount: { type: Number, default: 0 },
     stats: {
       up: { type: Number, default: 0 },
       down: { type: Number, default: 0 },

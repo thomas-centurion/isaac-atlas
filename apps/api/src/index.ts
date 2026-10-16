@@ -4,6 +4,7 @@ import { createApp } from './app.js';
 import { config } from './config.js';
 import { EmailToken } from './models/EmailToken.js';
 import { DailyPick, Verdict, Vote } from './models/Reactions.js';
+import { Report } from './models/Report.js';
 import { Run } from './models/Run.js';
 import { User } from './models/User.js';
 
@@ -18,6 +19,7 @@ await Promise.all([
   Vote.init(),
   Verdict.init(),
   DailyPick.init(),
+  Report.init(),
 ]);
 
 const sessionStore = MongoStore.create({

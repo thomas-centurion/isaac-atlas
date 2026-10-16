@@ -1,0 +1,40 @@
+# Ejemplo para correr todo en un servidor propio (VPS) con Docker:
+#
+#   cp .env.example .env.production      # y completar (ver docs/DEPLOY.md)
+#   docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+#
+# Delante hace falta un proxy con HTTPS (Caddy, Nginx, Traefik…) que apunte al puerto 4000: las
+# cookies de sesión son `Secure` en producción.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/isaac-atlas
+      WEB_ORIGIN: ${WEB_ORIGIN:?definí WEB_ORIGIN (https://tu-dominio)}
+      SESSION_SECRET: ${SESSION_SECRET:?definí SESSION_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      STEAM_API_KEY: ${STEAM_API_KEY:-}
+      SMTP_URL: ${SMTP_URL:-}
+      MAIL_FROM: ${MAIL_FROM:-Isaac Atlas <no-reply@example.com>}
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mongo-data:

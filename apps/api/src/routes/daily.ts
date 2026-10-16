@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import type { Types } from 'mongoose';
-import type { DailyResponse } from '@isaac-atlas/shared';
+import { REPORT_HIDE_THRESHOLD, type DailyResponse } from '@isaac-atlas/shared';
 import { asyncHandler } from '../http.js';
 import { currentUser } from '../middleware.js';
 import { DailyPick } from '../models/Reactions.js';
 import { Run, type RunDocument } from '../models/Run.js';
-import { attachViewer, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
+import { VISIBLE_RUNS, attachViewer, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
 
 const CANDIDATE_WINDOW_DAYS = 30;
 const NO_REPEAT_DAYS = 14;
@@ -28,15 +28,16 @@ async function choose(now: Date): Promise<Types.ObjectId | null> {
   const best = { 'stats.wilson': -1, createdAt: -1, _id: -1 } as const;
 
   const fresh = await Run.findOne({
+    ...VISIBLE_RUNS,
     _id: { $nin: recentIds },
     createdAt: { $gte: new Date(now.getTime() - CANDIDATE_WINDOW_DAYS * DAY_MS) },
   }).sort(best);
   if (fresh) return fresh._id;
 
   // Poca actividad: se amplía a runs más viejas y, si ya se usaron todas, se repite alguna.
-  const older = await Run.findOne({ _id: { $nin: recentIds } }).sort(best);
+  const older = await Run.findOne({ ...VISIBLE_RUNS, _id: { $nin: recentIds } }).sort(best);
   if (older) return older._id;
-  const any = await Run.findOne().sort(best);
+  const any = await Run.findOne(VISIBLE_RUNS).sort(best);
   return any?._id ?? null;
 }
 
@@ -44,8 +45,8 @@ async function dailyRun(date: string, now: Date): Promise<RunDocument | null> {
   const existing = await DailyPick.findOne({ date });
   if (existing) {
     const run = await loadPopulated(existing.runId);
-    if (run) return run;
-    // La run elegida fue borrada: se vuelve a elegir.
+    if (run && (run.reportCount ?? 0) < REPORT_HIDE_THRESHOLD) return run;
+    // La run elegida fue borrada o quedó oculta por reportes: se vuelve a elegir.
     await DailyPick.deleteOne({ date });
   }
 

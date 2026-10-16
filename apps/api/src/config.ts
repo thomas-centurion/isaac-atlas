@@ -22,6 +22,21 @@ const envSchema = z
     GOOGLE_CLIENT_SECRET: optional,
     /** Solo para traer avatar/nombre de Steam; el login no la necesita. */
     STEAM_API_KEY: optional,
+    /** Carpeta del build de la web (apps/web/dist). Si existe, la API la sirve (un solo origen). */
+    WEB_DIST: optional,
+    /**
+     * Cantidad de proxies delante de la API (hosting = 1; Cloudflare + hosting = 2). Si está mal,
+     * la API no ve el HTTPS original y no emite la cookie de sesión.
+     */
+    TRUST_PROXY: z.coerce.number().int().min(0).default(1),
+    /**
+     * Fuerza el atributo Secure de la cookie de sesión. Por defecto es true en producción.
+     * Poné false SOLO para probar un build de producción por http local.
+     */
+    COOKIE_SECURE: z
+      .enum(['true', 'false'])
+      .optional()
+      .transform((v) => (v === undefined ? undefined : v === 'true')),
     SMTP_URL: optional,
     MAIL_FROM: z.string().default('Isaac Atlas <no-reply@isaac-atlas.local>'),
     RATE_LIMIT_DISABLED: z

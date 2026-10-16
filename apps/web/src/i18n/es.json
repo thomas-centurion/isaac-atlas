@@ -8,6 +8,7 @@
     "design": "Diseño",
     "newRun": "Nueva run",
     "myRuns": "Mis runs",
+    "admin": "Moderación",
     "language": "Idioma"
   },
   "verdict": {
@@ -42,6 +43,38 @@
     "sortBy": "Ordenar por",
     "daily": "Seed del día",
     "dailyHint": "La mejor run reciente según la comunidad. Cambia cada día."
+  },
+  "report": {
+    "open": "Reportar",
+    "title": "Reportar esta run",
+    "reason": "Motivo",
+    "details": "Detalles (opcional)",
+    "send": "Enviar reporte",
+    "sent": "Gracias, recibimos tu reporte. Un moderador lo va a revisar.",
+    "reasons": {
+      "spam": "Spam o publicidad",
+      "offensive": "Contenido ofensivo",
+      "wrong_seed": "La seed no corresponde a lo que dice",
+      "other": "Otro motivo"
+    }
+  },
+  "profile": {
+    "notFound": "No existe ese usuario.",
+    "joined": "Miembro desde {{date}}",
+    "runs_one": "{{count}} run",
+    "runs_other": "{{count}} runs",
+    "upvotes_one": "{{count}} voto a favor",
+    "upvotes_other": "{{count}} votos a favor",
+    "runsTitle": "Runs",
+    "noRuns": "Todavía no publicó ninguna run."
+  },
+  "admin": {
+    "title": "Moderación",
+    "intro": "Reportes abiertos. Descartar devuelve la run a las listas; quitar la borra. La decisión vale para todos los reportes de esa run.",
+    "empty": "No hay reportes pendientes.",
+    "reportedBy": "reportado por {{user}}",
+    "dismiss": "Descartar",
+    "remove": "Quitar run"
   },
   "react": {
     "votes": "Votos",
@@ -141,6 +174,7 @@
     "last_login_method": "No podés desvincular tu único método de acceso.",
     "rate_limited": "Demasiados intentos. Probá de nuevo en unos minutos.",
     "not_found": "No encontrado.",
+    "already_reported": "Ya reportaste esta run.",
     "oauth_failed": "No pudimos completar el inicio de sesión. Probá de nuevo.",
     "internal": "Algo salió mal. Probá de nuevo."
   },
@@ -186,7 +220,7 @@
     "copied": "¡Copiada!",
     "unlocksFull": "Todo desbloqueado",
     "unlocksPartial": "Desbloqueos parciales",
-    "by": "por {{user}}",
+    "byPrefix": "por",
     "delete": "Borrar run",
     "confirmDelete": "¿Seguro? No se puede deshacer.",
     "deleteYes": "Sí, borrar",

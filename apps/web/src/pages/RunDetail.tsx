@@ -8,6 +8,7 @@ import { useMe } from '../auth/useAuth';
 import { useLang } from '../hooks/useLang';
 import { FloorGroups } from '../runs/FloorGroups';
 import { characterLabel } from '../runs/labels';
+import { ReportRun } from '../runs/ReportRun';
 import { VoteControls } from '../runs/VoteControls';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -73,7 +74,7 @@ export function RunDetail() {
           <Link to={`/seeds/${run.seed}`}>{t('run.allRunsOfSeed')}</Link>
         </p>
         <p className={styles.meta}>
-          {t('run.by', { user: run.author.username })} ·{' '}
+          {t('run.byPrefix')} <Link to={`/u/${run.author.username}`}>{run.author.username}</Link> ·{' '}
           {new Date(run.createdAt).toLocaleDateString(lang)}
         </p>
         {run.notes ? <p className={styles.notes}>{run.notes}</p> : null}
@@ -82,6 +83,12 @@ export function RunDetail() {
       <Panel title={t('run.itemsTitle')}>
         <FloorGroups items={run.items} trinkets={run.trinkets} />
       </Panel>
+
+      {!isOwner ? (
+        <Panel>
+          <ReportRun run={run} />
+        </Panel>
+      ) : null}
 
       {isOwner ? (
         <Panel>

@@ -3,7 +3,7 @@ import { isValidSeedFormat, normalizeSeed, type SeedSummary } from '@isaac-atlas
 import { HttpError, asyncHandler } from '../http.js';
 import { currentUser } from '../middleware.js';
 import { Run, type RunDocument } from '../models/Run.js';
-import { attachViewer, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
+import { VISIBLE_RUNS, attachViewer, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
 
 const SEED_RUNS_LIMIT = 50;
 const TOP_ITEMS_LIMIT = 12;
@@ -18,22 +18,22 @@ seedsRouter.get(
     if (!isValidSeedFormat(seed)) throw new HttpError('not_found');
 
     const [runCount, characters, topItems, runs] = await Promise.all([
-      Run.countDocuments({ seed }),
+      Run.countDocuments({ seed, ...VISIBLE_RUNS }),
       Run.aggregate<{ _id: number; count: number }>([
-        { $match: { seed } },
+        { $match: { seed, ...VISIBLE_RUNS } },
         { $group: { _id: '$characterId', count: { $sum: 1 } } },
         { $sort: { count: -1, _id: 1 } },
       ]),
       // Cuenta runs (no copias): un ítem repetido en una run suma una sola vez.
       Run.aggregate<{ _id: number; count: number }>([
-        { $match: { seed } },
+        { $match: { seed, ...VISIBLE_RUNS } },
         { $project: { ids: { $setUnion: ['$items.itemId', []] } } },
         { $unwind: '$ids' },
         { $group: { _id: '$ids', count: { $sum: 1 } } },
         { $sort: { count: -1, _id: 1 } },
         { $limit: TOP_ITEMS_LIMIT },
       ]),
-      Run.find({ seed })
+      Run.find({ seed, ...VISIBLE_RUNS })
         .sort({ createdAt: -1, _id: -1 })
         .limit(SEED_RUNS_LIMIT)
         .populate<{ author: PopulatedAuthor }>('author', 'username'),

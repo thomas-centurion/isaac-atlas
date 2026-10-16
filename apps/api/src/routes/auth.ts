@@ -32,7 +32,8 @@ import {
 import { consumeToken, issueToken } from '../auth/tokens.js';
 import { config } from '../config.js';
 import { HttpError, asyncHandler, parseBody } from '../http.js';
-import { authLimiter, currentUser, requireAuth } from '../middleware.js';
+import { authLimiter } from '../limiters.js';
+import { currentUser, requireAuth } from '../middleware.js';
 import { User, type UserDocument } from '../models/User.js';
 
 const SESSION_COOKIE = 'isaac.sid';

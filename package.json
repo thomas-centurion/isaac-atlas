@@ -19,7 +19,8 @@
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "catalog": "tsx --env-file=.env scripts/build-catalog.ts"
+    "catalog": "tsx --env-file=.env scripts/build-catalog.ts",
+    "make-admin": "tsx --env-file=.env scripts/make-admin.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

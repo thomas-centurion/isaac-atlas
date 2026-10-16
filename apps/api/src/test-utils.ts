@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { config } from './config.js';
 import { EmailToken } from './models/EmailToken.js';
 import { DailyPick, Verdict, Vote } from './models/Reactions.js';
+import { Report } from './models/Report.js';
 import { Run } from './models/Run.js';
 import { User } from './models/User.js';
 
@@ -18,6 +19,7 @@ export async function connectTestDb() {
     Vote.init(),
     Verdict.init(),
     DailyPick.init(),
+    Report.init(),
   ]);
   store = MongoStore.create({
     client: mongoose.connection.getClient(),
@@ -34,6 +36,7 @@ export async function resetTestDb() {
     Vote.deleteMany({}),
     Verdict.deleteMany({}),
     DailyPick.deleteMany({}),
+    Report.deleteMany({}),
     EmailToken.deleteMany({}),
     mongoose.connection.collection('sessions').deleteMany({}),
   ]);

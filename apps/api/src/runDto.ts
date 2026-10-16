@@ -1,8 +1,9 @@
 import { isValidObjectId, type Types } from 'mongoose';
-import type { Run as RunDto } from '@isaac-atlas/shared';
+import { REPORT_HIDE_THRESHOLD, type Run as RunDto } from '@isaac-atlas/shared';
 import { HttpError } from './http.js';
 import { Run, type RunDocument } from './models/Run.js';
 import { Verdict, Vote } from './models/Reactions.js';
+import { Report } from './models/Report.js';
 import type { UserDocument } from './models/User.js';
 
 export type PopulatedAuthor = Pick<UserDocument, 'username'> & { _id: Types.ObjectId };
@@ -78,4 +79,29 @@ export async function loadRun(id: string): Promise<{ run: RunDocument; author: P
   const run = await Run.findById(id).populate<{ author: PopulatedAuthor }>('author', 'username');
   if (!run || !run.author) throw new HttpError('not_found');
   return { run: run as unknown as RunDocument, author: run.author };
+}
+
+/**
+ * Filtro de runs públicas: las que acumularon REPORT_HIDE_THRESHOLD reportes abiertos quedan
+ * ocultas en listas, perfiles y seed del día hasta que un moderador las revise. `$not $gte`
+ * también cubre las runs viejas sin el campo.
+ */
+export const VISIBLE_RUNS = {
+  reportCount: { $not: { $gte: REPORT_HIDE_THRESHOLD } },
+} as const;
+
+/**
+ * Borra una run con todo lo que cuelga de ella (votos y veredictos). Los reportes se borran
+ * salvo que se pida conservarlos: tras una remoción de moderación quedan como constancia.
+ */
+export async function deleteRunCascade(
+  runId: Types.ObjectId,
+  { keepReports = false }: { keepReports?: boolean } = {},
+): Promise<void> {
+  await Promise.all([
+    Run.deleteOne({ _id: runId }),
+    Vote.deleteMany({ runId }),
+    Verdict.deleteMany({ runId }),
+    ...(keepReports ? [] : [Report.deleteMany({ runId })]),
+  ]);
 }

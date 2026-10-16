@@ -60,8 +60,8 @@ export function RunCard({ run, showAuthor = true, highlight = [] }: RunCardProps
         <VoteControls run={run} />
         {showAuthor ? (
           <span className={styles.meta}>
-            {t('run.by', { user: run.author.username })} ·{' '}
-            {new Date(run.createdAt).toLocaleDateString(lang)}
+            {t('run.byPrefix')} <Link to={`/u/${run.author.username}`}>{run.author.username}</Link>{' '}
+            · {new Date(run.createdAt).toLocaleDateString(lang)}
           </span>
         ) : null}
       </div>

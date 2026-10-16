@@ -8,6 +8,7 @@
     "design": "Design",
     "newRun": "New run",
     "myRuns": "My runs",
+    "admin": "Moderation",
     "language": "Language"
   },
   "verdict": {
@@ -42,6 +43,38 @@
     "sortBy": "Sort by",
     "daily": "Seed of the day",
     "dailyHint": "The best recent run according to the community. It changes every day."
+  },
+  "report": {
+    "open": "Report",
+    "title": "Report this run",
+    "reason": "Reason",
+    "details": "Details (optional)",
+    "send": "Send report",
+    "sent": "Thanks, we got your report. A moderator will review it.",
+    "reasons": {
+      "spam": "Spam or advertising",
+      "offensive": "Offensive content",
+      "wrong_seed": "The seed is not what it claims",
+      "other": "Other reason"
+    }
+  },
+  "profile": {
+    "notFound": "That user does not exist.",
+    "joined": "Member since {{date}}",
+    "runs_one": "{{count}} run",
+    "runs_other": "{{count}} runs",
+    "upvotes_one": "{{count}} upvote",
+    "upvotes_other": "{{count}} upvotes",
+    "runsTitle": "Runs",
+    "noRuns": "They have not published any runs yet."
+  },
+  "admin": {
+    "title": "Moderation",
+    "intro": "Open reports. Dismiss puts the run back in the lists; remove deletes it. The decision applies to every report of that run.",
+    "empty": "There are no pending reports.",
+    "reportedBy": "reported by {{user}}",
+    "dismiss": "Dismiss",
+    "remove": "Remove run"
   },
   "react": {
     "votes": "Votes",
@@ -141,6 +174,7 @@
     "last_login_method": "You cannot unlink your only way to log in.",
     "rate_limited": "Too many attempts. Try again in a few minutes.",
     "not_found": "Not found.",
+    "already_reported": "You already reported this run.",
     "oauth_failed": "We could not complete the login. Please try again.",
     "internal": "Something went wrong. Please try again."
   },
@@ -186,7 +220,7 @@
     "copied": "Copied!",
     "unlocksFull": "Fully unlocked",
     "unlocksPartial": "Partial unlocks",
-    "by": "by {{user}}",
+    "byPrefix": "by",
     "delete": "Delete run",
     "confirmDelete": "Are you sure? This cannot be undone.",
     "deleteYes": "Yes, delete",

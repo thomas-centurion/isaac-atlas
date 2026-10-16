@@ -30,6 +30,7 @@ export function toPublicUser(user: UserDocument): PublicUser {
     emailVerified: user.emailVerified,
     avatar: user.avatar ?? null,
     hasPassword: Boolean(user.passwordHash),
+    role: user.role ?? 'user',
     identities: user.identities.map((i) => ({
       provider: i.provider,
       linkedAt: i.linkedAt.toISOString(),

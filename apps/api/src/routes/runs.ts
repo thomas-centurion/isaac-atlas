@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import type { FilterQuery, SortOrder } from 'mongoose';
-import { rateLimit } from 'express-rate-limit';
 import {
   MIN_VERDICT_VOTES,
   runInputSchema,
@@ -9,30 +8,23 @@ import {
   type RunInput,
   type RunSearchResponse,
 } from '@isaac-atlas/shared';
-import { config } from '../config.js';
 import { decodeCursor, encodeCursor } from '../cursor.js';
-import { HttpError, asyncHandler, parseBody, sendError } from '../http.js';
+import { HttpError, asyncHandler, parseBody } from '../http.js';
+import { writeLimiter } from '../limiters.js';
 import { currentUser, requireAuth, requireUsername } from '../middleware.js';
-import { Verdict, Vote } from '../models/Reactions.js';
 import { Run, type RunAttrs, type RunDocument } from '../models/Run.js';
+import { User } from '../models/User.js';
 import { hotScore } from '../ranking.js';
 import {
+  VISIBLE_RUNS,
   attachViewer,
   authorDto,
+  deleteRunCascade,
   loadRun,
   populatedToDtos,
   toRunDto,
   type PopulatedAuthor,
 } from '../runDto.js';
-
-const writeLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  limit: 60,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  skip: () => config.RATE_LIMIT_DISABLED,
-  handler: (_req, res) => sendError(res, 'rate_limited'),
-});
 
 const fieldsFrom = (input: RunInput) => ({
   seed: input.seed,
@@ -54,7 +46,12 @@ runsRouter.get(
   asyncHandler(async (req, res) => {
     const q = parseBody(runSearchSchema, req.query);
 
-    const filter: FilterQuery<RunAttrs> = {};
+    const filter: FilterQuery<RunAttrs> = { ...VISIBLE_RUNS };
+    if (q.author) {
+      // Un autor inexistente no es un error: simplemente no tiene runs.
+      const author = await User.findOne({ usernameLower: q.author.toLowerCase() }, '_id');
+      filter.author = author ? author._id : { $in: [] };
+    }
     if (q.character !== undefined) filter.characterId = q.character;
     if (q.difficulty) filter.difficulty = q.difficulty;
     if (q.result) filter['outcome.result'] = q.result;
@@ -194,12 +191,7 @@ runsRouter.delete(
     const user = currentUser(req)!;
     const { run, author } = await loadRun(String(req.params.id));
     if (String(author._id) !== user.id) throw new HttpError('forbidden');
-    await Promise.all([
-      run.deleteOne(),
-      // Los votos y veredictos de una run borrada no deben quedar huérfanos.
-      Vote.deleteMany({ runId: run._id }),
-      Verdict.deleteMany({ runId: run._id }),
-    ]);
+    await deleteRunCascade(run._id);
     res.status(204).end();
   }),
 );

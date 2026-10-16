@@ -1,23 +1,12 @@
 import { Router } from 'express';
-import { rateLimit } from 'express-rate-limit';
 import { verdictInputSchema, voteInputSchema, type VerdictKind } from '@isaac-atlas/shared';
-import { config } from '../config.js';
-import { HttpError, asyncHandler, parseBody, sendError } from '../http.js';
+import { HttpError, asyncHandler, parseBody } from '../http.js';
+import { reactionLimiter } from '../limiters.js';
 import { currentUser, requireAuth, requireUsername } from '../middleware.js';
 import { Verdict, Vote } from '../models/Reactions.js';
 import { Run, type RunDocument } from '../models/Run.js';
 import { hotScore, wilsonLowerBound } from '../ranking.js';
 import { attachViewer, authorDto, loadRun, toRunDto } from '../runDto.js';
-
-// Votar es una acción de uso normal (se recorren muchas runs): límite más holgado que el de crear.
-const reactionLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  limit: 600,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  skip: () => config.RATE_LIMIT_DISABLED,
-  handler: (_req, res) => sendError(res, 'rate_limited'),
-});
 
 /**
  * Suma `inc` a los contadores de la run y recalcula Wilson y hot a partir de los totales

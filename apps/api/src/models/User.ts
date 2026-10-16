@@ -16,6 +16,8 @@ export interface UserAttrs {
   passwordHash?: string;
   identities: UserIdentity[];
   avatar?: string;
+  /** `admin` se asigna a mano (npm run make-admin): modera reportes. */
+  role: 'user' | 'admin';
   createdAt: Date;
 }
 
@@ -36,6 +38,7 @@ const userSchema = new Schema<UserAttrs>({
   passwordHash: String,
   identities: { type: [identitySchema], default: [] },
   avatar: String,
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   createdAt: { type: Date, default: Date.now },
 });
 

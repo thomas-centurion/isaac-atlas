@@ -8,10 +8,14 @@ import {
 import {
   dailyResponseSchema,
   filtersToParams,
+  profileSchema,
+  reportsResponseSchema,
   runResponseSchema,
   runSearchResponseSchema,
   runsResponseSchema,
   seedSummarySchema,
+  type ReportInput,
+  type ResolveAction,
   type Run,
   type RunDraftInput,
   type SearchFilters,
@@ -164,6 +168,44 @@ export function useDeleteRun() {
       qc.removeQueries({ queryKey: keys.one(id) });
       void qc.invalidateQueries({ queryKey: keys.all });
       void qc.invalidateQueries({ queryKey: ['seeds'] });
+    },
+  });
+}
+
+export function useProfile(username: string | undefined) {
+  return useQuery({
+    queryKey: ['users', username ?? ''] as const,
+    enabled: Boolean(username),
+    queryFn: async () => profileSchema.parse(await api(`/users/${encodeURIComponent(username!)}`)),
+  });
+}
+
+export function useReportRun() {
+  return useMutation({
+    mutationFn: ({ runId, ...input }: { runId: string } & ReportInput) =>
+      api(`/runs/${runId}/report`, { method: 'POST', body: input }),
+  });
+}
+
+export function useAdminReports(enabled: boolean) {
+  return useQuery({
+    queryKey: ['admin', 'reports'] as const,
+    enabled,
+    queryFn: async () => reportsResponseSchema.parse(await api('/admin/reports')).reports,
+  });
+}
+
+export function useResolveReport() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ reportId, action }: { reportId: string; action: ResolveAction }) =>
+      api(`/admin/reports/${reportId}/resolve`, { method: 'POST', body: { action } }),
+    onSuccess: () => {
+      // Resolver puede devolver una run a las listas o borrarla.
+      void qc.invalidateQueries({ queryKey: ['admin', 'reports'] });
+      void qc.invalidateQueries({ queryKey: ['runs'] });
+      void qc.invalidateQueries({ queryKey: ['seeds'] });
+      void qc.invalidateQueries({ queryKey: ['daily'] });
     },
   });
 }

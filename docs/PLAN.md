@@ -176,6 +176,16 @@ GET    /api/daily                    GET    /api/users/:username
 - **Web:** votos optimistas con rollback si falla; al terminar se reemplaza por lo que respondió el servidor (la run no salta de lugar mientras se mira).
 - Al borrar una run se borran sus votos y veredictos.
 
+## 7e. Decisiones de implementación (fase 7)
+
+- **Perfil público** (`/u/:username`): solo username, fecha de alta y totales recibidos. **No** expone email ni avatar (la foto de Google/Steam es un dato personal que el usuario no eligió publicar). Las runs se listan con `GET /api/runs?author=`.
+- **Reportes:** uno por usuario y run, no se puede reportar la propia. Con `REPORT_HIDE_THRESHOLD` (3) reportes abiertos la run sale de listas, seeds, perfil y seed del día (sigue accesible por link y en "Mis runs"). Un moderador descarta (todos los reportes de esa run) o la quita (los reportes quedan como constancia).
+- **Rol `admin`** solo por script (`npm run make-admin -- <username>`): no hay forma de pedirlo desde la web.
+- **Rate limiting** (`limiters.ts`): techo general por IP, auth por IP, y escritura/votos/reportes **por cuenta** (una IP compartida no bloquea a los demás). Se guarda en memoria: vale con una sola instancia.
+- **Deploy:** la API sirve la web compilada (un solo origen). CSP de helmet ampliada solo para los avatares de Google/Steam. Dockerfile multi-etapa verificado (corre como usuario no-root, healthcheck). Guía en `docs/DEPLOY.md`.
+- **Cookie de sesión:** detrás de un proxy TLS necesita `TRUST_PROXY` bien configurado; si no, no se emite (se descubrió al probar el contenedor).
+- Fuera de alcance (quedó documentado): borrado de cuenta/export de datos, edición de runs desde la web (la API ya lo soporta), importar unlocks desde Steam, comentarios y retos semanales.
+
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 
 - **Fase 1**: ruta de instalación del juego para extraer recursos con el ResourceExtractor.

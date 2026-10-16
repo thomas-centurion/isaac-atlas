@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom';
 import { RequireAuth } from './auth/RequireAuth';
 import { Layout } from './layout/Layout';
 import { Account } from './pages/Account';
+import { Admin } from './pages/Admin';
+import { Profile } from './pages/Profile';
 import { Design } from './pages/Design';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { Search } from './pages/Search';
@@ -21,6 +23,8 @@ export function App() {
       <Route element={<Layout />}>
         <Route index element={<Search />} />
         <Route path="seeds/:seed" element={<SeedPage />} />
+        <Route path="u/:username" element={<Profile />} />
+        <Route path="admin" element={<Admin />} />
         <Route path="design" element={<Design />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />

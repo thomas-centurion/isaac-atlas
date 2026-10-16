@@ -6,6 +6,7 @@ export * from './catalog-data';
 export * from './auth';
 export * from './runs';
 export * from './search';
+export * from './community';
 
 export const healthResponseSchema = z.object({
   status: z.literal('ok'),

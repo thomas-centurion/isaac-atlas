@@ -58,6 +58,7 @@ export const publicUserSchema = z.object({
   emailVerified: z.boolean(),
   avatar: z.string().nullable(),
   hasPassword: z.boolean(),
+  role: z.enum(['user', 'admin']),
   identities: z.array(z.object({ provider: authProviderSchema, linkedAt: z.string() })),
 });
 export type PublicUser = z.infer<typeof publicUserSchema>;
@@ -85,6 +86,7 @@ export const API_ERROR_CODES = [
   'last_login_method',
   'rate_limited',
   'not_found',
+  'already_reported',
   'internal',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];
