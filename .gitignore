@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.vite
+
+# Arte del juego generado por el script (no se redistribuye)
+apps/web/public/sprites/

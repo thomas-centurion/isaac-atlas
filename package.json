@@ -1,0 +1,37 @@
+{
+  "name": "isaac-atlas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run db:up && concurrently -k -n api,web -c cyan,magenta \"npm run dev -w @isaac-atlas/api\" \"npm run dev -w @isaac-atlas/web\"",
+    "db:up": "docker compose up -d --wait mongo",
+    "db:down": "docker compose down",
+    "build": "npm run build -w @isaac-atlas/web && npm run build -w @isaac-atlas/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "catalog": "tsx --env-file=.env scripts/build-catalog.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "fast-xml-parser": "^5.11.2",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.19.0"
+  }
+}
