@@ -3,14 +3,22 @@ import {
   difficultySchema,
   runResultSchema,
   runSchema,
+  verdictKindSchema,
   type Difficulty,
   type RunResult,
+  type VerdictKind,
 } from './runs';
 import { isValidSeedFormat, normalizeSeed } from './seed';
 
 export const MAX_FILTER_ITEMS = 10;
 export const MAX_PAGE_SIZE = 50;
 export const DEFAULT_PAGE_SIZE = 20;
+
+/** hot: votos con peso en lo reciente · top: mejor valoradas (Wilson) · new: más nuevas. */
+export const SORT_MODES = ['hot', 'top', 'new'] as const;
+export const sortModeSchema = z.enum(SORT_MODES);
+export type SortMode = z.infer<typeof sortModeSchema>;
+export const DEFAULT_SORT: SortMode = 'hot';
 
 /** "153,105" → [153, 105]. Cualquier otra cosa (p. ej. un array por parámetro repetido) no valida. */
 const idList = z
@@ -41,6 +49,9 @@ export const runSearchSchema = z.object({
     .transform(normalizeSeed)
     .refine(isValidSeedFormat, { message: 'invalid seed' })
     .optional(),
+  /** Solo runs que la comunidad marcó como OP / Troll / Hard. */
+  verdict: verdictKindSchema.optional(),
+  sort: sortModeSchema.default(DEFAULT_SORT),
   cursor: z.string().max(200).optional(),
   limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(DEFAULT_PAGE_SIZE),
 });
@@ -62,6 +73,13 @@ export const seedSummarySchema = z.object({
 });
 export type SeedSummary = z.infer<typeof seedSummarySchema>;
 
+/** Seed del día: una run elegida por fecha UTC (null si todavía no hay runs). */
+export const dailyResponseSchema = z.object({
+  date: z.string(),
+  run: runSchema.nullable(),
+});
+export type DailyResponse = z.infer<typeof dailyResponseSchema>;
+
 /** Filtros del buscador tal como los maneja la web (y como viajan en la URL). */
 export interface SearchFilters {
   character?: number;
@@ -72,9 +90,16 @@ export interface SearchFilters {
   items: number[];
   exclude: number[];
   seed?: string;
+  verdict?: VerdictKind;
+  sort: SortMode;
 }
 
-export const EMPTY_FILTERS: SearchFilters = { startItems: [], items: [], exclude: [] };
+export const EMPTY_FILTERS: SearchFilters = {
+  startItems: [],
+  items: [],
+  exclude: [],
+  sort: DEFAULT_SORT,
+};
 
 export function filtersToParams(filters: SearchFilters): URLSearchParams {
   const params = new URLSearchParams();
@@ -86,6 +111,9 @@ export function filtersToParams(filters: SearchFilters): URLSearchParams {
   if (filters.items.length) params.set('items', filters.items.join(','));
   if (filters.exclude.length) params.set('exclude', filters.exclude.join(','));
   if (filters.seed) params.set('seed', filters.seed);
+  if (filters.verdict) params.set('verdict', filters.verdict);
+  // El orden por defecto no viaja en la URL.
+  if (filters.sort !== DEFAULT_SORT) params.set('sort', filters.sort);
   return params;
 }
 
@@ -93,8 +121,18 @@ export function filtersToParams(filters: SearchFilters): URLSearchParams {
 export function filtersFromParams(params: URLSearchParams): SearchFilters {
   const parsed = runSearchSchema.safeParse(Object.fromEntries(params));
   if (!parsed.success) return EMPTY_FILTERS;
-  const { character, difficulty, result, fullUnlocks, startItems, items, exclude, seed } =
-    parsed.data;
+  const {
+    character,
+    difficulty,
+    result,
+    fullUnlocks,
+    startItems,
+    items,
+    exclude,
+    seed,
+    verdict,
+    sort,
+  } = parsed.data;
   return {
     ...(character !== undefined ? { character } : {}),
     ...(difficulty ? { difficulty } : {}),
@@ -104,7 +142,11 @@ export function filtersFromParams(params: URLSearchParams): SearchFilters {
     items,
     exclude,
     ...(seed ? { seed } : {}),
+    ...(verdict ? { verdict } : {}),
+    sort,
   };
 }
 
-export const hasActiveFilters = (f: SearchFilters): boolean => filtersToParams(f).toString() !== '';
+/** ¿Hay algún filtro aplicado? El orden no cuenta: no restringe resultados. */
+export const hasActiveFilters = (f: SearchFilters): boolean =>
+  filtersToParams({ ...f, sort: DEFAULT_SORT }).toString() !== '';

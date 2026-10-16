@@ -10,6 +10,18 @@ import {
   type RunResult,
 } from '@isaac-atlas/shared';
 
+export interface RunStatsAttrs {
+  up: number;
+  down: number;
+  op: number;
+  troll: number;
+  hard: number;
+  /** Límite inferior de Wilson: orden "top". */
+  wilson: number;
+  /** Puntaje temporal: orden "hot". */
+  hot: number;
+}
+
 export interface RunAttrs {
   /** Normalizada: 8 caracteres en mayúsculas, sin espacio. */
   seed: string;
@@ -24,6 +36,8 @@ export interface RunAttrs {
   outcome: { result: RunResult; lastFloor?: number; finalBoss?: string };
   notes: string;
   author: Types.ObjectId;
+  /** Contadores desnormalizados: el ranking se lee con un solo documento, sin agregar votos. */
+  stats: RunStatsAttrs;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -68,6 +82,15 @@ const runSchema = new Schema<RunAttrs>(
     },
     notes: { type: String, default: '' },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    stats: {
+      up: { type: Number, default: 0 },
+      down: { type: Number, default: 0 },
+      op: { type: Number, default: 0 },
+      troll: { type: Number, default: 0 },
+      hard: { type: Number, default: 0 },
+      wilson: { type: Number, default: 0 },
+      hot: { type: Number, default: 0 },
+    },
   },
   { timestamps: true },
 );
@@ -77,6 +100,9 @@ runSchema.index({ seed: 1 });
 runSchema.index({ characterId: 1, startItems: 1 });
 runSchema.index({ 'items.itemId': 1 });
 runSchema.index({ createdAt: -1 });
+// Orden por puntaje con desempate estable (createdAt, _id) para la paginación por cursor.
+runSchema.index({ 'stats.hot': -1, createdAt: -1, _id: -1 });
+runSchema.index({ 'stats.wilson': -1, createdAt: -1, _id: -1 });
 
 export const Run = model<RunAttrs>('Run', runSchema);
 export type RunDocument = HydratedDocument<RunAttrs>;

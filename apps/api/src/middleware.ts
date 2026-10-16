@@ -11,6 +11,12 @@ export const requireAuth: RequestHandler = (req, _res, next) => {
   next();
 };
 
+/** Las cuentas nuevas de Google/Steam deben elegir username antes de publicar o votar. */
+export const requireUsername: RequestHandler = (req, _res, next) => {
+  if (!currentUser(req)?.username) return next(new HttpError('forbidden'));
+  next();
+};
+
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 /**

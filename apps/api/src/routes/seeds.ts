@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { isValidSeedFormat, normalizeSeed, type SeedSummary } from '@isaac-atlas/shared';
 import { HttpError, asyncHandler } from '../http.js';
+import { currentUser } from '../middleware.js';
 import { Run, type RunDocument } from '../models/Run.js';
-import { populatedToDtos, type PopulatedAuthor } from './runs.js';
+import { attachViewer, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
 
 const SEED_RUNS_LIMIT = 50;
 const TOP_ITEMS_LIMIT = 12;
@@ -45,7 +46,7 @@ seedsRouter.get(
       runCount,
       characters: characters.map((c) => ({ characterId: c._id, count: c.count })),
       topItems: topItems.map((i) => ({ itemId: i._id, count: i.count })),
-      runs: populatedToDtos(runs as unknown as RunDocument[]),
+      runs: await attachViewer(populatedToDtos(runs as unknown as RunDocument[]), currentUser(req)),
     };
     res.json(body);
   }),

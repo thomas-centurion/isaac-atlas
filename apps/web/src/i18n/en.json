@@ -37,7 +37,20 @@
     "noMatches": "No run matches those filters.",
     "noRunsYet": "There are no runs yet.",
     "beFirst": "Log the first one",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "verdict": "Community tag",
+    "sortBy": "Sort by",
+    "daily": "Seed of the day",
+    "dailyHint": "The best recent run according to the community. It changes every day."
+  },
+  "react": {
+    "votes": "Votes",
+    "verdicts": "Community tags",
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "score": "Score {{count}}",
+    "loginToVote": "Log in to vote",
+    "ownRun": "You cannot vote on your own run"
   },
   "seed": {
     "notFound": "There are no runs for that seed.",

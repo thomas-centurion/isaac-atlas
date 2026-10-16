@@ -8,6 +8,7 @@ import { useMe } from '../auth/useAuth';
 import { useLang } from '../hooks/useLang';
 import { FloorGroups } from '../runs/FloorGroups';
 import { characterLabel } from '../runs/labels';
+import { VoteControls } from '../runs/VoteControls';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Notice } from '../ui/Notice';
@@ -67,6 +68,7 @@ export function RunDetail() {
           {run.outcome.lastFloor ? ` · ${t(`floors.${run.outcome.lastFloor}`)}` : ''}
           {run.outcome.finalBoss ? ` · ${t(`bosses.${run.outcome.finalBoss}`)}` : ''}
         </p>
+        <VoteControls run={run} />
         <p>
           <Link to={`/seeds/${run.seed}`}>{t('run.allRunsOfSeed')}</Link>
         </p>

@@ -4,6 +4,7 @@ import {
   DIFFICULTIES,
   MAX_FILTER_ITEMS,
   RUN_RESULTS,
+  VERDICT_KINDS,
   catalog,
   formatSeed,
   hasActiveFilters,
@@ -51,7 +52,9 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
 
   const set = (patch: Partial<SearchFilters>) => onChange({ ...filters, ...patch });
   /** Quita un filtro opcional (en vez de dejarlo en `undefined`, para que no viaje en la URL). */
-  const unset = (key: 'character' | 'difficulty' | 'result' | 'fullUnlocks' | 'seed') => {
+  const unset = (
+    key: 'character' | 'difficulty' | 'result' | 'fullUnlocks' | 'seed' | 'verdict',
+  ) => {
     const next = { ...filters };
     delete next[key];
     onChange(next);
@@ -168,6 +171,22 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
             </option>
           ))}
         </Select>
+
+        <Select
+          label={t('search.verdict')}
+          value={filters.verdict ?? ''}
+          onChange={(e) => {
+            if (e.target.value === '') unset('verdict');
+            else set({ verdict: e.target.value as (typeof VERDICT_KINDS)[number] });
+          }}
+        >
+          <option value="">{t('search.any')}</option>
+          {VERDICT_KINDS.map((kind) => (
+            <option key={kind} value={kind}>
+              {t(`verdict.${kind}`)}
+            </option>
+          ))}
+        </Select>
       </div>
 
       <div className={styles.pickers}>
@@ -189,7 +208,7 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
       <Button
         variant="secondary"
         disabled={!hasActiveFilters(filters)}
-        onClick={() => onChange({ startItems: [], items: [], exclude: [] })}
+        onClick={() => onChange({ startItems: [], items: [], exclude: [], sort: filters.sort })}
       >
         {t('search.clear')}
       </Button>

@@ -46,6 +46,8 @@ describe('filtros ⇄ URL', () => {
     startItems: [153],
     items: [105, 3],
     exclude: [],
+    verdict: 'op',
+    sort: 'top',
   };
 
   it('ida y vuelta sin pérdida (incluido character=0)', () => {
@@ -54,6 +56,18 @@ describe('filtros ⇄ URL', () => {
 
   it('una URL inválida da filtros vacíos', () => {
     expect(filtersFromParams(new URLSearchParams('startItems=zzz'))).toEqual(EMPTY_FILTERS);
+  });
+
+  it('el orden por defecto (hot) no viaja en la URL, los demás sí', () => {
+    expect(filtersToParams(EMPTY_FILTERS).toString()).toBe('');
+    expect(filtersToParams({ ...EMPTY_FILTERS, sort: 'new' }).get('sort')).toBe('new');
+    expect(filtersFromParams(new URLSearchParams('sort=top')).sort).toBe('top');
+    expect(filtersFromParams(new URLSearchParams()).sort).toBe('hot');
+  });
+
+  it('cambiar solo el orden no cuenta como filtro activo', () => {
+    expect(hasActiveFilters({ ...EMPTY_FILTERS, sort: 'top' })).toBe(false);
+    expect(hasActiveFilters({ ...EMPTY_FILTERS, verdict: 'troll' })).toBe(true);
   });
 
   it('detecta si hay filtros activos', () => {

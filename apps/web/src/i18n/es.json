@@ -37,7 +37,20 @@
     "noMatches": "Ninguna run coincide con esos filtros.",
     "noRunsYet": "Todavía no hay runs cargadas.",
     "beFirst": "Cargá la primera",
-    "loadMore": "Cargar más"
+    "loadMore": "Cargar más",
+    "verdict": "Etiqueta de la comunidad",
+    "sortBy": "Ordenar por",
+    "daily": "Seed del día",
+    "dailyHint": "La mejor run reciente según la comunidad. Cambia cada día."
+  },
+  "react": {
+    "votes": "Votos",
+    "verdicts": "Etiquetas de la comunidad",
+    "upvote": "Votar a favor",
+    "downvote": "Votar en contra",
+    "score": "Puntaje {{count}}",
+    "loginToVote": "Iniciá sesión para votar",
+    "ownRun": "No podés votar tu propia run"
   },
   "seed": {
     "notFound": "No hay runs para esa seed.",

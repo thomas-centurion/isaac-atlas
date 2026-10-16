@@ -165,6 +165,17 @@ GET    /api/daily                    GET    /api/users/:username
 - `GET /api/seeds/:seed`: runs de esa seed, personajes y los ítems que más se repiten (cuenta runs, no copias).
 - Los filtros viven en la URL (`/?character=0&startItems=153&items=105`): se pueden compartir y funcionan con el botón atrás. `/` es ahora la página de búsqueda.
 
+## 7d. Decisiones de implementación (fase 6)
+
+- **Votos:** uno por usuario y run (índice único). El delta sale del documento anterior (`findOneAndUpdate` con `new: false`), así que repetir o duplicar una petición no suma dos veces. No se puede votar la propia run.
+- **Veredictos** (`op` / `troll` / `hard`): uno por usuario y run, cambiable y quitable, independiente del voto. Una run cuenta como OP/Troll/Hard con `MIN_VERDICT_VOTES` (hoy 1) veredictos de ese tipo; es una constante en `shared` para ajustar si hay abuso.
+- **Contadores desnormalizados** en `run.stats` (`up`, `down`, `op`, `troll`, `hard`, `wilson`, `hot`), actualizados con `$inc` y recalculados después.
+- **Top** = límite inferior de Wilson (95 %). **Hot** = `sign · log10(|up−down|+1) + antigüedad/45000 s`, con la antigüedad fija al crear la run: no hace falta job periódico (cambia respecto al plan original, donde se pensó recalcular con un job). El `+1` hace que un solo voto ya pese.
+- **Orden** `hot` (por defecto) / `top` / `new` con cursor que incluye el puntaje; un cursor de otro orden da 400.
+- **Seed del día:** se elige al primer pedido de la fecha UTC (mejor Wilson entre las de 30 días, sin repetir las de los últimos 14) y queda fija; índice único por fecha para que pedidos simultáneos no elijan dos.
+- **Web:** votos optimistas con rollback si falla; al terminar se reemplaza por lo que respondió el servidor (la run no salta de lugar mientras se mira).
+- Al borrar una run se borran sus votos y veredictos.
+
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 
 - **Fase 1**: ruta de instalación del juego para extraer recursos con el ResourceExtractor.

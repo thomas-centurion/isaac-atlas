@@ -10,6 +10,8 @@ import { originCheck } from './middleware.js';
 import { authRouter } from './routes/auth.js';
 import { runsRouter } from './routes/runs.js';
 import { seedsRouter } from './routes/seeds.js';
+import { dailyRouter } from './routes/daily.js';
+import { reactionsRouter } from './routes/reactions.js';
 
 interface AppDeps {
   /** Store de sesiones (connect-mongo en runtime). Sin store: MemoryStore, solo para tests simples. */
@@ -53,7 +55,9 @@ export function createApp({ sessionStore }: AppDeps = {}) {
 
   app.use('/api', originCheck);
   app.use('/api/auth', authRouter);
+  app.use('/api/runs', reactionsRouter);
   app.use('/api/runs', runsRouter);
+  app.use('/api/daily', dailyRouter);
   app.use('/api/seeds', seedsRouter);
   app.use('/api', (_req, _res, next) => next(new HttpError('not_found')));
 

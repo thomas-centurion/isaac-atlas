@@ -1,5 +1,12 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query';
+import {
+  dailyResponseSchema,
   filtersToParams,
   runResponseSchema,
   runSearchResponseSchema,
@@ -8,7 +15,9 @@ import {
   type Run,
   type RunDraftInput,
   type SearchFilters,
+  type VerdictKind,
 } from '@isaac-atlas/shared';
+import { mapRunInCache, withVerdict, withVote, type VoteChoice } from '../runs/reactions';
 import { api } from './client';
 
 const keys = {
@@ -56,6 +65,82 @@ export function useSeedSummary(seed: string | undefined) {
     queryFn: async () => seedSummarySchema.parse(await api(`/seeds/${encodeURIComponent(seed!)}`)),
   });
 }
+
+export function useDaily() {
+  return useQuery({
+    queryKey: ['daily'] as const,
+    queryFn: async () => dailyResponseSchema.parse(await api('/daily')),
+    // La seed del día no cambia durante el día.
+    staleTime: 10 * 60_000,
+  });
+}
+
+/** Cachés que pueden contener una misma run (lista, búsqueda, detalle, seed, seed del día). */
+const RUN_CACHES = [['runs'], ['seeds'], ['daily']] as const;
+
+type Snapshot = [readonly unknown[], unknown][];
+
+function snapshotRunCaches(qc: QueryClient): Snapshot {
+  return RUN_CACHES.flatMap((key) =>
+    qc
+      .getQueriesData({ queryKey: key })
+      .map(([k, data]) => [k, data] as [readonly unknown[], unknown]),
+  );
+}
+
+function patchRunCaches(qc: QueryClient, runId: string, fn: (run: Run) => Run) {
+  for (const key of RUN_CACHES) {
+    qc.setQueriesData({ queryKey: key }, (data: unknown) =>
+      data === undefined ? data : mapRunInCache(data, runId, fn),
+    );
+  }
+}
+
+/**
+ * Mutación "optimista" sobre una run: la interfaz cambia al instante, si el servidor falla se
+ * vuelve atrás, y al terminar se reemplaza por lo que respondió el servidor (sin recargar listas:
+ * la run no salta de lugar mientras se está mirando).
+ */
+function useRunReaction<V extends { runId: string }>(
+  request: (vars: V) => Promise<unknown>,
+  optimistic: (vars: V) => (run: Run) => Run,
+) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (vars: V) => runResponseSchema.parse(await request(vars)).run,
+    onMutate: (vars) => {
+      const snapshot = snapshotRunCaches(qc);
+      patchRunCaches(qc, vars.runId, optimistic(vars));
+      return { snapshot };
+    },
+    onError: (_err, _vars, context) => {
+      for (const [key, data] of context?.snapshot ?? []) qc.setQueryData(key, data);
+    },
+    onSuccess: (run) => patchRunCaches(qc, run.id, () => run),
+  });
+}
+
+export const useVote = () =>
+  useRunReaction<{ runId: string; value: VoteChoice }>(
+    ({ runId, value }) =>
+      value === 0
+        ? api(`/runs/${runId}/vote`, { method: 'DELETE' })
+        : api(`/runs/${runId}/vote`, { method: 'PUT', body: { value } }),
+    ({ value }) =>
+      (run) =>
+        withVote(run, value),
+  );
+
+export const useVerdict = () =>
+  useRunReaction<{ runId: string; kind: VerdictKind | null }>(
+    ({ runId, kind }) =>
+      kind === null
+        ? api(`/runs/${runId}/verdict`, { method: 'DELETE' })
+        : api(`/runs/${runId}/verdict`, { method: 'PUT', body: { kind } }),
+    ({ kind }) =>
+      (run) =>
+        withVerdict(run, kind),
+  );
 
 export function useCreateRun() {
   const qc = useQueryClient();

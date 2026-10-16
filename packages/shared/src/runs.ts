@@ -112,11 +112,42 @@ export const startItemIds = (items: RunItem[]): number[] => [
   ...new Set(items.filter((i) => i.floor === FLOOR_MIN).map((i) => i.itemId)),
 ];
 
+/** Veredictos de la comunidad: "Overpowered", "Troll" (rota o engañosa) y "Hard" (difícil). */
+export const VERDICT_KINDS = ['op', 'troll', 'hard'] as const;
+export const verdictKindSchema = z.enum(VERDICT_KINDS);
+export type VerdictKind = z.infer<typeof verdictKindSchema>;
+
+/** Cantidad mínima de veredictos del mismo tipo para que la run cuente como "OP", "Troll" o "Hard". */
+export const MIN_VERDICT_VOTES = 1;
+
+export const voteValueSchema = z.union([z.literal(1), z.literal(-1)]);
+export type VoteValue = z.infer<typeof voteValueSchema>;
+export const voteInputSchema = z.object({ value: voteValueSchema });
+export const verdictInputSchema = z.object({ kind: verdictKindSchema });
+
+export const runStatsSchema = z.object({
+  up: z.number().int(),
+  down: z.number().int(),
+  op: z.number().int(),
+  troll: z.number().int(),
+  hard: z.number().int(),
+});
+export type RunStats = z.infer<typeof runStatsSchema>;
+
+/** Lo que el usuario logueado ya hizo con la run (ausente si no hay sesión). */
+export const runViewerSchema = z.object({
+  vote: z.union([z.literal(1), z.literal(-1), z.literal(0)]),
+  verdict: verdictKindSchema.nullable(),
+});
+export type RunViewer = z.infer<typeof runViewerSchema>;
+
 export const runSchema = runInputSchema.extend({
   id: z.string(),
   startItems: z.array(z.number().int()),
   author: z.object({ id: z.string(), username: z.string() }),
   createdAt: z.string(),
+  stats: runStatsSchema,
+  viewer: runViewerSchema.optional(),
 });
 export type Run = z.infer<typeof runSchema>;
 
