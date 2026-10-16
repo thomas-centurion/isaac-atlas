@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export * from './seed';
 export * from './catalog';
+export * from './auth';
 
 export const healthResponseSchema = z.object({
   status: z.literal('ok'),

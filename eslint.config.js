@@ -8,6 +8,10 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    // Express identifica los error handlers por tener 4 parámetros: `_next` es obligatorio.
+    rules: { '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
+  },
+  {
     files: ['apps/api/**/*.ts', 'packages/**/*.ts', 'scripts/**/*.ts'],
     languageOptions: { globals: globals.node },
   },

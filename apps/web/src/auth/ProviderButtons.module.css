@@ -1,0 +1,34 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: var(--space-4) var(--space-1);
+}
+
+.button {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--bg-0);
+  padding: var(--space-3);
+  box-shadow:
+    0 0 0 var(--px) var(--line-dark),
+    0 0 0 calc(var(--px) * 2) var(--line);
+  transition: transform 80ms steps(2);
+}
+
+.button:hover {
+  color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.google {
+  border-left: var(--space-2) solid #4285f4;
+}
+
+.steam {
+  border-left: var(--space-2) solid #66c0f4;
+}

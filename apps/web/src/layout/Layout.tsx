@@ -1,12 +1,15 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
+import { useLogout, useMe } from '../auth/useAuth';
 import { usePageVisibility } from '../hooks/usePageVisibility';
 import styles from './Layout.module.css';
 
 export function Layout() {
   const { t, i18n } = useTranslation();
   usePageVisibility();
+  const { data: user } = useMe();
+  const logout = useLogout();
   const current: Language = i18n.language.startsWith('es') ? 'es' : 'en';
 
   return (
@@ -26,6 +29,26 @@ export function Layout() {
           >
             {t('nav.design')}
           </NavLink>
+          {user ? (
+            <>
+              <NavLink
+                to="/account"
+                className={({ isActive }) => (isActive ? styles.active : undefined)}
+              >
+                {user.username ?? t('account.title')}
+              </NavLink>
+              <button type="button" className={styles.navButton} onClick={() => logout.mutate()}>
+                {t('auth.logout')}
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/login"
+              className={({ isActive }) => (isActive ? styles.active : undefined)}
+            >
+              {t('auth.login')}
+            </NavLink>
+          )}
         </nav>
         <div className={styles.langs} role="group" aria-label={t('nav.language')}>
           {LANGUAGES.map((lang) => (

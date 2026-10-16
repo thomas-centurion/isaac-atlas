@@ -47,7 +47,7 @@ isaac-atlas/                    npm workspaces
 **Backend**
 - Express + Helmet + `express-rate-limit` + validación Zod en cada endpoint.
 - Mongoose sobre MongoDB (Docker en dev, Atlas M0 en prod).
-- Testing: Vitest + Supertest + `mongodb-memory-server`.
+- Testing: Vitest + Supertest contra el Mongo real de Docker (base `isaac-atlas-test`), en lugar de `mongodb-memory-server`: más fiel (índices únicos parciales, TTL, connect-mongo) y sin descargar binarios. En CI hará falta un servicio Mongo.
 
 ## 4. Autenticación
 
@@ -77,6 +77,15 @@ User {
 - Vinculación de proveedores desde el perfil estando logueado.
 - Autovinculación por email **solo** si el email viene verificado (Google sí; Steam no da email).
 - Flujos de email: verificación de cuenta y reseteo de contraseña con tokens de un solo uso (hash guardado, TTL index).
+
+**Decisiones de implementación (fase 3)**
+- Steam OpenID 2.0 propio (sin `passport-steam`): se verifica con `check_authentication` contra Steam, `return_to` exacto, `claimed_id` de `steamcommunity.com`, y un `state` aleatorio guardado en la sesión dentro del `return_to`.
+- Google con `passport-google-oauth20` y `state: true`. Sin credenciales, el botón no aparece (`GET /api/auth/providers`).
+- Anti pre-hijacking: si un login de Google/Steam llega con email verificado que coincide con una cuenta local sin verificar, se verifica y **se le borra la contraseña**.
+- Un reset de contraseña cierra todas las sesiones del usuario.
+- Login sin enumeración de usuarios (hash falso para igualar tiempos); `forgot` siempre responde 204.
+- CSRF: `SameSite=Lax` + verificación de `Origin` en toda mutación. Rate limit (30 req / 15 min) en login, registro, forgot, reset y verificación.
+- Pendiente para producción: configurar SMTP real (Resend) y credenciales de Google; hoy los mails salen por consola.
 
 ## 5. Modelo de datos
 
