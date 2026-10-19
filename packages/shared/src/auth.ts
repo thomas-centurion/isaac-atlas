@@ -47,6 +47,9 @@ export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 
 export const verifyEmailSchema = z.object({ token: z.string().min(20).max(200) });
 
+/** Borrar la cuenta exige confirmar: la contraseña, o el username si la cuenta no tiene contraseña. */
+export const deleteAccountSchema = z.object({ confirm: z.string().min(1).max(128) });
+
 export const setUsernameSchema = z.object({ username: usernameSchema });
 export type SetUsernameInput = z.infer<typeof setUsernameSchema>;
 
@@ -87,6 +90,7 @@ export const API_ERROR_CODES = [
   'rate_limited',
   'not_found',
   'already_reported',
+  'confirmation_failed',
   'internal',
 ] as const;
 export type ApiErrorCode = (typeof API_ERROR_CODES)[number];

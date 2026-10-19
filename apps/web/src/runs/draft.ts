@@ -8,12 +8,15 @@ import {
   getItem,
   getTrinket,
   itemSourceSchema,
+  formatSeed,
   runResultSchema,
+  startingKit,
   type Difficulty,
   type ItemSource,
   type RunDraftInput,
   type RunItem,
   type RunResult,
+  type Run,
   type RunTrinket,
 } from '@isaac-atlas/shared';
 import { z } from 'zod';
@@ -54,8 +57,49 @@ export type DraftAction =
   | { type: 'setItemSource'; index: number; source: ItemSource }
   | { type: 'addTrinket'; trinketId: number }
   | { type: 'removeTrinket'; index: number }
+  | { type: 'setCharacter'; characterId: number | null }
+  | { type: 'setFullUnlocks'; value: boolean }
   | { type: 'changeFloor'; delta: 1 | -1 }
   | { type: 'reset' };
+
+/**
+ * Cambia personaje y/o desbloqueos y recalcula los ítems iniciales: quita los que se autocompletaron
+ * antes (source 'innate', y los trinkets del piso 1 del kit anterior) y agrega los del kit nuevo.
+ * Lo que el usuario cargó a mano no se toca.
+ */
+function withStartingKit(state: Draft, characterId: number | null, fullUnlocks: boolean): Draft {
+  const previous =
+    state.characterId === null
+      ? { items: [], trinkets: [] }
+      : startingKit(state.characterId, state.fullUnlocks);
+  const next =
+    characterId === null ? { items: [], trinkets: [] } : startingKit(characterId, fullUnlocks);
+
+  const items = state.items.filter((i) => i.source !== 'innate');
+  const trinkets = state.trinkets.filter(
+    (t) => !(t.floor === FLOOR_MIN && previous.trinkets.includes(t.trinketId)),
+  );
+  const haveItems = new Set(items.map((i) => i.itemId));
+  const haveTrinkets = new Set(trinkets.map((t) => t.trinketId));
+
+  return {
+    ...state,
+    characterId,
+    fullUnlocks,
+    items: [
+      ...next.items
+        .filter((id) => !haveItems.has(id))
+        .map((itemId) => ({ itemId, floor: FLOOR_MIN, source: 'innate' as const })),
+      ...items,
+    ],
+    trinkets: [
+      ...next.trinkets
+        .filter((id) => !haveTrinkets.has(id))
+        .map((trinketId) => ({ trinketId, floor: FLOOR_MIN })),
+      ...trinkets,
+    ],
+  };
+}
 
 export function draftReducer(state: Draft, action: DraftAction): Draft {
   switch (action.type) {
@@ -82,6 +126,10 @@ export function draftReducer(state: Draft, action: DraftAction): Draft {
       };
     case 'removeTrinket':
       return { ...state, trinkets: state.trinkets.filter((_, i) => i !== action.index) };
+    case 'setCharacter':
+      return withStartingKit(state, action.characterId, state.fullUnlocks);
+    case 'setFullUnlocks':
+      return withStartingKit(state, state.characterId, action.value);
     case 'changeFloor':
       return {
         ...state,
@@ -164,6 +212,28 @@ export function loadDraft(): Draft {
   } catch {
     return EMPTY_DRAFT;
   }
+}
+
+/** Borrador a partir de una run publicada (para editarla). */
+export function runToDraft(run: Run): Draft {
+  return {
+    seed: formatSeed(run.seed),
+    characterId: run.characterId,
+    difficulty: run.difficulty,
+    fullUnlocks: run.fullUnlocks,
+    // El piso actual arranca en el último donde hay algo cargado: lo nuevo suele ser lo siguiente.
+    floor: Math.max(
+      FLOOR_MIN,
+      ...run.items.map((i) => i.floor),
+      ...run.trinkets.map((t) => t.floor),
+    ),
+    items: run.items,
+    trinkets: run.trinkets,
+    result: run.outcome.result,
+    lastFloor: run.outcome.lastFloor ?? null,
+    finalBoss: run.outcome.finalBoss ?? null,
+    notes: run.notes,
+  };
 }
 
 export function isDraftEmpty(draft: Draft): boolean {

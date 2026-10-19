@@ -42,6 +42,8 @@ export interface RunAttrs {
   reportCount: number;
   createdAt: Date;
   updatedAt: Date;
+  /** Se fija cuando el autor edita la run publicada. */
+  editedAt?: Date;
 }
 
 const runSchema = new Schema<RunAttrs>(
@@ -85,6 +87,7 @@ const runSchema = new Schema<RunAttrs>(
     notes: { type: String, default: '' },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     reportCount: { type: Number, default: 0 },
+    editedAt: Date,
     stats: {
       up: { type: Number, default: 0 },
       down: { type: Number, default: 0 },

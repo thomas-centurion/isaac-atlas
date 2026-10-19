@@ -7,6 +7,7 @@ import { passport } from './auth/passport.js';
 import { config } from './config.js';
 import { HttpError, errorHandler } from './http.js';
 import { originCheck } from './middleware.js';
+import { accountRouter } from './routes/account.js';
 import { authRouter } from './routes/auth.js';
 import { runsRouter } from './routes/runs.js';
 import { seedsRouter } from './routes/seeds.js';
@@ -75,6 +76,7 @@ export function createApp({ sessionStore }: AppDeps = {}) {
 
   app.use('/api', apiLimiter, originCheck);
   app.use('/api/auth', authRouter);
+  app.use('/api/account', accountRouter);
   app.use('/api/runs', reactionsRouter);
   app.use('/api/runs', reportRouter);
   app.use('/api/runs', runsRouter);

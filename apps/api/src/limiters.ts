@@ -45,5 +45,8 @@ export const writeLimiter = limiter({ windowMs: HOUR, limit: 60, by: 'user' });
 /** Votos y veredictos: se recorren muchas runs, así que el margen es amplio. */
 export const reactionLimiter = limiter({ windowMs: HOUR, limit: 600, by: 'user' });
 
+/** Exportar los datos de la cuenta: se arma con varias consultas, no tiene sentido repetirlo seguido. */
+export const exportLimiter = limiter({ windowMs: HOUR, limit: 10, by: 'user' });
+
 /** Reportes: pocos y deliberados; frena el uso para acosar. */
 export const reportLimiter = limiter({ windowMs: HOUR, limit: 20, by: 'user' });

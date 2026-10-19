@@ -79,6 +79,11 @@ export function RunDetail() {
           {t('run.byPrefix')} <Link to={`/u/${run.author.username}`}>{run.author.username}</Link> ·{' '}
           {new Date(run.createdAt).toLocaleDateString(lang)}
         </p>
+        {run.editedAt ? (
+          <p className={styles.meta}>
+            {t('run.editedOn', { date: new Date(run.editedAt).toLocaleDateString(lang) })}
+          </p>
+        ) : null}
         {run.notes ? <p className={styles.notes}>{run.notes}</p> : null}
       </Panel>
 
@@ -94,6 +99,11 @@ export function RunDetail() {
 
       {isOwner ? (
         <Panel>
+          <div className={styles.confirm}>
+            <Button variant="secondary" onClick={() => navigate(`/runs/${run.id}/edit`)}>
+              {t('run.edit')}
+            </Button>
+          </div>
           {remove.error ? <Notice tone="error">{t('errors.internal')}</Notice> : null}
           {confirming ? (
             <div className={styles.confirm}>

@@ -16,6 +16,7 @@ const STATUS: Record<ApiErrorCode, number> = {
   rate_limited: 429,
   not_found: 404,
   already_reported: 409,
+  confirmation_failed: 403,
   internal: 500,
 };
 

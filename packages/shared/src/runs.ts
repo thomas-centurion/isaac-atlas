@@ -22,6 +22,8 @@ export const ITEM_SOURCES = [
   'curse',
   'chest',
   'machine',
+  /** Ítem con el que el personaje empieza la run (se autocompleta al elegirlo). */
+  'innate',
   'other',
 ] as const;
 export const itemSourceSchema = z.enum(ITEM_SOURCES);
@@ -146,6 +148,8 @@ export const runSchema = runInputSchema.extend({
   startItems: z.array(z.number().int()),
   author: z.object({ id: z.string(), username: z.string() }),
   createdAt: z.string(),
+  /** Solo si el autor la modificó después de publicarla (quienes votaron antes lo pueden ver). */
+  editedAt: z.string().optional(),
   stats: runStatsSchema,
   viewer: runViewerSchema.optional(),
 });

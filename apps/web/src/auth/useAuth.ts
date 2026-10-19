@@ -92,6 +92,25 @@ export function useVerifyEmail() {
   });
 }
 
+/** Borra la cuenta (irreversible): confirma con la contraseña o, sin contraseña, con el username. */
+export const useDeleteAccount = () =>
+  useMutation({
+    mutationFn: (confirm: string) => api('/account', { method: 'DELETE', body: { confirm } }),
+  });
+
+/**
+ * Descarta todo lo cacheado de la sesión (usuario, runs propias, votos…). Va aparte de la mutación
+ * a propósito: si se limpia antes de navegar, la ruta protegida en la que se está redirige a /login
+ * y pisa la navegación a la portada.
+ */
+export function useClearSession() {
+  const qc = useQueryClient();
+  return () => {
+    qc.removeQueries({ predicate: (q) => q.queryKey[0] !== 'auth' });
+    qc.setQueryData(ME_KEY, null);
+  };
+}
+
 export const useResendVerification = () =>
   useMutation({ mutationFn: () => api('/auth/resend-verification', { method: 'POST' }) });
 

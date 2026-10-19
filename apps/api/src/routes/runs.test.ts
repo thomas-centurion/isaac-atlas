@@ -141,6 +141,12 @@ describe('edición y borrado', () => {
       .put(`/api/runs/${id}`)
       .send({ ...run, notes: 'editado', items: [{ itemId: 105, floor: 1, source: 'other' }] });
     expect(edited.status).toBe(200);
+    // Una run recién publicada no figura como editada; después de editarla, sí.
+    expect(body.run.editedAt).toBeUndefined();
+    expect(Date.parse(edited.body.run.editedAt)).toBeGreaterThan(0);
+    expect((await request(app).get(`/api/runs/${id}`)).body.run.editedAt).toBe(
+      edited.body.run.editedAt,
+    );
     expect(edited.body.run.notes).toBe('editado');
     expect(edited.body.run.startItems).toEqual([105]);
 

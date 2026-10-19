@@ -146,6 +146,21 @@ export const useVerdict = () =>
         withVerdict(run, kind),
   );
 
+export function useUpdateRun(id: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: RunDraftInput): Promise<Run> =>
+      runResponseSchema.parse(await api(`/runs/${id}`, { method: 'PUT', body: input })).run,
+    onSuccess: (run) => {
+      qc.setQueryData(keys.one(run.id), run);
+      // La run puede haber cambiado de seed, personaje o ítems: listas, búsquedas y seeds quedan viejas.
+      void qc.invalidateQueries({ queryKey: keys.all });
+      void qc.invalidateQueries({ queryKey: ['seeds'] });
+      void qc.invalidateQueries({ queryKey: ['daily'] });
+    },
+  });
+}
+
 export function useCreateRun() {
   const qc = useQueryClient();
   return useMutation({

@@ -47,3 +47,9 @@
   --bg: #5a1612;
   --bg-hover: var(--blood);
 }
+
+/* Versión <a> del botón (ButtonLink): sin subrayado y alineada como un botón */
+.asLink {
+  display: inline-block;
+  text-decoration: none;
+}

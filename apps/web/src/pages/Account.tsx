@@ -8,6 +8,8 @@ import { errorMessage } from '../auth/errors';
 import { useMe, useResendVerification, useUnlink } from '../auth/useAuth';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
+import { ButtonLink } from '../ui/ButtonLink';
+import { DeleteAccountPanel } from '../auth/DeleteAccountPanel';
 import { Notice } from '../ui/Notice';
 import { Panel } from '../ui/Panel';
 
@@ -79,6 +81,15 @@ export function Account() {
         {!canUnlink && linkedProviders.length > 0 ? <p>{t('account.lastMethod')}</p> : null}
         <ProviderButtons link exclude={linkedProviders} />
       </Panel>
+
+      <Panel title={t('account.dataTitle')}>
+        <p>{t('account.dataBody')}</p>
+        <ButtonLink href="/api/account/export" download>
+          {t('account.download')}
+        </ButtonLink>
+      </Panel>
+
+      <DeleteAccountPanel username={me.username} hasPassword={me.hasPassword} />
     </>
   );
 }

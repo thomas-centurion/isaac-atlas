@@ -194,6 +194,16 @@ GET    /api/daily                    GET    /api/users/:username
 - **CI** (`.github/workflows/ci.yml`): formato, lint, tipos, tests contra Mongo real, build, auditoría de producción y construcción de la imagen Docker. `npm run check` hace lo mismo en local.
 - **Auditoría de dependencias:** `react-router` tiene un aviso moderado sobre hidratación SSR; no usamos SSR, no es explotable. Subir a v7 es un cambio mayor sin beneficio hoy. Los demás avisos son de herramientas de desarrollo.
 
+## 7g. Funciones que habían quedado afuera
+
+- **Ítems iniciales por personaje** (`packages/shared/src/startingItems.ts`). Fuentes cruzadas: `players.xml` del juego (atributos `items`/`pocketActive`, la fuente de verdad) y el infobox de cada personaje en la wiki. Descubrimiento clave: **muchos ítems iniciales dependen de logros** (el D6 de Isaac exige derrotar a Isaac como ???), por eso cada entrada lleva `requiresUnlock` y el autocompletado respeta la casilla "save con todo desbloqueado" de la run. Quedaron afuera a propósito los efectos innatos que no son un ítem (el Brimstone de Azazel, Lil Larva de ???), las cartas y los ítems aleatorios de Eden. Un test garantiza que todo lo que dice el XML del juego esté en la tabla y que cada ID sea el ítem que dice ser.
+  - Los ítems autocompletados se guardan con `source: 'innate'` ("Inicial"), cuentan como ítems del piso 1 (entran en `startItems`) y se pueden quitar.
+- **Editar runs** (`/runs/:id/edit`): mismo formulario que "Nueva run" (extraído a `RunForm`), precargado. La run queda con `editedAt` y se muestra "Editada el …": quienes votaron antes pueden ver que cambió. Los votos y etiquetas se conservan.
+- **Exportar y borrar cuenta:**
+  - `GET /api/account/export`: JSON descargable con la cuenta, runs, votos, etiquetas y reportes propios; nunca hashes, tokens ni datos de terceros.
+  - `DELETE /api/account`: confirma con la contraseña (o con el username si la cuenta entra solo con Google/Steam). Borra la cuenta, sus runs con todo lo que cuelga, y lo que dejó en runs ajenas; los contadores de esas runs se **recalculan desde los votos que quedan** (idempotente: si se corta a mitad, se reintenta sin descontar dos veces). Libera el email y el username.
+  - En la web: _Mi cuenta_ → "Tus datos" y "Borrar mi cuenta".
+
 ## 8. Pendientes del usuario (cuando lleguemos a cada fase)
 
 - **Fase 1**: ruta de instalación del juego para extraer recursos con el ResourceExtractor.

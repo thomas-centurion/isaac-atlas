@@ -128,7 +128,10 @@
     "or": "or",
     "continueWith": "Continue with {{provider}}",
     "linkWith": "Link {{provider}}",
-    "providers": { "google": "Google", "steam": "Steam" },
+    "providers": {
+      "google": "Google",
+      "steam": "Steam"
+    },
     "noAccount": "No account yet? Create one",
     "haveAccount": "Already have an account? Log in",
     "forgot": "I forgot my password",
@@ -156,7 +159,16 @@
     "connections": "Connections",
     "unlink": "Unlink",
     "linked": "{{provider}} linked to your account.",
-    "lastMethod": "You cannot unlink your only way to log in."
+    "lastMethod": "You cannot unlink your only way to log in.",
+    "dataTitle": "Your data",
+    "dataBody": "Download a copy of everything Isaac Atlas stores about you: your account, runs, votes, tags and reports, as a JSON file. It does not include passwords or other people's data.",
+    "download": "Download my data",
+    "deleteTitle": "Delete my account",
+    "deleteBody": "Your account, all your runs (with their votes and tags) and what you voted, tagged or reported on other people's runs are deleted. This cannot be undone. If you want to keep something, download your data first.",
+    "confirmPassword": "Type your password to confirm",
+    "confirmUsername": "Type your username ({{username}}) to confirm",
+    "deleteSubmit": "Delete my account forever",
+    "deleted": "Your account was deleted. Thanks for stopping by Isaac Atlas."
   },
   "fieldErrors": {
     "email": "Enter a valid email",
@@ -178,7 +190,8 @@
     "not_found": "Not found.",
     "already_reported": "You already reported this run.",
     "oauth_failed": "We could not complete the login. Please try again.",
-    "internal": "Something went wrong. Please try again."
+    "internal": "Something went wrong. Please try again.",
+    "confirmation_failed": "The confirmation does not match. Nothing was deleted."
   },
   "run": {
     "newTitle": "New run",
@@ -228,6 +241,12 @@
     "deleteYes": "Yes, delete",
     "cancel": "Cancel",
     "backToRuns": "Back to my runs",
+    "edit": "Edit run",
+    "editTitle": "Edit run",
+    "editNote": "Votes and tags are kept. The run will be marked as edited, so it is visible if it changed after being voted.",
+    "saveChanges": "Save changes",
+    "editedOn": "Edited on {{date}}",
+    "innateHint": "Choosing the character adds their starting items. The ones that depend on an achievement are only added with the box above checked; you can remove any you did not have.",
     "allRunsOfSeed": "See all runs of this seed",
     "myRuns": "My runs",
     "newCta": "+ New run",
@@ -260,6 +279,7 @@
     "curse": "Curse room",
     "chest": "Chest",
     "machine": "Machine / Beggar",
+    "innate": "Starting",
     "other": "Other"
   },
   "difficulty": {
@@ -268,7 +288,11 @@
     "greed": "Greed",
     "greedier": "Greedier"
   },
-  "results": { "win": "Win", "death": "Death", "quit": "Quit" },
+  "results": {
+    "win": "Win",
+    "death": "Death",
+    "quit": "Quit"
+  },
   "bosses": {
     "mom": "Mom",
     "moms-heart": "Mom's Heart",

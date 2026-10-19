@@ -177,6 +177,7 @@ runsRouter.put(
     const { run, author } = await loadRun(String(req.params.id));
     if (String(author._id) !== user.id) throw new HttpError('forbidden');
     run.set(fieldsFrom(parseBody(runInputSchema, req.body)));
+    run.editedAt = new Date();
     await run.save();
     const [dto] = await attachViewer([toRunDto(run, authorDto(author))], user);
     res.json({ run: dto });

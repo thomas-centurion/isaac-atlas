@@ -34,6 +34,7 @@ export function toRunDto(run: RunDocument, author: { id: string; username: strin
     notes: run.notes,
     author,
     createdAt: run.createdAt.toISOString(),
+    ...(run.editedAt ? { editedAt: run.editedAt.toISOString() } : {}),
     stats: {
       up: run.stats?.up ?? 0,
       down: run.stats?.down ?? 0,

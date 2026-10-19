@@ -1,6 +1,5 @@
 import { randomBytes } from 'node:crypto';
 import { Router, type Request, type Response } from 'express';
-import mongoose from 'mongoose';
 import {
   authProviderSchema,
   forgotPasswordSchema,
@@ -33,6 +32,7 @@ import { consumeToken, issueToken } from '../auth/tokens.js';
 import { config } from '../config.js';
 import { HttpError, asyncHandler, parseBody } from '../http.js';
 import { authLimiter } from '../limiters.js';
+import { invalidateUserSessions } from '../services.js';
 import { currentUser, requireAuth } from '../middleware.js';
 import { User, type UserDocument } from '../models/User.js';
 
@@ -55,14 +55,6 @@ const logOut = (req: Request) =>
   new Promise<void>((resolve, reject) => {
     req.logout((err) => (err ? reject(err) : resolve()));
   });
-
-/** Cierra todas las sesiones de un usuario (connect-mongo guarda el JSON como string). */
-async function invalidateUserSessions(userId: string) {
-  if (!/^[0-9a-f]{24}$/.test(userId)) return;
-  await mongoose.connection
-    .collection('sessions')
-    .deleteMany({ session: { $regex: `"passport":\\{"user":"${userId}"\\}` } });
-}
 
 const webUrl = (path: string) => `${config.WEB_ORIGIN}${path}`;
 

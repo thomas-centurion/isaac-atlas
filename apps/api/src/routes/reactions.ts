@@ -4,35 +4,8 @@ import { HttpError, asyncHandler, parseBody } from '../http.js';
 import { reactionLimiter } from '../limiters.js';
 import { currentUser, requireAuth, requireUsername } from '../middleware.js';
 import { Verdict, Vote } from '../models/Reactions.js';
-import { Run, type RunDocument } from '../models/Run.js';
-import { hotScore, wilsonLowerBound } from '../ranking.js';
 import { attachViewer, authorDto, loadRun, toRunDto } from '../runDto.js';
-
-/**
- * Suma `inc` a los contadores de la run y recalcula Wilson y hot a partir de los totales
- * que quedaron. Los `$inc` son atómicos; el recálculo parte del documento ya actualizado.
- */
-async function adjustStats(runId: RunDocument['_id'], inc: Record<string, number>) {
-  const changes = Object.entries(inc).filter(([, delta]) => delta !== 0);
-  if (changes.length === 0) return;
-  const updated = await Run.findByIdAndUpdate(
-    runId,
-    { $inc: Object.fromEntries(changes.map(([key, delta]) => [`stats.${key}`, delta])) },
-    { new: true },
-  );
-  if (!updated) return;
-  const up = Math.max(0, updated.stats.up);
-  const down = Math.max(0, updated.stats.down);
-  await Run.updateOne(
-    { _id: runId },
-    {
-      $set: {
-        'stats.wilson': wilsonLowerBound(up, down),
-        'stats.hot': hotScore(up, down, updated.createdAt),
-      },
-    },
-  );
-}
+import { adjustStats } from '../services.js';
 
 /** La run existe y no es del propio usuario (no se puede votar lo que uno publicó). */
 async function loadVotableRun(id: string, userId: string) {

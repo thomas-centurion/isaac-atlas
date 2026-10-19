@@ -128,7 +128,10 @@
     "or": "o",
     "continueWith": "Continuar con {{provider}}",
     "linkWith": "Vincular {{provider}}",
-    "providers": { "google": "Google", "steam": "Steam" },
+    "providers": {
+      "google": "Google",
+      "steam": "Steam"
+    },
     "noAccount": "¿No tenés cuenta? Creala",
     "haveAccount": "¿Ya tenés cuenta? Entrá",
     "forgot": "Olvidé mi contraseña",
@@ -156,7 +159,16 @@
     "connections": "Conexiones",
     "unlink": "Desvincular",
     "linked": "{{provider}} vinculado a tu cuenta.",
-    "lastMethod": "No podés desvincular tu único método de acceso."
+    "lastMethod": "No podés desvincular tu único método de acceso.",
+    "dataTitle": "Tus datos",
+    "dataBody": "Descargá una copia de todo lo que Isaac Atlas guarda de vos: tu cuenta, tus runs, tus votos, tus etiquetas y tus reportes, en un archivo JSON. No incluye contraseñas ni datos de otras personas.",
+    "download": "Descargar mis datos",
+    "deleteTitle": "Borrar mi cuenta",
+    "deleteBody": "Se borran tu cuenta, todas tus runs (con sus votos y etiquetas) y lo que votaste, etiquetaste o reportaste en runs de otras personas. No se puede deshacer. Si querés conservar algo, descargá tus datos antes.",
+    "confirmPassword": "Escribí tu contraseña para confirmar",
+    "confirmUsername": "Escribí tu nombre de usuario ({{username}}) para confirmar",
+    "deleteSubmit": "Borrar mi cuenta para siempre",
+    "deleted": "Tu cuenta fue borrada. Gracias por haber pasado por Isaac Atlas."
   },
   "fieldErrors": {
     "email": "Ingresá un email válido",
@@ -178,7 +190,8 @@
     "not_found": "No encontrado.",
     "already_reported": "Ya reportaste esta run.",
     "oauth_failed": "No pudimos completar el inicio de sesión. Probá de nuevo.",
-    "internal": "Algo salió mal. Probá de nuevo."
+    "internal": "Algo salió mal. Probá de nuevo.",
+    "confirmation_failed": "La confirmación no coincide. No se borró nada."
   },
   "run": {
     "newTitle": "Nueva run",
@@ -228,6 +241,12 @@
     "deleteYes": "Sí, borrar",
     "cancel": "Cancelar",
     "backToRuns": "Volver a mis runs",
+    "edit": "Editar run",
+    "editTitle": "Editar run",
+    "editNote": "Los votos y las etiquetas se conservan. La run va a quedar marcada como editada, para que se note si cambió después de ser votada.",
+    "saveChanges": "Guardar cambios",
+    "editedOn": "Editada el {{date}}",
+    "innateHint": "Al elegir el personaje se agregan sus ítems iniciales. Los que dependen de un logro solo se agregan con la casilla de arriba marcada; podés quitarlos si no los tenías.",
     "allRunsOfSeed": "Ver todas las runs de esta seed",
     "myRuns": "Mis runs",
     "newCta": "+ Nueva run",
@@ -260,6 +279,7 @@
     "curse": "Sala de maldición",
     "chest": "Cofre",
     "machine": "Máquina / Mendigo",
+    "innate": "Inicial",
     "other": "Otro"
   },
   "difficulty": {
@@ -268,7 +288,11 @@
     "greed": "Greed",
     "greedier": "Greedier"
   },
-  "results": { "win": "Victoria", "death": "Muerte", "quit": "Abandono" },
+  "results": {
+    "win": "Victoria",
+    "death": "Muerte",
+    "quit": "Abandono"
+  },
   "bosses": {
     "mom": "Mamá",
     "moms-heart": "Corazón de Mamá",

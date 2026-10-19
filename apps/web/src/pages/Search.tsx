@@ -56,6 +56,10 @@ export function Search() {
         </Panel>
       ) : null}
 
+      {params.get('account') === 'deleted' ? (
+        <Notice tone="success">{t('account.deleted')}</Notice>
+      ) : null}
+
       <FilterPanel filters={filters} onChange={update} focusRef={focusRef} />
 
       <Panel title={t('search.results')}>

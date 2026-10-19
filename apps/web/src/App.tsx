@@ -5,6 +5,7 @@ import { Account } from './pages/Account';
 import { Admin } from './pages/Admin';
 import { Profile } from './pages/Profile';
 import { Design } from './pages/Design';
+import { EditRun } from './pages/EditRun';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { Search } from './pages/Search';
 import { SeedPage } from './pages/SeedPage';
@@ -39,6 +40,7 @@ export function App() {
           <Route path="account" element={<Account />} />
           <Route path="runs" element={<MyRuns />} />
           <Route path="runs/new" element={<NewRun />} />
+          <Route path="runs/:id/edit" element={<EditRun />} />
         </Route>
       </Route>
     </Routes>

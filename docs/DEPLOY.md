@@ -104,4 +104,4 @@ MONGODB_URI="mongodb+srv://…" npm run make-admin -- TuUsername
 
 - **Límites de tasa** (`apps/api/src/limiters.ts`): se guardan en memoria del proceso. Con **una sola instancia** funcionan tal cual; si algún día escalás a varias, hay que moverlos a un store compartido (Redis).
 - **Moderación:** una run con 3 reportes abiertos de usuarios distintos sale de las listas hasta que un admin la revise.
-- **Borrado de cuenta y export de datos** (RGPD): todavía no existen; si el sitio tiene público europeo, es lo próximo a agregar.
+- **Datos personales (RGPD):** cada usuario puede descargar todo lo que se guarda de él (`GET /api/account/export`) y borrar su cuenta (`DELETE /api/account`) desde _Mi cuenta_. Falta, si el sitio tiene público europeo, publicar una política de privacidad que lo explique (qué se guarda: email, username, identificadores de Google/Steam, runs, votos y reportes).

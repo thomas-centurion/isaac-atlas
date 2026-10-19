@@ -1,23 +1,18 @@
 import { Router } from 'express';
-import { isValidObjectId, type Types } from 'mongoose';
+import { isValidObjectId } from 'mongoose';
 import {
   reportInputSchema,
   resolveReportSchema,
   type Report as ReportDto,
 } from '@isaac-atlas/shared';
 import { HttpError, asyncHandler, parseBody } from '../http.js';
+import { syncReportCount } from '../services.js';
 import { reportLimiter } from '../limiters.js';
 import { currentUser, requireAdmin, requireAuth, requireUsername } from '../middleware.js';
 import { Report } from '../models/Report.js';
 import { Run, type RunDocument } from '../models/Run.js';
 import { User } from '../models/User.js';
 import { deleteRunCascade, loadRun, populatedToDtos, type PopulatedAuthor } from '../runDto.js';
-
-/** Recalcula cuántos reportes abiertos tiene una run (fuente de verdad: la colección Report). */
-async function syncReportCount(runId: Types.ObjectId) {
-  const open = await Report.countDocuments({ runId, status: 'open' });
-  await Run.updateOne({ _id: runId }, { reportCount: open });
-}
 
 /** POST /api/runs/:id/report — cualquier usuario con cuenta puede reportar una run ajena. */
 export const reportRouter = Router();
