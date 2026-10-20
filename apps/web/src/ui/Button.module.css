@@ -1,55 +1,58 @@
 .button {
-  --bg: var(--panel-raised);
-  --bg-hover: var(--line);
-  font-family: var(--font-display);
-  font-size: 0.6rem;
+  --btn-bg: var(--surface-3);
+  --btn-hover: var(--surface-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0.5rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
   color: var(--ink);
-  background: var(--bg);
-  border: 0;
-  padding: var(--space-3) var(--space-4);
-  /* Borde pixelado con esquinas cortadas, solo box-shadow */
-  box-shadow:
-    0 calc(var(--px) * -1) 0 0 var(--line-dark),
-    0 var(--px) 0 0 var(--line-dark),
-    calc(var(--px) * -1) 0 0 0 var(--line-dark),
-    var(--px) 0 0 0 var(--line-dark),
-    inset 0 calc(var(--px) * -1) 0 0 rgb(0 0 0 / 0.35),
-    inset 0 var(--px) 0 0 rgb(255 255 255 / 0.12);
-  margin: var(--px);
-  text-shadow: 2px 2px 0 var(--line-dark);
+  background: var(--btn-bg);
+  border: 2px solid var(--line-dark);
+  /* El borde inferior grueso da el efecto de botón "físico" de las interfaces retro */
+  box-shadow: 0 4px 0 0 var(--line-dark);
+  margin: 0 0 4px;
   transition: transform 80ms steps(2);
 }
 
 .button:hover:not(:disabled) {
-  background: var(--bg-hover);
-  transform: translateY(-2px);
+  background: var(--btn-hover);
+  transform: translateY(-1px);
 }
 
 .button:active:not(:disabled) {
-  transform: translateY(2px);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 0 var(--line-dark);
 }
 
 .button:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .primary {
-  --bg: var(--blood);
-  --bg-hover: var(--blood-hover);
+  --btn-bg: var(--blood);
+  --btn-hover: var(--blood-hover);
 }
 
 .secondary {
-  --bg: var(--panel-raised);
+  --btn-bg: var(--surface-3);
+  --btn-hover: var(--surface-2);
+  border-color: var(--line);
 }
 
 .danger {
-  --bg: #5a1612;
-  --bg-hover: var(--blood);
+  --btn-bg: var(--danger);
+  --btn-hover: var(--blood);
 }
 
 /* Versión <a> del botón (ButtonLink): sin subrayado y alineada como un botón */
 .asLink {
-  display: inline-block;
   text-decoration: none;
 }

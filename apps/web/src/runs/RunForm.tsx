@@ -93,7 +93,7 @@ export function RunForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form onSubmit={handleSubmit} noValidate className={styles.form}>
       <Panel as="h1" title={t(mode === 'create' ? 'run.newTitle' : 'run.editTitle')}>
         <p>{t(mode === 'create' ? 'run.draftNote' : 'run.editNote')}</p>
         {error ? <Notice tone="error">{errorMessage(t, error)}</Notice> : null}

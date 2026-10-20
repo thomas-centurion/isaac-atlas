@@ -1,28 +1,50 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-bottom: var(--space-4);
 }
 
 .label {
-  font-family: var(--font-display);
-  font-size: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--ink-dim);
 }
 
 .input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.55rem 0.75rem;
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--ink);
-  background: var(--bg-0);
-  border: 0;
-  padding: var(--space-2) var(--space-3);
+  background: var(--bg);
+  border: 2px solid var(--line-strong);
+  border-radius: 0;
+  /* Sombra interior: el campo se ve "hundido" */
+  box-shadow: inset 3px 3px 0 0 rgb(0 0 0 / 0.45);
+}
+
+.input::placeholder {
+  color: var(--ink-dim);
+  opacity: 0.65;
+}
+
+.input:hover {
+  border-color: var(--ink-dim);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--gold);
   box-shadow:
-    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
-    0 0 0 var(--px) var(--line-dark),
-    0 0 0 calc(var(--px) * 2) var(--line-strong);
-  margin: calc(var(--px) * 2);
+    inset 3px 3px 0 0 rgb(0 0 0 / 0.45),
+    0 0 0 3px rgb(244 194 74 / 0.3);
+}
+
+.invalid {
+  border-color: var(--blood-bright);
 }
 
 .select {
@@ -31,38 +53,20 @@
 
 .textarea {
   resize: vertical;
-  min-height: 4em;
-  font-family: var(--font-body);
-}
-
-.input::placeholder {
-  color: var(--ink-dim);
-  opacity: 0.6;
-}
-
-.input:focus {
-  outline: none;
-  box-shadow:
-    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
-    0 0 0 var(--px) var(--line-dark),
-    0 0 0 calc(var(--px) * 2) var(--gold);
-}
-
-.invalid {
-  box-shadow:
-    inset var(--px) var(--px) 0 0 rgb(0 0 0 / 0.6),
-    0 0 0 var(--px) var(--line-dark),
-    0 0 0 calc(var(--px) * 2) var(--blood-bright);
+  min-height: 5.5rem;
+  line-height: 1.5;
 }
 
 .hint,
 .error {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
+
 .hint {
   color: var(--ink-dim);
 }
+
 .error {
   color: var(--blood-text);
 }

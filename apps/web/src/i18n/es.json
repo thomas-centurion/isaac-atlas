@@ -44,7 +44,8 @@
     "verdict": "Etiqueta de la comunidad",
     "sortBy": "Ordenar por",
     "daily": "Seed del día",
-    "dailyHint": "La mejor run reciente según la comunidad. Cambia cada día."
+    "dailyHint": "La mejor run reciente según la comunidad. Cambia cada día.",
+    "moreFilters": "Más filtros"
   },
   "report": {
     "open": "Reportar",
@@ -250,7 +251,10 @@
     "allRunsOfSeed": "Ver todas las runs de esta seed",
     "myRuns": "Mis runs",
     "newCta": "+ Nueva run",
-    "emptyMine": "Todavía no cargaste ninguna run."
+    "emptyMine": "Todavía no cargaste ninguna run.",
+    "author": "Autor",
+    "published": "Publicada",
+    "edited": "Editada"
   },
   "floors": {
     "1": "Sótano I / Aguacero I",

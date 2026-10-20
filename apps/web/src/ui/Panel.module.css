@@ -1,20 +1,27 @@
 .panel {
   position: relative;
-  margin: var(--space-2);
+  margin: 0 0 var(--space-6);
   padding: var(--space-6);
-  background: linear-gradient(135deg, rgb(255 255 255 / 0.04), transparent 40%), var(--panel);
-  /* Borde doble: línea oscura + línea clara interior, esquinas escalonadas */
-  box-shadow:
-    0 calc(var(--px) * -1) 0 0 var(--line-dark),
-    0 var(--px) 0 0 var(--line-dark),
-    calc(var(--px) * -1) 0 0 0 var(--line-dark),
-    var(--px) 0 0 0 var(--line-dark),
-    inset 0 0 0 var(--px) var(--line),
-    inset 0 0 0 calc(var(--px) * 2) var(--line-dark);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-card);
 }
 
 .title {
-  font-size: 0.8rem;
-  color: var(--blood-text);
-  margin-bottom: var(--space-4);
+  margin: 0 0 var(--space-4);
+}
+
+/* Los títulos de sección (h2) llevan una barra de acento; el h1 de página va en pixel, sin barra */
+h2.title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+h2.title::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 1.1em;
+  background: var(--blood-bright);
 }

@@ -1,12 +1,45 @@
-.head {
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+.main {
+  min-width: 0;
+}
+
+/* ---------- Cabecera de la run: la seed es la protagonista ---------- */
+
+.hero {
+  margin-bottom: var(--space-6);
+  padding: var(--space-6);
+  background: linear-gradient(135deg, rgb(200 54 43 / 0.16), transparent 60%), var(--surface);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.seedRow {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 
 .seed {
+  margin: 0;
+  font-size: 1.6rem;
   letter-spacing: 4px;
   user-select: all;
 }
@@ -14,25 +47,94 @@
 .badges {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-
-.meta {
-  color: var(--ink-dim);
-  font-size: 0.95rem;
+  gap: var(--space-2);
 }
 
 .notes {
+  margin: 0;
   white-space: pre-wrap;
-  padding: var(--space-3);
-  background: var(--bg-0);
-  box-shadow: 0 0 0 var(--px) var(--line-dark);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Columna lateral ---------- */
+
+.aside {
+  position: sticky;
+  top: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.facts dt {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.seedLink {
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 }
 
 .confirm {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.confirmButtons {
+  display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
+}
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+
+  .aside {
+    position: static;
+  }
+
+  .seed {
+    font-size: 1.2rem;
+  }
 }

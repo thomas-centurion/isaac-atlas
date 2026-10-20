@@ -1,106 +1,9 @@
 .shell {
   display: grid;
-  /* Columna explícita: sin ella la grilla toma el ancho mínimo del contenido y se desborda en pantallas angostas */
+  /* Columna explícita: sin ella la grilla toma el ancho mínimo del contenido y se desborda */
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 var(--space-4);
-}
-
-.header {
-  display: grid;
-  /* Fila 1: logo + idioma. Fila 2: navegación (con sesión iniciada son muchos links). */
-  /* minmax(0, …): sin esto la columna no puede ser más angosta que el logo y la página se desborda */
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas:
-    'brand langs'
-    'nav nav';
-  align-items: center;
-  gap: var(--space-4) var(--space-6);
-  padding: var(--space-6) 0 var(--space-4);
-  border-bottom: var(--px) solid var(--line-dark);
-  box-shadow: 0 var(--px) 0 0 var(--line);
-}
-
-.brand {
-  grid-area: brand;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.logo {
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  color: var(--blood-bright);
-  text-shadow:
-    3px 3px 0 var(--line-dark),
-    0 0 12px rgb(224 64 50 / 0.5);
-  animation: flicker 4s steps(1) infinite;
-}
-
-.tagline {
-  color: var(--ink-dim);
-  font-size: 1rem;
-}
-
-.nav {
-  grid-area: nav;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2) var(--space-4);
-}
-
-.nav a {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  color: var(--ink);
-  text-decoration: none;
-  padding: var(--space-2);
-}
-
-.navButton {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  color: var(--ink-dim);
-  background: none;
-  border: 0;
-  padding: var(--space-2);
-}
-
-.navButton:hover,
-.nav a:hover {
-  color: var(--gold);
-}
-
-.nav a.active {
-  color: var(--gold);
-  box-shadow: inset 0 calc(var(--px) * -1) 0 0 var(--blood);
-}
-
-.langs {
-  grid-area: langs;
-  display: flex;
-  gap: var(--space-2);
-}
-
-.langs button {
-  font-family: var(--font-display);
-  font-size: 0.55rem;
-  color: var(--ink-dim);
-  background: var(--bg-0);
-  border: 0;
-  padding: var(--space-2);
-  box-shadow: 0 0 0 var(--px) var(--line-dark);
-  margin: var(--px);
-}
-
-.langs button.langActive {
-  color: var(--gold);
-  background: var(--panel-raised);
 }
 
 /* Enlace para saltar el menú: invisible hasta que recibe el foco con el teclado */
@@ -108,11 +11,10 @@
   position: absolute;
   left: var(--space-3);
   top: -100px;
-  z-index: 10;
-  padding: var(--space-2) var(--space-3);
-  font-family: var(--font-display);
-  font-size: 0.55rem;
-  color: var(--bg-0);
+  z-index: 30;
+  padding: var(--space-2) var(--space-4);
+  font-weight: 700;
+  color: var(--bg);
   background: var(--gold);
   text-decoration: none;
 }
@@ -121,40 +23,229 @@
   top: var(--space-3);
 }
 
+/* ---------- Barra superior ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgb(25 19 31 / 0.94);
+  border-bottom: 2px solid var(--line);
+  box-shadow: 0 4px 0 0 rgb(0 0 0 / 0.35);
+  backdrop-filter: blur(6px);
+}
+
+.topbarInner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4) var(--space-8);
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-6);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: none;
+  text-decoration: none;
+}
+
+.brandIcon {
+  display: inline-flex;
+  filter: drop-shadow(0 0 8px rgb(229 80 63 / 0.55));
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--blood-text);
+  text-shadow: 3px 3px 0 var(--line-dark);
+  animation: flicker 5s steps(1) infinite;
+}
+
+.brand:hover .logo {
+  color: var(--gold);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.navLink {
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--ink);
+}
+
+.navActive {
+  color: var(--gold);
+}
+
+/* Barra de acento bajo el link activo, pegada al borde de la barra superior */
+.navActive::after {
+  content: '';
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: -14px;
+  height: 4px;
+  background: var(--blood-bright);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: none;
+  margin-left: auto;
+}
+
+.langs {
+  display: inline-flex;
+  border: 2px solid var(--line);
+}
+
+.langs button {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+}
+
+.langs button:hover {
+  color: var(--ink);
+}
+
+.langs button.langActive {
+  color: var(--bg);
+  background: var(--gold);
+}
+
+.account {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.accountLink {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.accountLink:hover {
+  color: var(--gold);
+}
+
+.logout {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-dim);
+  background: none;
+  border: 0;
+}
+
+.logout:hover {
+  color: var(--blood-text);
+}
+
+.ghost,
+.cta {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ghost {
+  color: var(--ink);
+  border: 2px solid var(--line);
+}
+
+.ghost:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.cta {
+  color: var(--ink);
+  background: var(--blood);
+  border: 2px solid var(--line-dark);
+  box-shadow: 0 3px 0 0 var(--line-dark);
+}
+
+.cta:hover {
+  color: var(--ink);
+  background: var(--blood-hover);
+}
+
+/* ---------- Contenido y pie ---------- */
+
+.main {
+  width: 100%;
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6) var(--space-12);
+}
+
 .main:focus {
   outline: none;
 }
 
-.main {
-  padding: var(--space-6) 0;
+.footer {
+  border-top: 2px solid var(--line);
+  background: rgb(15 11 20 / 0.6);
 }
 
-.footer {
+.footerInner {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-4) 0 var(--space-6);
-  border-top: var(--px) solid var(--line-dark);
-  box-shadow: 0 calc(var(--px) * -1) 0 0 var(--line);
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-6);
+  font-size: 0.85rem;
   color: var(--ink-dim);
-  font-size: 0.9rem;
 }
 
-.footer p {
+.footerInner p {
   margin: 0;
-  max-width: 60ch;
+  max-width: 70ch;
 }
 
-/* Contador de visitas falso, estilo años 2000 */
+/* Contador de visitas falso, guiño a los años 2000 */
 .counter span {
+  padding: 2px 8px;
   font-family: var(--font-display);
   font-size: 0.6rem;
+  letter-spacing: 2px;
   color: var(--good);
   background: #000;
-  padding: var(--space-1) var(--space-2);
-  box-shadow: 0 0 0 2px var(--line);
-  letter-spacing: 2px;
+  border: 1px solid var(--line);
 }
 
 @keyframes flicker {
@@ -166,46 +257,53 @@
   }
   94%,
   98% {
-    opacity: 0.55;
+    opacity: 0.6;
   }
 }
 
-/* Pantallas angostas (teléfono, ventana chica, overlay de Steam): encabezado compacto para que el
-   contenido empiece arriba y no tres filas más abajo. */
-@media (max-width: 560px) {
-  .shell {
-    padding: 0 var(--space-3);
+/* ---------- Pantallas angostas ---------- */
+
+@media (max-width: 860px) {
+  .topbarInner {
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
   }
 
-  .header {
-    padding: var(--space-3) 0 var(--space-2);
-    gap: var(--space-2) var(--space-3);
+  .right {
+    margin-left: auto;
   }
 
-  .logo {
-    font-size: 0.85rem;
-    overflow-wrap: anywhere;
+  /* La navegación pasa a su propia fila y se desplaza horizontalmente si no entra */
+  .nav {
+    order: 3;
+    flex: 1 0 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 
-  .tagline {
+  .nav::-webkit-scrollbar {
     display: none;
   }
 
-  .nav {
-    gap: 0 var(--space-2);
-  }
-
-  .nav a,
-  .navButton {
-    font-size: 0.5rem;
-    padding: var(--space-2) var(--space-1);
-  }
-
-  .langs button {
-    padding: var(--space-1) var(--space-2);
+  .navActive::after {
+    bottom: 0;
   }
 
   .main {
-    padding: var(--space-4) 0;
+    padding: var(--space-6) var(--space-4) var(--space-8);
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 0.75rem;
+  }
+
+  .account {
+    gap: var(--space-2);
+  }
+
+  .ghost {
+    display: none;
   }
 }

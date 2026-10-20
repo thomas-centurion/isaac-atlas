@@ -7,6 +7,8 @@
 }
 
 .seed {
+  margin: 0;
+  font-size: 1.6rem;
   letter-spacing: 4px;
   user-select: all;
 }
@@ -14,42 +16,69 @@
 .badges {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-2);
+}
+
+.badges a {
+  text-decoration: none;
 }
 
 .hint {
+  margin: 0 0 var(--space-4);
+  font-size: 0.85rem;
   color: var(--ink-dim);
-  font-size: 0.95rem;
 }
 
 .items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .item {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-0);
-  box-shadow: 0 0 0 var(--px) var(--line-dark);
-  margin: var(--px);
+  padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
+  background: var(--surface-2);
+  border: 2px solid var(--line);
+}
+
+/* El sprite va en su casillero (box-shadow y no borde: el sprite se posiciona sobre su fondo) */
+.item > :first-child {
+  flex: none;
+  margin: 6px;
+  background-color: var(--bg);
+  box-shadow:
+    0 0 0 4px var(--bg),
+    0 0 0 6px var(--line);
 }
 
 .item span:nth-child(2) {
   flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .runs {
-  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-5);
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
+  list-style: none;
+}
+
+@media (max-width: 480px) {
+  .seed {
+    font-size: 1.1rem;
+  }
+
+  .runs {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

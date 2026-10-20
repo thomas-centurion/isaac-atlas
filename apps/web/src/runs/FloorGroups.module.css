@@ -1,35 +1,67 @@
 .group {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.group:last-child {
+  margin-bottom: 0;
+}
+
+/* Cada piso lleva su título con una línea que lo separa del siguiente */
+.group h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.group h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
 }
 
 .list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .card {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-0);
-  box-shadow: 0 0 0 var(--px) var(--line-dark);
-  margin: var(--px);
+  padding: var(--space-2);
+  padding-right: var(--space-3);
+  background: var(--surface-2);
+  border: 2px solid var(--line);
+}
+
+/* El sprite va en su casillero, como en el inventario del juego */
+/* (con box-shadow y no con padding/borde: el sprite se posiciona sobre el fondo del propio elemento) */
+.card > :first-child {
+  flex: none;
+  margin: 6px;
+  background-color: var(--bg);
+  box-shadow:
+    0 0 0 4px var(--bg),
+    0 0 0 6px var(--line);
 }
 
 .info {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
   flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
   min-width: 0;
 }
 
 .name {
+  font-weight: 700;
+  line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
@@ -42,23 +74,23 @@
 .source {
   flex: 1;
   min-width: 0;
-}
-
-.source {
+  padding: 0.25rem 0.4rem;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   color: var(--ink);
-  background: var(--panel);
-  border: 0;
-  padding: 2px var(--space-1);
-  box-shadow: 0 0 0 2px var(--line);
+  background: var(--bg);
+  border: 2px solid var(--line-strong);
 }
 
 .sourceText {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-dim);
-  font-size: 0.9rem;
 }
 
 .empty {
+  margin: 0;
   color: var(--ink-dim);
 }

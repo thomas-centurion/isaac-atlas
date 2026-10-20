@@ -44,7 +44,8 @@
     "verdict": "Community tag",
     "sortBy": "Sort by",
     "daily": "Seed of the day",
-    "dailyHint": "The best recent run according to the community. It changes every day."
+    "dailyHint": "The best recent run according to the community. It changes every day.",
+    "moreFilters": "More filters"
   },
   "report": {
     "open": "Report",
@@ -250,7 +251,10 @@
     "allRunsOfSeed": "See all runs of this seed",
     "myRuns": "My runs",
     "newCta": "+ New run",
-    "emptyMine": "You have not logged any runs yet."
+    "emptyMine": "You have not logged any runs yet.",
+    "author": "Author",
+    "published": "Published",
+    "edited": "Edited"
   },
   "floors": {
     "1": "Basement I / Downpour I",

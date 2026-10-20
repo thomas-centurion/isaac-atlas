@@ -10,7 +10,7 @@ import { useLang } from '../hooks/useLang';
 import { FloorGroups } from '../runs/FloorGroups';
 import { characterLabel } from '../runs/labels';
 import { ReportRun } from '../runs/ReportRun';
-import { VoteControls } from '../runs/VoteControls';
+import { VerdictChips, VoteBox } from '../runs/VoteControls';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { Notice } from '../ui/Notice';
@@ -38,6 +38,7 @@ export function RunDetail() {
   const character = getCharacter(run.characterId);
   const seed = formatSeed(run.seed);
   const isOwner = me?.id === run.author.id;
+  const date = (iso: string) => new Date(iso).toLocaleDateString(lang);
 
   const copySeed = async () => {
     try {
@@ -50,84 +51,106 @@ export function RunDetail() {
   };
 
   return (
-    <>
-      <Panel>
-        <div className={styles.head}>
-          <h1 className={styles.seed}>{seed}</h1>
-          <Button variant="secondary" onClick={copySeed}>
-            {copied ? t('run.copied') : t('run.copySeed')}
-          </Button>
-        </div>
-        <div className={styles.badges}>
-          {character ? <Badge tone="op">{characterLabel(character, lang, t)}</Badge> : null}
-          <Badge>{t(`difficulty.${run.difficulty}`)}</Badge>
-          <Badge>Rep+</Badge>
-          <Badge tone={run.fullUnlocks ? 'troll' : 'hard'}>
-            {t(run.fullUnlocks ? 'run.unlocksFull' : 'run.unlocksPartial')}
-          </Badge>
-        </div>
-        <p>
-          {t(`results.${run.outcome.result}`)}
-          {run.outcome.lastFloor ? ` · ${t(`floors.${run.outcome.lastFloor}`)}` : ''}
-          {run.outcome.finalBoss ? ` · ${t(`bosses.${run.outcome.finalBoss}`)}` : ''}
-        </p>
-        <VoteControls run={run} />
-        <p>
-          <Link to={`/seeds/${run.seed}`}>{t('run.allRunsOfSeed')}</Link>
-        </p>
-        <p className={styles.meta}>
-          {t('run.byPrefix')} <Link to={`/u/${run.author.username}`}>{run.author.username}</Link> ·{' '}
-          {new Date(run.createdAt).toLocaleDateString(lang)}
-        </p>
-        {run.editedAt ? (
-          <p className={styles.meta}>
-            {t('run.editedOn', { date: new Date(run.editedAt).toLocaleDateString(lang) })}
+    <div className={styles.layout}>
+      <div className={styles.main}>
+        <header className={styles.hero}>
+          <p className={styles.eyebrow}>
+            {character ? characterLabel(character, lang, t) : null}
+            {' · '}
+            {t(`difficulty.${run.difficulty}`)}
           </p>
-        ) : null}
-        {run.notes ? <p className={styles.notes}>{run.notes}</p> : null}
-      </Panel>
-
-      <Panel title={t('run.itemsTitle')}>
-        <FloorGroups items={run.items} trinkets={run.trinkets} />
-      </Panel>
-
-      {!isOwner ? (
-        <Panel>
-          <ReportRun run={run} />
-        </Panel>
-      ) : null}
-
-      {isOwner ? (
-        <Panel>
-          <div className={styles.confirm}>
-            <Button variant="secondary" onClick={() => navigate(`/runs/${run.id}/edit`)}>
-              {t('run.edit')}
+          <div className={styles.seedRow}>
+            <h1 className={styles.seed}>{seed}</h1>
+            <Button variant="secondary" onClick={copySeed}>
+              {copied ? t('run.copied') : t('run.copySeed')}
             </Button>
           </div>
-          {remove.error ? <Notice tone="error">{t('errors.internal')}</Notice> : null}
-          {confirming ? (
-            <div className={styles.confirm}>
-              <span>{t('run.confirmDelete')}</span>
-              <Button
-                variant="danger"
-                disabled={remove.isPending}
-                onClick={() => remove.mutate(run.id, { onSuccess: () => navigate('/runs') })}
-              >
-                {t('run.deleteYes')}
+          <div className={styles.badges}>
+            <Badge tone="op">{t(`results.${run.outcome.result}`)}</Badge>
+            {run.outcome.lastFloor ? <Badge>{t(`floors.${run.outcome.lastFloor}`)}</Badge> : null}
+            {run.outcome.finalBoss ? <Badge>{t(`bosses.${run.outcome.finalBoss}`)}</Badge> : null}
+            <Badge>Rep+</Badge>
+            <Badge tone={run.fullUnlocks ? 'troll' : 'hard'}>
+              {t(run.fullUnlocks ? 'run.unlocksFull' : 'run.unlocksPartial')}
+            </Badge>
+          </div>
+        </header>
+
+        <Panel title={t('run.itemsTitle')}>
+          <FloorGroups items={run.items} trinkets={run.trinkets} />
+        </Panel>
+
+        {run.notes ? (
+          <Panel title={t('run.notes')}>
+            <p className={styles.notes}>{run.notes}</p>
+          </Panel>
+        ) : null}
+      </div>
+
+      <aside className={styles.aside}>
+        <section className={styles.card} aria-label={t('react.votes')}>
+          <VoteBox run={run} orientation="horizontal" />
+          <VerdictChips run={run} />
+        </section>
+
+        <section className={styles.card}>
+          <dl className={styles.facts}>
+            <div>
+              <dt>{t('run.author')}</dt>
+              <dd>
+                <Link to={`/u/${run.author.username}`}>{run.author.username}</Link>
+              </dd>
+            </div>
+            <div>
+              <dt>{t('run.published')}</dt>
+              <dd>{date(run.createdAt)}</dd>
+            </div>
+            {run.editedAt ? (
+              <div>
+                <dt>{t('run.edited')}</dt>
+                <dd>{date(run.editedAt)}</dd>
+              </div>
+            ) : null}
+          </dl>
+          <Link to={`/seeds/${run.seed}`} className={styles.seedLink}>
+            {t('run.allRunsOfSeed')} →
+          </Link>
+        </section>
+
+        <section className={styles.card}>
+          {isOwner ? (
+            <div className={styles.actions}>
+              <Button variant="secondary" onClick={() => navigate(`/runs/${run.id}/edit`)}>
+                {t('run.edit')}
               </Button>
-              <Button variant="secondary" onClick={() => setConfirming(false)}>
-                {t('run.cancel')}
-              </Button>
+              {remove.error ? <Notice tone="error">{t('errors.internal')}</Notice> : null}
+              {confirming ? (
+                <div className={styles.confirm}>
+                  <span>{t('run.confirmDelete')}</span>
+                  <div className={styles.confirmButtons}>
+                    <Button
+                      variant="danger"
+                      disabled={remove.isPending}
+                      onClick={() => remove.mutate(run.id, { onSuccess: () => navigate('/runs') })}
+                    >
+                      {t('run.deleteYes')}
+                    </Button>
+                    <Button variant="secondary" onClick={() => setConfirming(false)}>
+                      {t('run.cancel')}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button variant="danger" onClick={() => setConfirming(true)}>
+                  {t('run.delete')}
+                </Button>
+              )}
             </div>
           ) : (
-            <Button variant="danger" onClick={() => setConfirming(true)}>
-              {t('run.delete')}
-            </Button>
+            <ReportRun run={run} />
           )}
-        </Panel>
-      ) : null}
-
-      <Link to="/runs">{t('run.backToRuns')}</Link>
-    </>
+        </section>
+      </aside>
+    </div>
   );
 }

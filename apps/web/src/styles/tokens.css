@@ -1,46 +1,63 @@
 :root {
   color-scheme: dark;
 
-  /* Paleta: sótano oscuro, sangre y pergamino */
-  --bg-0: #100b09;
-  --bg-1: #1a120f;
-  --panel: #2a1d18;
-  --panel-raised: #3a2a22;
-  --line: #5a4234;
-  --line-dark: #0a0605;
-  --ink: #efe2c8;
-  --ink-dim: #a89880;
-  --blood: #b3261e;
-  --blood-bright: #e04032;
-  /* Variantes accesibles (WCAG AA, ver docs/PLAN.md): texto rojo sobre fondos oscuros, hover de botones
-     rojos con texto claro, y borde de campos de formulario (3:1 contra el panel). */
-  --blood-text: #f27565;
-  --blood-hover: #bf2c25;
-  --line-strong: #8a7358;
-  --gold: #e2b040;
-  --tear: #6fb4e8;
-  --good: #7fbf5a;
+  /* --- Superficies: del fondo de la página a lo más elevado --- */
+  --bg: #0f0b14;
+  --surface: #19131f;
+  --surface-2: #231b2b;
+  --surface-3: #2e2437;
 
-  /* Tipografía */
+  /* --- Líneas --- */
+  --line: #3a2f45;
+  /* Borde de campos de formulario: 3:1 contra las superficies (WCAG 1.4.11) */
+  --line-strong: #85749a;
+  --line-dark: #05030a;
+
+  /* --- Texto --- */
+  --ink: #f4eee6;
+  --ink-dim: #b5a9c0;
+
+  /* --- Acentos (cada uno con un significado) --- */
+  --blood: #c8362b; /* acción principal */
+  --blood-hover: #b52d23; /* más oscuro al pasar el mouse: el texto claro mantiene contraste */
+  --blood-bright: #e5503f; /* rellenos y bordes de error */
+  --blood-text: #ff7a6b; /* texto rojo sobre fondo oscuro */
+  --gold: #f4c24a; /* seed, destacados, OP */
+  --tear: #62c4f5; /* links */
+  --good: #7ad36b; /* éxito, Troll */
+  --danger: #7a1f1a; /* botón destructivo */
+
+  /* --- Tipografía ---
+     Pixel solo para el logo y los títulos de página; el resto, una sans legible. */
   --font-display: 'Press Start 2P', monospace;
-  --font-body: 'VT323', monospace;
+  --font-body: 'Chakra Petch', system-ui, sans-serif;
 
-  /* Espaciado en múltiplos del "píxel" del tema */
+  /* --- Espaciado (múltiplos del "píxel" del tema) --- */
   --px: 4px;
   --space-1: var(--px);
   --space-2: calc(var(--px) * 2);
   --space-3: calc(var(--px) * 3);
   --space-4: calc(var(--px) * 4);
+  --space-5: calc(var(--px) * 5);
   --space-6: calc(var(--px) * 6);
   --space-8: calc(var(--px) * 8);
+  --space-12: calc(var(--px) * 12);
 
-  /* Cursores pixel art (SVG inline, sin archivos) */
+  /* --- Profundidad al estilo píxel: sombra dura, sin desenfoque --- */
+  --shadow-card: 4px 4px 0 0 rgb(0 0 0 / 0.45);
+  --shadow-raise: 6px 6px 0 0 rgb(0 0 0 / 0.5);
+
+  /* --- Tamaños de layout --- */
+  --page-max: 1320px;
+  --sidebar-w: 300px;
+
+  /* --- Cursores pixel art (SVG inline, sin archivos) --- */
   --cursor-default:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,10 3,7 5,11 7,10 5,6 9,6' fill='%23efe2c8' stroke='%230a0605' stroke-width='1'/%3E%3C/svg%3E")
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,10 3,7 5,11 7,10 5,6 9,6' fill='%23f4eee6' stroke='%2305030a' stroke-width='1'/%3E%3C/svg%3E")
       0 0,
     auto;
   --cursor-pointer:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,10 3,7 5,11 7,10 5,6 9,6' fill='%23e2b040' stroke='%23b3261e' stroke-width='1'/%3E%3C/svg%3E")
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 12 12' shape-rendering='crispEdges'%3E%3Cpolygon points='0,0 0,10 3,7 5,11 7,10 5,6 9,6' fill='%23f4c24a' stroke='%23c8362b' stroke-width='1'/%3E%3C/svg%3E")
       0 0,
     pointer;
 }

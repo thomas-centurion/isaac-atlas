@@ -15,8 +15,6 @@ import {
 import { useLang } from '../hooks/useLang';
 import { ItemPicker } from '../runs/ItemPicker';
 import { characterLabel } from '../runs/labels';
-import { Button } from '../ui/Button';
-import { Panel } from '../ui/Panel';
 import { Select } from '../ui/Select';
 import { TextField } from '../ui/TextField';
 import { ItemChips } from './ItemChips';
@@ -31,6 +29,7 @@ interface FilterPanelProps {
   focusRef?: RefObject<HTMLInputElement>;
 }
 
+/** Barra lateral de filtros: lo principal (personaje e ítems) a la vista, el resto en "Más filtros". */
 export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
   const { t } = useTranslation();
   const lang = useLang();
@@ -84,114 +83,58 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
     { list: 'exclude', label: t('search.excludeItems'), hint: t('search.excludeItemsHint') },
   ];
 
+  // "Más filtros" se abre solo si alguno de ellos está aplicado (así no hay filtros ocultos activos).
+  const moreActive =
+    filters.seed !== undefined ||
+    filters.difficulty !== undefined ||
+    filters.fullUnlocks !== undefined ||
+    filters.result !== undefined ||
+    filters.verdict !== undefined;
+
   return (
-    <Panel title={t('search.filters')}>
-      <div className={styles.grid}>
-        <TextField
-          label={t('run.seed')}
-          placeholder="ABCD 1234"
-          maxLength={9}
-          autoComplete="off"
-          spellCheck={false}
-          value={seedText}
-          error={
-            seedText.trim() !== '' && !isValidSeedFormat(seedText)
-              ? t('run.seedInvalid')
-              : undefined
-          }
-          onChange={(e) => onSeedChange(e.target.value)}
-        />
-
-        <Select
-          label={t('run.character')}
-          value={filters.character ?? ''}
-          onChange={(e) => {
-            if (e.target.value === '') unset('character');
-            else set({ character: Number(e.target.value) });
-          }}
+    <section className={styles.panel} aria-labelledby="filters-title">
+      <div className={styles.head}>
+        <h2 id="filters-title" className={styles.title}>
+          {t('search.filters')}
+        </h2>
+        <button
+          type="button"
+          className={styles.clear}
+          disabled={!hasActiveFilters(filters)}
+          onClick={() => onChange({ startItems: [], items: [], exclude: [], sort: filters.sort })}
         >
-          <option value="">{t('search.any')}</option>
-          <optgroup label={t('run.regular')}>
-            {regular.map((c) => (
-              <option key={c.id} value={c.id}>
-                {characterLabel(c, lang, t)}
-              </option>
-            ))}
-          </optgroup>
-          <optgroup label={t('run.tainted')}>
-            {tainted.map((c) => (
-              <option key={c.id} value={c.id}>
-                {characterLabel(c, lang, t)}
-              </option>
-            ))}
-          </optgroup>
-        </Select>
-
-        <Select
-          label={t('run.difficulty')}
-          value={filters.difficulty ?? ''}
-          onChange={(e) => {
-            if (e.target.value === '') unset('difficulty');
-            else set({ difficulty: e.target.value as (typeof DIFFICULTIES)[number] });
-          }}
-        >
-          <option value="">{t('search.any')}</option>
-          {DIFFICULTIES.map((d) => (
-            <option key={d} value={d}>
-              {t(`difficulty.${d}`)}
-            </option>
-          ))}
-        </Select>
-
-        <Select
-          label={t('search.unlocks')}
-          value={filters.fullUnlocks === undefined ? '' : String(filters.fullUnlocks)}
-          onChange={(e) => {
-            if (e.target.value === '') unset('fullUnlocks');
-            else set({ fullUnlocks: e.target.value === 'true' });
-          }}
-        >
-          <option value="">{t('search.any')}</option>
-          <option value="true">{t('run.unlocksFull')}</option>
-          <option value="false">{t('run.unlocksPartial')}</option>
-        </Select>
-
-        <Select
-          label={t('run.result')}
-          value={filters.result ?? ''}
-          onChange={(e) => {
-            if (e.target.value === '') unset('result');
-            else set({ result: e.target.value as (typeof RUN_RESULTS)[number] });
-          }}
-        >
-          <option value="">{t('search.any')}</option>
-          {RUN_RESULTS.map((r) => (
-            <option key={r} value={r}>
-              {t(`results.${r}`)}
-            </option>
-          ))}
-        </Select>
-
-        <Select
-          label={t('search.verdict')}
-          value={filters.verdict ?? ''}
-          onChange={(e) => {
-            if (e.target.value === '') unset('verdict');
-            else set({ verdict: e.target.value as (typeof VERDICT_KINDS)[number] });
-          }}
-        >
-          <option value="">{t('search.any')}</option>
-          {VERDICT_KINDS.map((kind) => (
-            <option key={kind} value={kind}>
-              {t(`verdict.${kind}`)}
-            </option>
-          ))}
-        </Select>
+          {t('search.clear')}
+        </button>
       </div>
+
+      <Select
+        label={t('run.character')}
+        value={filters.character ?? ''}
+        onChange={(e) => {
+          if (e.target.value === '') unset('character');
+          else set({ character: Number(e.target.value) });
+        }}
+      >
+        <option value="">{t('search.any')}</option>
+        <optgroup label={t('run.regular')}>
+          {regular.map((c) => (
+            <option key={c.id} value={c.id}>
+              {characterLabel(c, lang, t)}
+            </option>
+          ))}
+        </optgroup>
+        <optgroup label={t('run.tainted')}>
+          {tainted.map((c) => (
+            <option key={c.id} value={c.id}>
+              {characterLabel(c, lang, t)}
+            </option>
+          ))}
+        </optgroup>
+      </Select>
 
       <div className={styles.pickers}>
         {pickers.map(({ list, label, hint }, i) => (
-          <div key={list}>
+          <div key={list} className={styles.picker}>
             <ItemPicker
               kind="item"
               label={label}
@@ -205,13 +148,86 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
         ))}
       </div>
 
-      <Button
-        variant="secondary"
-        disabled={!hasActiveFilters(filters)}
-        onClick={() => onChange({ startItems: [], items: [], exclude: [], sort: filters.sort })}
-      >
-        {t('search.clear')}
-      </Button>
-    </Panel>
+      <details className={styles.more} open={moreActive}>
+        <summary className={styles.summary}>{t('search.moreFilters')}</summary>
+        <div className={styles.moreBody}>
+          <TextField
+            label={t('run.seed')}
+            placeholder="ABCD 1234"
+            maxLength={9}
+            autoComplete="off"
+            spellCheck={false}
+            value={seedText}
+            error={
+              seedText.trim() !== '' && !isValidSeedFormat(seedText)
+                ? t('run.seedInvalid')
+                : undefined
+            }
+            onChange={(e) => onSeedChange(e.target.value)}
+          />
+
+          <Select
+            label={t('run.difficulty')}
+            value={filters.difficulty ?? ''}
+            onChange={(e) => {
+              if (e.target.value === '') unset('difficulty');
+              else set({ difficulty: e.target.value as (typeof DIFFICULTIES)[number] });
+            }}
+          >
+            <option value="">{t('search.any')}</option>
+            {DIFFICULTIES.map((d) => (
+              <option key={d} value={d}>
+                {t(`difficulty.${d}`)}
+              </option>
+            ))}
+          </Select>
+
+          <Select
+            label={t('search.unlocks')}
+            value={filters.fullUnlocks === undefined ? '' : String(filters.fullUnlocks)}
+            onChange={(e) => {
+              if (e.target.value === '') unset('fullUnlocks');
+              else set({ fullUnlocks: e.target.value === 'true' });
+            }}
+          >
+            <option value="">{t('search.any')}</option>
+            <option value="true">{t('run.unlocksFull')}</option>
+            <option value="false">{t('run.unlocksPartial')}</option>
+          </Select>
+
+          <Select
+            label={t('run.result')}
+            value={filters.result ?? ''}
+            onChange={(e) => {
+              if (e.target.value === '') unset('result');
+              else set({ result: e.target.value as (typeof RUN_RESULTS)[number] });
+            }}
+          >
+            <option value="">{t('search.any')}</option>
+            {RUN_RESULTS.map((r) => (
+              <option key={r} value={r}>
+                {t(`results.${r}`)}
+              </option>
+            ))}
+          </Select>
+
+          <Select
+            label={t('search.verdict')}
+            value={filters.verdict ?? ''}
+            onChange={(e) => {
+              if (e.target.value === '') unset('verdict');
+              else set({ verdict: e.target.value as (typeof VERDICT_KINDS)[number] });
+            }}
+          >
+            <option value="">{t('search.any')}</option>
+            {VERDICT_KINDS.map((kind) => (
+              <option key={kind} value={kind}>
+                {t(`verdict.${kind}`)}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </details>
+    </section>
   );
 }

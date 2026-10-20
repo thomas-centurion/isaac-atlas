@@ -1,25 +1,38 @@
 .badge {
-  --c: var(--ink-dim);
-  display: inline-block;
-  font-family: var(--font-display);
-  font-size: 0.5rem;
-  line-height: 1;
-  padding: var(--space-2) var(--space-2);
-  color: var(--bg-0);
-  background: var(--c);
-  box-shadow: 0 0 0 2px var(--line-dark);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  line-height: 1.5;
   text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink);
+  background: var(--surface-3);
+  border: 1px solid var(--line);
 }
 
+/* Los veredictos de la comunidad llevan color pleno: es lo que tiene que saltar a la vista */
 .op {
-  --c: var(--gold);
+  color: var(--bg);
+  background: var(--gold);
+  border-color: transparent;
 }
+
 .troll {
-  --c: var(--good);
+  color: var(--bg);
+  background: var(--good);
+  border-color: transparent;
 }
+
 .hard {
-  --c: var(--blood-bright);
+  color: var(--bg);
+  background: var(--blood-text);
+  border-color: transparent;
 }
+
 .neutral {
-  --c: var(--ink-dim);
+  color: var(--ink);
+  background: var(--surface-3);
 }

@@ -1,33 +1,70 @@
 .card {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-3);
-  color: var(--ink);
-  background: var(--bg-0);
-  box-shadow: 0 0 0 var(--px) var(--line-dark);
-  margin: var(--px);
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  height: 100%;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 100ms steps(2),
+    box-shadow 100ms steps(2),
+    border-color 100ms steps(2);
 }
 
 .card:hover {
-  background: var(--panel-raised);
+  border-color: var(--line-strong);
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-raise);
 }
 
-.main {
+/* La seed del día destaca con el dorado y un halo suave */
+.featured {
+  border-color: var(--gold);
+  box-shadow:
+    var(--shadow-card),
+    0 0 28px rgb(244 194 74 / 0.18);
+}
+
+.featured:hover {
+  border-color: var(--gold);
+}
+
+/* Columna de voto: un riel a la izquierda, como en los foros */
+.votes {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) 0;
+  background: var(--surface-2);
+  border-right: 2px solid var(--line);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-4);
+}
+
+.head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3) var(--space-6);
+  gap: var(--space-2) var(--space-4);
 }
 
-/* El link cubre toda la tarjeta; lo interactivo del pie va con z-index por encima. */
+/* El link cubre toda la tarjeta; lo interactivo va con z-index por encima */
 .link {
   font-family: var(--font-display);
-  font-size: 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  letter-spacing: 1px;
   color: var(--gold);
-  letter-spacing: 2px;
   text-decoration: none;
+  text-shadow: 2px 2px 0 var(--line-dark);
 }
 
 .link::after {
@@ -37,45 +74,75 @@
 }
 
 .link:focus-visible::after {
-  outline: 2px dashed var(--gold);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 
 .badges {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  gap: var(--space-1) var(--space-2);
 }
 
-.icons {
+/* Ranuras de inventario: cada ítem en su casillero, como en el juego */
+.slots {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  margin-left: auto;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.slot {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  background: var(--bg);
+  border: 2px solid var(--line);
+}
+
+.hit {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgb(244 194 74 / 0.35);
 }
 
 .more {
+  margin-left: var(--space-1);
+  font-size: 0.85rem;
+  font-weight: 700;
   color: var(--ink-dim);
-  margin-left: var(--space-2);
 }
 
-.footer {
+.foot {
   position: relative;
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3) var(--space-6);
-  /* Los clics en espacios vacíos del pie siguen yendo al link de la tarjeta. */
+  gap: var(--space-2) var(--space-4);
+  margin-top: auto;
+  /* Los clics en espacios vacíos del pie siguen yendo al link de la tarjeta */
   pointer-events: none;
 }
 
-.footer > * {
+.foot > * {
   pointer-events: auto;
 }
 
 .meta {
+  font-size: 0.8rem;
   color: var(--ink-dim);
-  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .card {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .body {
+    padding: var(--space-3);
+  }
 }
