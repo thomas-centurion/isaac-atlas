@@ -63,3 +63,21 @@
 .danger {
   margin-top: var(--space-4);
 }
+
+/* Textos legales: columna de lectura cómoda */
+.legal {
+  max-width: 760px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Páginas de resultado (email confirmado, etc.): contenido centrado */
+.center {
+  text-align: center;
+}
+
+.center > p,
+.center > a {
+  margin-left: auto;
+  margin-right: auto;
+}

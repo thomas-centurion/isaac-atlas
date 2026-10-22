@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
 import { useLogout, useMe } from '../auth/useAuth';
@@ -33,6 +33,7 @@ export function Layout() {
 
   const { data: user } = useMe();
   const logout = useLogout();
+  const navigate = useNavigate();
   const current: Language = i18n.language.startsWith('es') ? 'es' : 'en';
 
   return (
@@ -97,7 +98,13 @@ export function Layout() {
                 <NavLink to="/account" className={styles.accountLink}>
                   {user.username ?? t('account.title')}
                 </NavLink>
-                <button type="button" className={styles.logout} onClick={() => logout.mutate()}>
+                <button
+                  type="button"
+                  className={styles.logout}
+                  onClick={() =>
+                    logout.mutate(undefined, { onSuccess: () => navigate('/?session=closed') })
+                  }
+                >
                   {t('auth.logout')}
                 </button>
               </div>
@@ -121,7 +128,9 @@ export function Layout() {
 
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
-          <p>{t('footer.legal')}</p>
+          <p>
+            {t('footer.legal')} <Link to="/privacy">{t('footer.privacy')}</Link>
+          </p>
           <p className={styles.counter}>
             {t('footer.visitors')} <span>000042</span>
           </p>

@@ -3,6 +3,7 @@ import { RequireAuth } from './auth/RequireAuth';
 import { Layout } from './layout/Layout';
 import { Account } from './pages/Account';
 import { Admin } from './pages/Admin';
+import { Privacy } from './pages/Privacy';
 import { Profile } from './pages/Profile';
 import { Design } from './pages/Design';
 import { EditRun } from './pages/EditRun';
@@ -27,6 +28,7 @@ export function App() {
         <Route path="u/:username" element={<Profile />} />
         <Route path="admin" element={<Admin />} />
         <Route path="design" element={<Design />} />
+        <Route path="privacy" element={<Privacy />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route path="forgot-password" element={<ForgotPassword />} />

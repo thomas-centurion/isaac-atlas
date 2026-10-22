@@ -19,7 +19,7 @@ import {
   unlinkIdentity,
   type ProviderProfile,
 } from '../auth/accounts.js';
-import { sendResetMail, sendVerificationMail } from '../auth/mailer.js';
+import { logMailFailure, sendResetMail, sendVerificationMail } from '../auth/mailer.js';
 import { googleEnabled, passport, steamEnabled } from '../auth/passport.js';
 import { burnPasswordCheck, hashPassword, verifyPassword } from '../auth/password.js';
 import {
@@ -83,7 +83,10 @@ authRouter.post(
       username,
       passwordHash: await hashPassword(password),
     });
-    await sendVerificationMail(email, await issueToken(user._id, 'verify'), locale);
+    // Sin esperar al proveedor: un mail lento no debe colgar el registro.
+    void sendVerificationMail(email, await issueToken(user._id, 'verify'), locale).catch(
+      logMailFailure,
+    );
     await logIn(req, user);
     res.status(201).json({ user: toPublicUser(user) });
   }),
@@ -150,7 +153,11 @@ authRouter.post(
     const { email, locale } = parseBody(forgotPasswordSchema, req.body);
     const user = await User.findOne({ email });
     // Misma respuesta exista o no el email: no revelamos qué cuentas hay.
-    if (user?.email) await sendResetMail(user.email, await issueToken(user._id, 'reset'), locale);
+    if (user?.email) {
+      void sendResetMail(user.email, await issueToken(user._id, 'reset'), locale).catch(
+        logMailFailure,
+      );
+    }
     res.status(204).end();
   }),
 );

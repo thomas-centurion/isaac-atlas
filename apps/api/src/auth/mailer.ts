@@ -11,13 +11,48 @@ export interface Mail {
 /** En tests guardamos los mails acá en vez de enviarlos. */
 export const outbox: Mail[] = [];
 
-const transport = config.SMTP_URL ? nodemailer.createTransport(config.SMTP_URL) : null;
+function createTransport() {
+  if (config.SMTP_HOST) {
+    const port = Number(config.SMTP_PORT ?? 587);
+    return nodemailer.createTransport({
+      host: config.SMTP_HOST,
+      port,
+      secure: port === 465,
+      auth: config.SMTP_USER ? { user: config.SMTP_USER, pass: config.SMTP_PASS ?? '' } : undefined,
+    });
+  }
+  return config.SMTP_URL ? nodemailer.createTransport(config.SMTP_URL) : null;
+}
+
+const transport = createTransport();
+
+/** Separa "Nombre <correo>" en sus partes. */
+function parseSender(from: string): { name?: string; email: string } {
+  const match = /^(.*)<([^>]+)>\s*$/.exec(from);
+  return match ? { name: match[1]!.trim() || undefined, email: match[2]!.trim() } : { email: from };
+}
+
+async function sendViaBrevo(mail: Mail): Promise<void> {
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': config.BREVO_API_KEY!, 'content-type': 'application/json' },
+    body: JSON.stringify({
+      sender: parseSender(config.MAIL_FROM),
+      to: [{ email: mail.to }],
+      subject: mail.subject,
+      textContent: mail.text,
+    }),
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
+}
 
 export async function sendMail(mail: Mail): Promise<void> {
   if (config.NODE_ENV === 'test') {
     outbox.push(mail);
     return;
   }
+  if (config.BREVO_API_KEY) return sendViaBrevo(mail);
   if (!transport) {
     // Desarrollo sin SMTP: el mail se imprime en consola.
     console.log(`\n[mail] to=${mail.to}\n[mail] ${mail.subject}\n${mail.text}\n`);
@@ -53,4 +88,9 @@ export function sendVerificationMail(to: string, token: string, locale: Locale =
 export function sendResetMail(to: string, token: string, locale: Locale = 'es') {
   const url = `${config.PUBLIC_URL}/reset-password?token=${token}`;
   return sendMail({ to, subject: COPY[locale].resetSubject, text: COPY[locale].resetBody(url) });
+}
+
+/** Para registro y recuperación: si el proveedor falla, se registra el error y la petición sigue. */
+export function logMailFailure(err: unknown): void {
+  console.error('[mail] no se pudo enviar:', err instanceof Error ? err.message : err);
 }

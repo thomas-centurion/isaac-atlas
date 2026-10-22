@@ -95,6 +95,9 @@ export function Search() {
           <p>{t('search.intro')}</p>
         </header>
 
+        {params.get('session') === 'closed' ? (
+          <Notice tone="success">{t('auth.loggedOut')}</Notice>
+        ) : null}
         {params.get('account') === 'deleted' ? (
           <Notice tone="success">{t('account.deleted')}</Notice>
         ) : null}

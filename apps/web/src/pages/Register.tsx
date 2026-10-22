@@ -17,7 +17,7 @@ export function Register() {
   usePageTitle(t('auth.registerTitle'));
   const { data: me } = useMe();
   const register = useRegister();
-  const [values, setValues] = useState({ email: '', username: '', password: '' });
+  const [values, setValues] = useState({ email: '', username: '', password: '', confirm: '' });
   const [clientErrors, setClientErrors] = useState<Record<string, true>>({});
 
   if (me) return <Navigate to="/" replace />;
@@ -35,12 +35,12 @@ export function Register() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const parsed = registerSchema.safeParse(values);
-    setClientErrors(
-      parsed.success
-        ? {}
-        : Object.fromEntries(parsed.error.issues.map((i) => [i.path.join('.'), true as const])),
-    );
-    if (parsed.success) register.mutate(parsed.data);
+    const errors: Record<string, true> = parsed.success
+      ? {}
+      : Object.fromEntries(parsed.error.issues.map((i) => [i.path.join('.'), true as const]));
+    if (values.confirm !== values.password) errors.confirm = true;
+    setClientErrors(errors);
+    if (parsed.success && !errors.confirm) register.mutate(parsed.data);
   };
 
   // Los errores de campo ya se muestran junto al input.
@@ -65,6 +65,12 @@ export function Register() {
           type="password"
           autoComplete="new-password"
           {...bind('password')}
+        />
+        <TextField
+          label={t('auth.confirmPassword')}
+          type="password"
+          autoComplete="new-password"
+          {...bind('confirm')}
         />
         <Button type="submit" disabled={register.isPending}>
           {t('auth.register')}

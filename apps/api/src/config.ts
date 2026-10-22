@@ -37,7 +37,14 @@ const envSchema = z
       .enum(['true', 'false'])
       .optional()
       .transform((v) => (v === undefined ? undefined : v === 'true')),
+    // Brevo por HTTPS: los hosts gratuitos (Render) bloquean el SMTP saliente.
+    BREVO_API_KEY: optional,
     SMTP_URL: optional,
+    // Alternativa a SMTP_URL que no exige codificar caracteres especiales en usuario/clave.
+    SMTP_HOST: optional,
+    SMTP_PORT: optional,
+    SMTP_USER: optional,
+    SMTP_PASS: optional,
     MAIL_FROM: z.string().default('Isaac Atlas <no-reply@isaac-atlas.local>'),
     RATE_LIMIT_DISABLED: z
       .enum(['true', 'false'])

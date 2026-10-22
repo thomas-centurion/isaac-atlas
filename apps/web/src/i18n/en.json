@@ -149,7 +149,10 @@
     "verified": "Email confirmed!",
     "welcomeTitle": "Welcome!",
     "welcomeBody": "Choose your username. It is what others will see on your runs and it cannot be changed later.",
-    "welcomeSubmit": "Continue"
+    "welcomeSubmit": "Continue",
+    "confirmPassword": "Repeat the password",
+    "loggedOut": "You signed out. See you soon!",
+    "goHome": "Go to the home page"
   },
   "account": {
     "title": "My account",
@@ -174,7 +177,8 @@
   "fieldErrors": {
     "email": "Enter a valid email",
     "username": "3 to 20 characters: letters, numbers and _",
-    "password": "At least 10 characters"
+    "password": "At least 10 characters",
+    "confirm": "The passwords do not match"
   },
   "errors": {
     "validation": "Check the data you entered.",
@@ -314,6 +318,32 @@
   },
   "footer": {
     "visitors": "Visitor no.",
-    "legal": "Non-profit fan site. The Binding of Isaac and its sprites belong to Edmund McMillen and Nicalis, Inc."
+    "legal": "Non-profit fan site. The Binding of Isaac and its sprites belong to Edmund McMillen and Nicalis, Inc.",
+    "privacy": "Privacy"
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "intro": "Isaac Atlas is a non-profit fan site. This page explains what data we store and why.",
+    "collect": {
+      "title": "What we store",
+      "body": "Your email and username; a hashed version of your password if you signed up with email; the ID and avatar of your Google or Steam account if you sign in with them; and the content you publish (runs, votes, verdicts and reports). With Google we only request your email and basic profile."
+    },
+    "use": {
+      "title": "What we use it for",
+      "body": "To let you sign in, publish and vote, show your username on your runs, and send verification and password-reset emails. We do not use your data for advertising and we never sell it."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "body": "We use a single session cookie, required to keep you signed in. We use no tracking or analytics cookies. We also keep your IP temporarily to limit abuse (rate limiting)."
+    },
+    "share": {
+      "title": "Who we share it with",
+      "body": "Your data is stored in MongoDB Atlas and the app runs on Render. Your username and runs are public; your email is never shown."
+    },
+    "rights": {
+      "title": "Your rights",
+      "body": "You can export all your data and delete your account at any time from your account page. Deleting it removes your personal data and your posts."
+    },
+    "manage": "Go to my account"
   }
 }
