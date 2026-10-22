@@ -198,7 +198,10 @@
     "oauth_failed": "No pudimos completar el inicio de sesión. Probá de nuevo.",
     "internal": "Algo salió mal. Probá de nuevo.",
     "confirmation_failed": "La confirmación no coincide. No se borró nada.",
-    "email_unverified": "Verificá tu email para poder hacer esto."
+    "email_unverified": "Verificá tu email para poder hacer esto.",
+    "waking": "El servidor estaba dormido y está despertando: puede tardar hasta un minuto.",
+    "network": "No pudimos conectar con el servidor. Probá de nuevo.",
+    "retry": "Reintentar"
   },
   "run": {
     "newTitle": "Nueva run",
@@ -347,5 +350,9 @@
       "body": "Podés exportar todos tus datos y eliminar tu cuenta cuando quieras desde la página de tu cuenta. Al eliminarla se borran tus datos personales y tus publicaciones."
     },
     "manage": "Ir a mi cuenta"
+  },
+  "notFoundPage": {
+    "title": "Página no encontrada",
+    "body": "Esa dirección no existe o fue movida."
   }
 }

@@ -28,6 +28,8 @@ const sessionStore = MongoStore.create({
   collectionName: 'sessions',
   // Las sesiones vencen solas (TTL) según la cookie.
   ttl: 30 * 24 * 60 * 60,
+  // Con la cookie `rolling`, sin esto cada request reescribe la sesión en Mongo.
+  touchAfter: 24 * 60 * 60,
 });
 
 createApp({ sessionStore }).listen(config.PORT, () => {

@@ -3,6 +3,7 @@ import { RequireAuth } from './auth/RequireAuth';
 import { Layout } from './layout/Layout';
 import { Account } from './pages/Account';
 import { Admin } from './pages/Admin';
+import { NotFound } from './pages/NotFound';
 import { Privacy } from './pages/Privacy';
 import { Profile } from './pages/Profile';
 import { Design } from './pages/Design';
@@ -44,6 +45,7 @@ export function App() {
           <Route path="runs/new" element={<NewRun />} />
           <Route path="runs/:id/edit" element={<EditRun />} />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );

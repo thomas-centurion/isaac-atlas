@@ -198,7 +198,10 @@
     "oauth_failed": "We could not complete the login. Please try again.",
     "internal": "Something went wrong. Please try again.",
     "confirmation_failed": "The confirmation does not match. Nothing was deleted.",
-    "email_unverified": "Verify your email to do this."
+    "email_unverified": "Verify your email to do this.",
+    "waking": "The server was asleep and is waking up: it can take up to a minute.",
+    "network": "We could not reach the server. Try again.",
+    "retry": "Retry"
   },
   "run": {
     "newTitle": "New run",
@@ -347,5 +350,9 @@
       "body": "You can export all your data and delete your account at any time from your account page. Deleting it removes your personal data and your posts."
     },
     "manage": "Go to my account"
+  },
+  "notFoundPage": {
+    "title": "Page not found",
+    "body": "That address does not exist or was moved."
   }
 }

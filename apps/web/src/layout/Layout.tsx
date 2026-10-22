@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
@@ -31,7 +31,17 @@ export function Layout() {
     mainRef.current?.focus({ preventScroll: false });
   }, [pathname]);
 
-  const { data: user } = useMe();
+  const { data: user, isPending: sessionPending } = useMe();
+  // Render gratis duerme el servicio: si la primera respuesta tarda, se explica por qué.
+  const [waking, setWaking] = useState(false);
+  useEffect(() => {
+    if (!sessionPending) {
+      setWaking(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setWaking(true), 4000);
+    return () => window.clearTimeout(timer);
+  }, [sessionPending]);
   const logout = useLogout();
   const navigate = useNavigate();
   const current: Language = i18n.language.startsWith('es') ? 'es' : 'en';
@@ -121,6 +131,12 @@ export function Layout() {
           </div>
         </div>
       </header>
+
+      {waking ? (
+        <p role="status" className={styles.wake}>
+          {t('errors.waking')}
+        </p>
+      ) : null}
 
       <main id="main" ref={mainRef} tabIndex={-1} className={styles.main}>
         <Outlet />

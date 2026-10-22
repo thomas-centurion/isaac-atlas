@@ -47,7 +47,9 @@ export function createApp({ sessionStore }: AppDeps = {}) {
     }),
   );
   app.use(express.json({ limit: '100kb' }));
+  // Sesión y passport solo para la API: los assets estáticos no deben costar consultas a Mongo.
   app.use(
+    '/api',
     session({
       name: 'isaac.sid',
       secret: config.SESSION_SECRET,
@@ -63,8 +65,8 @@ export function createApp({ sessionStore }: AppDeps = {}) {
       },
     }),
   );
-  app.use(passport.initialize());
-  app.use(passport.session());
+  app.use('/api', passport.initialize());
+  app.use('/api', passport.session());
 
   app.get('/api/health', (req, res) => {
     if (config.DEBUG_IP === 'true') {

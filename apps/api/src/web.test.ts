@@ -9,7 +9,7 @@ const dist = mkdtempSync(join(tmpdir(), 'isaac-web-'));
 mkdirSync(join(dist, 'assets'));
 writeFileSync(
   join(dist, 'index.html'),
-  '<!doctype html><title>Isaac Atlas</title><div id="root"></div>',
+  '<!doctype html><html><head><title>Isaac Atlas</title></head><body><div id="root"></div></body></html>',
 );
 writeFileSync(join(dist, 'assets', 'app-abc123.js'), 'console.log("hi")');
 writeFileSync(join(dist, 'robots.txt'), 'User-agent: *');
@@ -59,5 +59,33 @@ describe('servir la web desde la API', () => {
     expect(csp).toMatch(/img-src[^;]*https:\/\/\*\.googleusercontent\.com/);
     expect(csp).toMatch(/img-src[^;]*https:\/\/\*\.steamstatic\.com/);
     expect(csp).not.toMatch(/script-src[^;]*'unsafe-inline'/);
+  });
+
+  it('inyecta título, descripción y canonical por página, escapando el contenido', async () => {
+    const home = (await request(app).get('/')).text;
+    expect(home).toContain('<meta name="description"');
+    expect(home).toContain('<link rel="canonical"');
+    expect(home).toContain('og:title');
+
+    // Perfil con caracteres inválidos para HTML: nunca llega sin escapar al documento.
+    const evil = await request(app).get('/seeds/%22%3E%3Cscript%3E');
+    expect(evil.text).not.toContain('<script>');
+  });
+
+  it('las páginas privadas llevan noindex y las rutas inexistentes dan 404 real', async () => {
+    expect((await request(app).get('/login')).text).toContain('noindex');
+    const missing = await request(app).get('/esto-no-existe');
+    expect(missing.status).toBe(404);
+    expect(missing.text).toContain('<div id="root">');
+    expect((await request(app).get('/assets/viejo-123.js')).status).toBe(404);
+    expect((await request(app).get('/assets/viejo-123.js')).headers['content-type']).toMatch(
+      /text\/plain/,
+    );
+  });
+
+  it('robots.txt apunta al sitemap y bloquea la API', async () => {
+    const res = await request(app).get('/robots.txt');
+    expect(res.text).toContain('Disallow: /api/');
+    expect(res.text).toMatch(/Sitemap: https?:\/\/.+\/sitemap\.xml/);
   });
 });

@@ -1,0 +1,10 @@
+{
+  "name": "Isaac Atlas",
+  "short_name": "Isaac Atlas",
+  "description": "Bitácora comunitaria de seeds y runs de The Binding of Isaac.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0f0b14",
+  "theme_color": "#0f0b14",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

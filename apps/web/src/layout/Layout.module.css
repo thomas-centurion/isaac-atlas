@@ -307,3 +307,14 @@
     display: none;
   }
 }
+
+/* Aviso mientras el servidor gratuito despierta */
+.wake {
+  margin: 0;
+  padding: var(--space-3) var(--space-6);
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--surface-3);
+  border-bottom: 2px solid var(--gold);
+}
