@@ -34,6 +34,8 @@ async function signUp(username: string): Promise<Agent> {
     username,
     password: 'correct-horse-battery',
   });
+  // Votar y reportar exigen email verificado.
+  await User.updateOne({ username }, { emailVerified: true });
   return agent;
 }
 

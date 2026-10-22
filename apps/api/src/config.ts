@@ -28,6 +28,8 @@ const envSchema = z
      * Cantidad de proxies delante de la API (hosting = 1; Cloudflare + hosting = 2). Si está mal,
      * la API no ve el HTTPS original y no emite la cookie de sesión.
      */
+    // Diagnóstico temporal: con DEBUG_IP=true, /api/health loguea la IP que ve el rate limit.
+    DEBUG_IP: optional,
     TRUST_PROXY: z.coerce.number().int().min(0).default(1),
     /**
      * Fuerza el atributo Secure de la cookie de sesión. Por defecto es true en producción.

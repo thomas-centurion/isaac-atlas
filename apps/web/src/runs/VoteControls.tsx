@@ -26,8 +26,15 @@ function useReactionAccess(run: Run) {
   const { t } = useTranslation();
   const { data: me } = useMe();
   const isOwn = me?.id === run.author.id;
-  const canReact = Boolean(me?.username) && !isOwn;
-  const reason = !me ? t('react.loginToVote') : isOwn ? t('react.ownRun') : undefined;
+  const verified = Boolean(me?.emailVerified) || (me?.identities.length ?? 0) > 0;
+  const canReact = Boolean(me?.username) && verified && !isOwn;
+  const reason = !me
+    ? t('react.loginToVote')
+    : isOwn
+      ? t('react.ownRun')
+      : !verified
+        ? t('react.verifyToVote')
+        : undefined;
   return { canReact, reason };
 }
 

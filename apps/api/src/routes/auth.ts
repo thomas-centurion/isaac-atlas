@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { Router, type Request, type Response } from 'express';
+import type { Types } from 'mongoose';
 import {
   authProviderSchema,
   forgotPasswordSchema,
@@ -60,6 +61,19 @@ const webUrl = (path: string) => `${config.WEB_ORIGIN}${path}`;
 
 export const authRouter = Router();
 
+/**
+ * Emite el token y manda el mail sin esperar al proveedor (un mail lento no debe colgar la
+ * respuesta). Si ya se emitió uno hace poco, no se manda otro: frena el spam a terceros.
+ */
+async function queueMail(
+  userId: Types.ObjectId,
+  kind: 'verify' | 'reset',
+  send: (token: string) => Promise<void>,
+) {
+  const token = await issueToken(userId, kind);
+  if (token) void send(token).catch(logMailFailure);
+}
+
 authRouter.get('/providers', (_req, res) => {
   const body: ProvidersResponse = { google: googleEnabled, steam: steamEnabled };
   res.json(body);
@@ -84,9 +98,7 @@ authRouter.post(
       passwordHash: await hashPassword(password),
     });
     // Sin esperar al proveedor: un mail lento no debe colgar el registro.
-    void sendVerificationMail(email, await issueToken(user._id, 'verify'), locale).catch(
-      logMailFailure,
-    );
+    await queueMail(user._id, 'verify', (token) => sendVerificationMail(email, token, locale));
     await logIn(req, user);
     res.status(201).json({ user: toPublicUser(user) });
   }),
@@ -140,7 +152,8 @@ authRouter.post(
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;
     if (user.email && !user.emailVerified) {
-      await sendVerificationMail(user.email, await issueToken(user._id, 'verify'));
+      const to = user.email;
+      await queueMail(user._id, 'verify', (token) => sendVerificationMail(to, token));
     }
     res.status(204).end();
   }),
@@ -154,9 +167,8 @@ authRouter.post(
     const user = await User.findOne({ email });
     // Misma respuesta exista o no el email: no revelamos qué cuentas hay.
     if (user?.email) {
-      void sendResetMail(user.email, await issueToken(user._id, 'reset'), locale).catch(
-        logMailFailure,
-      );
+      const to = user.email;
+      await queueMail(user._id, 'reset', (token) => sendResetMail(to, token, locale));
     }
     res.status(204).end();
   }),
@@ -169,11 +181,11 @@ authRouter.post(
     const { token, password } = parseBody(resetPasswordSchema, req.body);
     const userId = await consumeToken(token, 'reset');
     if (!userId) throw new HttpError('invalid_token');
-    // Recibir el mail prueba control del email → queda verificado.
-    await User.updateOne(
-      { _id: userId },
-      { passwordHash: await hashPassword(password), emailVerified: true },
-    );
+    // Recibir el mail prueba control del email → queda verificado. Si todavía no lo estaba, quien
+    // creó la cuenta pudo vincular identidades propias: se descartan.
+    const passwordHash = await hashPassword(password);
+    await User.updateOne({ _id: userId, emailVerified: false }, { identities: [] });
+    await User.updateOne({ _id: userId }, { passwordHash, emailVerified: true });
     await invalidateUserSessions(String(userId));
     res.status(204).end();
   }),
@@ -220,16 +232,23 @@ async function finishProviderLogin(req: Request, res: Response, profile: Provide
   }
 }
 
+const ANONYMOUS_SESSION_MS = 10 * 60 * 1000;
+
 function startIntent(req: Request) {
   if (req.query.link === '1') {
-    if (!currentUser(req)) throw new HttpError('unauthorized');
+    const user = currentUser(req);
+    if (!user) throw new HttpError('unauthorized');
+    // Quien registró un email sin probar que es suyo no puede colgarle identidades a la cuenta.
+    if (user.email && !user.emailVerified) throw new HttpError('email_unverified');
     req.session.oauthIntent = 'link';
   } else {
     delete req.session.oauthIntent;
+    // Sesión previa al login (solo guarda el state): vence rápido para que no se acumulen.
+    if (!currentUser(req)) req.session.cookie.maxAge = ANONYMOUS_SESSION_MS;
   }
 }
 
-authRouter.get('/google', (req, res, next) => {
+authRouter.get('/google', authLimiter, (req, res, next) => {
   if (!googleEnabled) return next(new HttpError('provider_unavailable'));
   try {
     startIntent(req);
@@ -239,7 +258,7 @@ authRouter.get('/google', (req, res, next) => {
   passport.authenticate('google', { session: false })(req, res, next);
 });
 
-authRouter.get('/google/callback', (req, res, next) => {
+authRouter.get('/google/callback', authLimiter, (req, res, next) => {
   if (!googleEnabled) return next(new HttpError('provider_unavailable'));
   passport.authenticate('google', { session: false }, (err: unknown, profile: unknown) => {
     if (err || !profile) return res.redirect(webUrl('/login?error=oauth_failed'));
@@ -250,7 +269,7 @@ authRouter.get('/google/callback', (req, res, next) => {
 const steamReturnTo = (state: string) =>
   `${config.PUBLIC_URL}/api/auth/steam/callback?s=${encodeURIComponent(state)}`;
 
-authRouter.get('/steam', (req, res, next) => {
+authRouter.get('/steam', authLimiter, (req, res, next) => {
   try {
     startIntent(req);
   } catch (err) {
@@ -264,6 +283,7 @@ authRouter.get('/steam', (req, res, next) => {
 
 authRouter.get(
   '/steam/callback',
+  authLimiter,
   asyncHandler(async (req, res) => {
     const state = req.session.steamState;
     delete req.session.steamState;

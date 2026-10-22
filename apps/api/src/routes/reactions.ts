@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { verdictInputSchema, voteInputSchema, type VerdictKind } from '@isaac-atlas/shared';
 import { HttpError, asyncHandler, parseBody } from '../http.js';
 import { reactionLimiter } from '../limiters.js';
-import { currentUser, requireAuth, requireUsername } from '../middleware.js';
+import { currentUser, requireAuth, requireUsername, requireVerified } from '../middleware.js';
 import { Verdict, Vote } from '../models/Reactions.js';
 import { attachViewer, authorDto, loadRun, toRunDto } from '../runDto.js';
 import { adjustStats } from '../services.js';
@@ -26,6 +26,7 @@ reactionsRouter.put(
   '/:id/vote',
   requireAuth,
   requireUsername,
+  requireVerified,
   reactionLimiter,
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;
@@ -52,6 +53,7 @@ reactionsRouter.delete(
   '/:id/vote',
   requireAuth,
   requireUsername,
+  requireVerified,
   reactionLimiter,
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;
@@ -71,6 +73,7 @@ reactionsRouter.put(
   '/:id/verdict',
   requireAuth,
   requireUsername,
+  requireVerified,
   reactionLimiter,
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;
@@ -96,6 +99,7 @@ reactionsRouter.delete(
   '/:id/verdict',
   requireAuth,
   requireUsername,
+  requireVerified,
   reactionLimiter,
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;

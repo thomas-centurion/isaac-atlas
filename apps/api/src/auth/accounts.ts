@@ -2,6 +2,7 @@ import type { Types } from 'mongoose';
 import type { AuthProvider, PublicUser } from '@isaac-atlas/shared';
 import { HttpError } from '../http.js';
 import { User, type UserDocument } from '../models/User.js';
+import { invalidateUserSessions } from '../services.js';
 
 const RESERVED_USERNAMES = new Set([
   'admin',
@@ -135,8 +136,14 @@ export async function resolveProviderLogin(
       if (!byEmail.emailVerified) {
         // Alguien pudo registrar este email sin ser su dueño y fijar una clave.
         // El dueño real acaba de probar el email vía el proveedor: le quitamos esa clave.
+        // Todo lo que agregó quien no probó el email se descarta: clave, identidades vinculadas
+        // y sesiones abiertas (si no, el atacante seguiría adentro).
         byEmail.emailVerified = true;
         byEmail.passwordHash = undefined;
+        byEmail.identities.splice(0, byEmail.identities.length);
+        const user = await attachIdentity(byEmail, profile);
+        await invalidateUserSessions(user.id);
+        return { user, created: false };
       }
       return { user: await attachIdentity(byEmail, profile), created: false };
     }

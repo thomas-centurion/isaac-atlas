@@ -5,6 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 // Los módulos se importan después del stub porque la config se lee al cargar.
 vi.stubEnv('RATE_LIMIT_DISABLED', 'false');
 const { createApp } = await import('../app.js');
+const { User } = await import('../models/User.js');
 const { connectTestDb, disconnectTestDb, resetTestDb } = await import('../test-utils.js');
 
 let app: ReturnType<typeof createApp>;
@@ -70,6 +71,7 @@ describe('rate limiting', () => {
     await reporter
       .post('/api/auth/register')
       .send({ email: 'rep@example.com', username: 'Reporter', password: 'correct-horse-battery' });
+    await User.updateOne({ username: 'Reporter' }, { emailVerified: true });
     for (let i = 0; i < 20; i++) {
       expect(
         (await reporter.post(`/api/runs/${ids[i]}/report`).send({ reason: 'spam' })).status,

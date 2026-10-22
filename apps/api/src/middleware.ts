@@ -16,6 +16,18 @@ export const requireUsername: RequestHandler = (req, _res, next) => {
   next();
 };
 
+/**
+ * Votar y reportar exigen una cuenta que probó quién es (email verificado o Google/Steam):
+ * si no, cuentas descartables podrían manipular rankings y ocultar runs ajenas.
+ */
+export const requireVerified: RequestHandler = (req, _res, next) => {
+  const user = currentUser(req);
+  if (!user || (!user.emailVerified && user.identities.length === 0)) {
+    return next(new HttpError('email_unverified'));
+  }
+  next();
+};
+
 /** Moderación: solo cuentas con rol `admin` (se asigna a mano en la base). */
 export const requireAdmin: RequestHandler = (req, _res, next) => {
   const user = currentUser(req);

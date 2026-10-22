@@ -16,6 +16,7 @@ const STATUS: Record<ApiErrorCode, number> = {
   rate_limited: 429,
   not_found: 404,
   already_reported: 409,
+  email_unverified: 403,
   confirmation_failed: 403,
   internal: 500,
 };
@@ -58,6 +59,14 @@ export function parseBody<S extends ZodTypeAny>(schema: S, data: unknown): z.out
 
 export const errorHandler = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof HttpError) return sendError(res, err.code, err.issues);
-  console.error('[api] unhandled error', err);
+  // Errores de body-parser: JSON mal formado o demasiado grande. Nunca se loguea `err.body`
+  // (puede traer contraseñas en claro).
+  const type = (err as { type?: string } | null)?.type;
+  if (type === 'entity.parse.failed') return sendError(res, 'validation');
+  if (type === 'entity.too.large') return void res.status(413).json({ error: 'validation' });
+  console.error(
+    '[api] unhandled error',
+    err instanceof Error ? err.name + ': ' + err.message : 'unknown',
+  );
   sendError(res, 'internal');
 };

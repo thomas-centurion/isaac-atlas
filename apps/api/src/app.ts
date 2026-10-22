@@ -66,7 +66,10 @@ export function createApp({ sessionStore }: AppDeps = {}) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.get('/api/health', (_req, res) => {
+  app.get('/api/health', (req, res) => {
+    if (config.DEBUG_IP === 'true') {
+      console.log('[debug-ip]', { ip: req.ip, ips: req.ips, xff: req.get('x-forwarded-for') });
+    }
     const body: HealthResponse = {
       status: 'ok',
       db: mongoose.connection.readyState === 1 ? 'up' : 'down',

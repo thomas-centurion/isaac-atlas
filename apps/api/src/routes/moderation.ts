@@ -8,7 +8,13 @@ import {
 import { HttpError, asyncHandler, parseBody } from '../http.js';
 import { syncReportCount } from '../services.js';
 import { reportLimiter } from '../limiters.js';
-import { currentUser, requireAdmin, requireAuth, requireUsername } from '../middleware.js';
+import {
+  currentUser,
+  requireAdmin,
+  requireAuth,
+  requireUsername,
+  requireVerified,
+} from '../middleware.js';
 import { Report } from '../models/Report.js';
 import { Run, type RunDocument } from '../models/Run.js';
 import { User } from '../models/User.js';
@@ -21,6 +27,7 @@ reportRouter.post(
   '/:id/report',
   requireAuth,
   requireUsername,
+  requireVerified,
   reportLimiter,
   asyncHandler(async (req, res) => {
     const user = currentUser(req)!;

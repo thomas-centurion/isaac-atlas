@@ -9,8 +9,23 @@ const TTL_MS: Record<EmailTokenKind, number> = {
 
 const hash = (token: string) => createHash('sha256').update(token).digest('hex');
 
-/** Crea un token de un solo uso y devuelve el valor en claro (para el mail). */
-export async function issueToken(userId: Types.ObjectId, kind: EmailTokenKind): Promise<string> {
+/** Entre un mail y el siguiente del mismo tipo para la misma cuenta. */
+const COOLDOWN_MS = 2 * 60 * 1000;
+
+/**
+ * Crea un token de un solo uso y devuelve el valor en claro (para el mail), o null si se emitió
+ * uno hace menos de ${COOLDOWN_MS / 60000} minutos (no hay que mandar otro mail).
+ */
+export async function issueToken(
+  userId: Types.ObjectId,
+  kind: EmailTokenKind,
+): Promise<string | null> {
+  const recent = await EmailToken.exists({
+    userId,
+    kind,
+    createdAt: { $gt: new Date(Date.now() - COOLDOWN_MS) },
+  });
+  if (recent) return null;
   // Un solo token vigente por usuario y tipo.
   await EmailToken.deleteMany({ userId, kind });
   const token = randomBytes(32).toString('base64url');

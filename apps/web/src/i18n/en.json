@@ -86,7 +86,8 @@
     "downvote": "Downvote",
     "score": "Score {{count}}",
     "loginToVote": "Log in to vote",
-    "ownRun": "You cannot vote on your own run"
+    "ownRun": "You cannot vote on your own run",
+    "verifyToVote": "Verify your email to vote and report."
   },
   "seed": {
     "notFound": "There are no runs for that seed.",
@@ -196,7 +197,8 @@
     "already_reported": "You already reported this run.",
     "oauth_failed": "We could not complete the login. Please try again.",
     "internal": "Something went wrong. Please try again.",
-    "confirmation_failed": "The confirmation does not match. Nothing was deleted."
+    "confirmation_failed": "The confirmation does not match. Nothing was deleted.",
+    "email_unverified": "Verify your email to do this."
   },
   "run": {
     "newTitle": "New run",

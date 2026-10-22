@@ -10,7 +10,9 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - '4000:4000'
+      # Solo local: el proxy con HTTPS es quien da la cara. Si el puerto quedara público, cualquiera
+      # podría falsificar X-Forwarded-For / X-Forwarded-Proto.
+      - '127.0.0.1:4000:4000'
     environment:
       NODE_ENV: production
       MONGODB_URI: mongodb://mongo:27017/isaac-atlas

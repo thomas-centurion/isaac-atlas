@@ -47,11 +47,26 @@ async function sendViaBrevo(mail: Mail): Promise<void> {
   if (!res.ok) throw new Error(`Brevo ${res.status}: ${await res.text()}`);
 }
 
+/** Tope diario global (el plan gratis de Brevo permite ~300): evita agotar la cuota por abuso. */
+const DAILY_MAIL_LIMIT = 250;
+let mailDay = '';
+let mailsToday = 0;
+
+function withinDailyLimit(): boolean {
+  const day = new Date().toISOString().slice(0, 10);
+  if (day !== mailDay) {
+    mailDay = day;
+    mailsToday = 0;
+  }
+  return ++mailsToday <= DAILY_MAIL_LIMIT;
+}
+
 export async function sendMail(mail: Mail): Promise<void> {
   if (config.NODE_ENV === 'test') {
     outbox.push(mail);
     return;
   }
+  if (!withinDailyLimit()) throw new Error('tope diario de mails alcanzado');
   if (config.BREVO_API_KEY) return sendViaBrevo(mail);
   if (!transport) {
     // Desarrollo sin SMTP: el mail se imprime en consola.

@@ -90,6 +90,7 @@ export const API_ERROR_CODES = [
   'rate_limited',
   'not_found',
   'already_reported',
+  'email_unverified',
   'confirmation_failed',
   'internal',
 ] as const;

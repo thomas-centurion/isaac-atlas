@@ -38,6 +38,8 @@ async function signUp(username: string): Promise<Agent> {
   await agent
     .post('/api/auth/register')
     .send({ email: `${username.toLowerCase()}@example.com`, username, password: PASSWORD });
+  // Votar y reportar exigen email verificado.
+  await User.updateOne({ username }, { emailVerified: true });
   return agent;
 }
 

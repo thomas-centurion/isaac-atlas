@@ -86,7 +86,8 @@
     "downvote": "Votar en contra",
     "score": "Puntaje {{count}}",
     "loginToVote": "Iniciá sesión para votar",
-    "ownRun": "No podés votar tu propia run"
+    "ownRun": "No podés votar tu propia run",
+    "verifyToVote": "Verificá tu email para votar y reportar."
   },
   "seed": {
     "notFound": "No hay runs para esa seed.",
@@ -196,7 +197,8 @@
     "already_reported": "Ya reportaste esta run.",
     "oauth_failed": "No pudimos completar el inicio de sesión. Probá de nuevo.",
     "internal": "Algo salió mal. Probá de nuevo.",
-    "confirmation_failed": "La confirmación no coincide. No se borró nada."
+    "confirmation_failed": "La confirmación no coincide. No se borró nada.",
+    "email_unverified": "Verificá tu email para poder hacer esto."
   },
   "run": {
     "newTitle": "Nueva run",

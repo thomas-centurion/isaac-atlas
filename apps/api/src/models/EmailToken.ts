@@ -8,6 +8,7 @@ interface EmailTokenAttrs {
   /** SHA-256 del token; el token en claro solo viaja por mail. */
   tokenHash: string;
   expiresAt: Date;
+  createdAt: Date;
 }
 
 const schema = new Schema<EmailTokenAttrs>({
@@ -15,6 +16,7 @@ const schema = new Schema<EmailTokenAttrs>({
   kind: { type: String, enum: ['verify', 'reset'], required: true },
   tokenHash: { type: String, required: true, unique: true },
   expiresAt: { type: Date, required: true },
+  createdAt: { type: Date, default: () => new Date() },
 });
 // Mongo borra el documento cuando expiresAt queda en el pasado.
 schema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });

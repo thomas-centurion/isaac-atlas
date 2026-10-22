@@ -9,6 +9,7 @@ import {
 import { createApp } from '../app.js';
 import { DailyPick, Verdict, Vote } from '../models/Reactions.js';
 import { Run } from '../models/Run.js';
+import { User } from '../models/User.js';
 import { connectTestDb, disconnectTestDb, resetTestDb } from '../test-utils.js';
 
 const baseRun: RunDraftInput = {
@@ -40,6 +41,8 @@ async function signUp(username: string): Promise<Agent> {
     username,
     password: 'correct-horse-battery',
   });
+  // Votar y reportar exigen email verificado.
+  await User.updateOne({ username }, { emailVerified: true });
   return agent;
 }
 
