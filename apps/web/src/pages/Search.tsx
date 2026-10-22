@@ -45,12 +45,11 @@ export function Search() {
 
   const update = (next: SearchFilters) => setParams(filtersToParams(next), { replace: true });
 
-  // Atajo "/": enfoca el primer buscador de ítems (y abre los filtros si estaban plegados).
+  // Atajo Ctrl/Cmd+K: enfoca el primer buscador de ítems (y abre los filtros si estaban plegados).
+  // Lleva modificador: un atajo de una sola tecla no se puede desactivar (WCAG 2.1.4).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
-      if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey) && !e.altKey) {
         e.preventDefault();
         setFiltersOpen(true);
         // Esperar a que el panel se muestre antes de enfocar.
@@ -138,7 +137,13 @@ export function Search() {
             </div>
           ) : null}
 
-          <ul className={styles.grid} aria-live="polite">
+          {search.data ? (
+            <p role="status" className="visually-hidden">
+              {t('search.resultCount', { count: runs.length })}
+            </p>
+          ) : null}
+
+          <ul className={styles.grid}>
             {runs.map((run) => (
               <li key={run.id}>
                 <RunCard run={run} highlight={highlight} />

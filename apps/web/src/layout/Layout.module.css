@@ -304,7 +304,7 @@
   }
 
   .ghost {
-    display: none;
+    padding: 0.4rem 0.6rem;
   }
 }
 

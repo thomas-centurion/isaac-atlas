@@ -62,12 +62,10 @@ export function RunForm({
   const [submitted, setSubmitted] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // Atajo "/": enfoca el buscador, salvo que ya se esté escribiendo en un campo.
+  // Atajo Ctrl/Cmd+K: enfoca el buscador de ítems (con modificador: WCAG 2.1.4).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
-      if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey) && !e.altKey) {
         e.preventDefault();
         searchRef.current?.focus();
       }
@@ -208,7 +206,7 @@ export function RunForm({
         <ItemPicker
           kind={pickerKind}
           inputRef={searchRef}
-          shortcut="/"
+          shortcut="Ctrl K"
           onPick={(id) =>
             dispatch(
               pickerKind === 'item'

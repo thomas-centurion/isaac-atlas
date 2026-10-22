@@ -138,7 +138,7 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
             <ItemPicker
               kind="item"
               label={label}
-              shortcut={i === 0 ? '/' : undefined}
+              shortcut={i === 0 ? 'Ctrl K' : undefined}
               inputRef={i === 0 ? focusRef : undefined}
               onPick={(id) => addItem(list, id)}
             />

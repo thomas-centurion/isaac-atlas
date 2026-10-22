@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
 import { useLogout, useMe } from '../auth/useAuth';
 import { usePageVisibility } from '../hooks/usePageVisibility';
+import { CONTACT_EMAIL } from '../site';
 import { ItemIcon } from '../ui/ItemIcon';
 import styles from './Layout.module.css';
 
@@ -94,6 +95,8 @@ export function Layout() {
                 <button
                   key={lang}
                   type="button"
+                  lang={lang}
+                  aria-label={lang === 'es' ? 'Español' : 'English'}
                   aria-pressed={lang === current}
                   className={lang === current ? styles.langActive : undefined}
                   onClick={() => setLanguage(lang)}
@@ -145,9 +148,10 @@ export function Layout() {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <p>
-            {t('footer.legal')} <Link to="/privacy">{t('footer.privacy')}</Link>
+            {t('footer.legal')} <Link to="/privacy">{t('footer.privacy')}</Link> ·{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`}>{t('footer.contact')}</a>
           </p>
-          <p className={styles.counter}>
+          <p className={styles.counter} aria-hidden="true">
             {t('footer.visitors')} <span>000042</span>
           </p>
         </div>

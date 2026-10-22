@@ -45,7 +45,9 @@
     "sortBy": "Sort by",
     "daily": "Seed of the day",
     "dailyHint": "The best recent run according to the community. It changes every day.",
-    "moreFilters": "More filters"
+    "moreFilters": "More filters",
+    "resultCount_one": "{{count}} result",
+    "resultCount_other": "{{count}} results"
   },
   "report": {
     "open": "Report",
@@ -324,31 +326,53 @@
   "footer": {
     "visitors": "Visitor no.",
     "legal": "Non-profit fan site. The Binding of Isaac and its sprites belong to Edmund McMillen and Nicalis, Inc.",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "contact": "Contact"
   },
   "privacy": {
     "title": "Privacy policy",
-    "intro": "Isaac Atlas is a non-profit fan site. This page explains what data we store and why.",
+    "intro": "Isaac Atlas is a non-profit fan site. This page explains what data we store, why, who we share it with and what you can do with it.",
+    "controller": {
+      "title": "Who is responsible",
+      "body": "The site is maintained by an individual, with no company behind it. For any question about your data, write to the contact email below."
+    },
     "collect": {
       "title": "What we store",
       "body": "Your email and username; a hashed version of your password if you signed up with email; the ID and avatar of your Google or Steam account if you sign in with them; and the content you publish (runs, votes, verdicts and reports). With Google we only request your email and basic profile."
     },
     "use": {
       "title": "What we use it for",
-      "body": "To let you sign in, publish and vote, show your username on your runs, and send verification and password-reset emails. We do not use your data for advertising and we never sell it."
+      "body": "To let you sign in, publish and vote, show your username on your runs, and send verification and password-reset emails. We do not use your data for advertising, we never sell it and we do not build profiles."
+    },
+    "basis": {
+      "title": "Legal basis",
+      "body": "We process your data to provide the service you asked for when creating your account (performance of the service) and for our legitimate interest in keeping it secure and preventing abuse."
     },
     "cookies": {
-      "title": "Cookies",
-      "body": "We use a single session cookie, required to keep you signed in. We use no tracking or analytics cookies. We also keep your IP temporarily to limit abuse (rate limiting)."
+      "title": "Cookies and logs",
+      "body": "We use a single session cookie, required to keep you signed in (lasts up to 30 days of inactivity). We use no tracking or analytics cookies. Your IP is used temporarily to limit abuse and may remain in the hosting provider technical logs."
     },
-    "share": {
+    "processors": {
       "title": "Who we share it with",
-      "body": "Your data is stored in MongoDB Atlas and the app runs on Render. Your username and runs are public; your email is never shown."
+      "body": "We use providers that process data on our behalf: MongoDB Atlas (database), Render (hosting and server), Cloudflare (network in front of the hosting) and Brevo (sending verification and password-reset emails, so it receives your email). If you sign in with Google or Steam, those services know you signed in here. Your username and runs are public; your email is never shown. Some providers are outside your country, for example in the United States or the European Union."
+    },
+    "retention": {
+      "title": "How long we keep it",
+      "body": "While you have an account. If you delete it, we remove your personal data, runs, votes and reports. Sessions expire on their own after 30 days and verification or reset tokens after 24 hours and 1 hour. The hosting providers technical logs follow each provider policies."
     },
     "rights": {
       "title": "Your rights",
-      "body": "You can export all your data and delete your account at any time from your account page. Deleting it removes your personal data and your posts."
+      "body": "You can access your data, export it and delete your account at any time from your account page. To correct, object or ask anything else, write to us. If you believe we are not handling your data properly, you can complain to the data protection authority of your country."
     },
+    "age": {
+      "title": "Minimum age",
+      "body": "The site is not aimed at children under 13. If you believe an account belongs to someone younger, tell us and we will delete it."
+    },
+    "takedown": {
+      "title": "Content and copyright",
+      "body": "The Binding of Isaac and its sprites belong to Edmund McMillen and Nicalis, Inc. This is a non-profit fan site. If you are a rights holder and want us to remove some content, or you see something that breaks the rules, write to us and we will review it."
+    },
+    "contact": "Contact",
     "manage": "Go to my account"
   },
   "notFoundPage": {
