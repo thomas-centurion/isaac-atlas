@@ -64,7 +64,7 @@ export function VoteBox({ run, orientation = 'vertical' }: VoteBoxProps) {
         className={`${styles.vote} ${current === 1 ? styles.upActive : ''}`}
         aria-pressed={current === 1}
         aria-label={t('react.upvote')}
-        disabled={!canReact}
+        disabled={!canReact || vote.isPending}
         onClick={() => vote.mutate({ runId: run.id, value: toggleVote(current, 1) })}
       >
         <Arrow />
@@ -77,7 +77,7 @@ export function VoteBox({ run, orientation = 'vertical' }: VoteBoxProps) {
         className={`${styles.vote} ${current === -1 ? styles.downActive : ''}`}
         aria-pressed={current === -1}
         aria-label={t('react.downvote')}
-        disabled={!canReact}
+        disabled={!canReact || vote.isPending}
         onClick={() => vote.mutate({ runId: run.id, value: toggleVote(current, -1) })}
       >
         <Arrow down />
@@ -106,7 +106,7 @@ export function VerdictChips({ run }: { run: Run }) {
           type="button"
           className={`${styles.verdict} ${styles[kind]} ${current === kind ? styles.verdictActive : ''}`}
           aria-pressed={current === kind}
-          disabled={!canReact}
+          disabled={!canReact || verdict.isPending}
           onClick={() => verdict.mutate({ runId: run.id, kind: toggleVerdict(current, kind) })}
         >
           {t(`verdict.${kind}`)}

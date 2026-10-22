@@ -153,7 +153,8 @@ authRouter.post(
     const user = currentUser(req)!;
     if (user.email && !user.emailVerified) {
       const to = user.email;
-      await queueMail(user._id, 'verify', (token) => sendVerificationMail(to, token));
+      const { locale } = parseBody(forgotPasswordSchema.pick({ locale: true }), req.body ?? {});
+      await queueMail(user._id, 'verify', (token) => sendVerificationMail(to, token, locale));
     }
     res.status(204).end();
   }),

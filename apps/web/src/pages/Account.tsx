@@ -55,6 +55,7 @@ export function Account() {
         {me.email && !me.emailVerified ? (
           <>
             {resend.isSuccess ? <Notice tone="success">{t('account.resent')}</Notice> : null}
+            {resend.error ? <Notice tone="error">{errorMessage(t, resend.error)}</Notice> : null}
             <Button variant="secondary" onClick={() => resend.mutate()} disabled={resend.isPending}>
               {t('account.resend')}
             </Button>

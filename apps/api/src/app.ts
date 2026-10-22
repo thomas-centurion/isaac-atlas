@@ -72,11 +72,10 @@ export function createApp({ sessionStore }: AppDeps = {}) {
     if (config.DEBUG_IP === 'true') {
       console.log('[debug-ip]', { ip: req.ip, ips: req.ips, xff: req.get('x-forwarded-for') });
     }
-    const body: HealthResponse = {
-      status: 'ok',
-      db: mongoose.connection.readyState === 1 ? 'up' : 'down',
-    };
-    res.json(body);
+    const db = mongoose.connection.readyState === 1 ? 'up' : 'down';
+    const body: HealthResponse = { status: 'ok', db };
+    // 503 con la base caída: así el hosting no manda tráfico a una instancia que no puede servirlo.
+    res.status(db === 'up' ? 200 : 503).json(body);
   });
 
   app.use('/api', apiLimiter, originCheck);

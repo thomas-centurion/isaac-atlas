@@ -68,7 +68,11 @@ export function useLogout() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: () => api('/auth/logout', { method: 'POST' }),
-    onSuccess: () => qc.setQueryData(ME_KEY, null),
+    // También se vacía la caché: votos propios, "Mis runs", etc. no deben verlos otros en el mismo navegador.
+    onSuccess: () => {
+      qc.clear();
+      qc.setQueryData(ME_KEY, null);
+    },
   });
 }
 
@@ -112,7 +116,10 @@ export function useClearSession() {
 }
 
 export const useResendVerification = () =>
-  useMutation({ mutationFn: () => api('/auth/resend-verification', { method: 'POST' }) });
+  useMutation({
+    mutationFn: () =>
+      api('/auth/resend-verification', { method: 'POST', body: { locale: currentLocale() } }),
+  });
 
 /** Los flujos OAuth son redirecciones completas del navegador, no fetch. */
 export const providerLoginUrl = (provider: AuthProvider, link = false) =>

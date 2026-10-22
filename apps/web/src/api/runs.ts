@@ -36,7 +36,8 @@ export function useRun(id: string | undefined) {
   return useQuery({
     queryKey: keys.one(id ?? ''),
     enabled: Boolean(id),
-    queryFn: async () => runResponseSchema.parse(await api(`/runs/${id}`)).run,
+    queryFn: async () =>
+      runResponseSchema.parse(await api(`/runs/${encodeURIComponent(id ?? '')}`)).run,
   });
 }
 

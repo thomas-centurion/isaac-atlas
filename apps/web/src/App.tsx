@@ -32,7 +32,7 @@ export function App() {
           <Route path="seeds/:seed" element={<SeedPage />} />
           <Route path="u/:username" element={<Profile />} />
           <Route path="admin" element={<Admin />} />
-          <Route path="design" element={<Design />} />
+          {import.meta.env.DEV ? <Route path="design" element={<Design />} /> : null}
           <Route path="privacy" element={<Privacy />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

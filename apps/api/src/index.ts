@@ -32,7 +32,19 @@ const sessionStore = MongoStore.create({
   touchAfter: 24 * 60 * 60,
 });
 
-createApp({ sessionStore }).listen(config.PORT, () => {
+const server = createApp({ sessionStore }).listen(config.PORT, () => {
   console.log(`[api] http://localhost:${config.PORT}`);
   if (!config.GOOGLE_CLIENT_ID) console.log('[auth] Google deshabilitado (faltan credenciales)');
 });
+
+// Un deploy envía SIGTERM: se deja de aceptar conexiones, se terminan las peticiones en curso y
+// se cierra Mongo, en vez de cortarlas a la mitad.
+for (const signal of ['SIGTERM', 'SIGINT'] as const) {
+  process.on(signal, () => {
+    console.log(`[api] ${signal}: cerrando`);
+    server.close(() => {
+      void mongoose.disconnect().finally(() => process.exit(0));
+    });
+    setTimeout(() => process.exit(1), 10_000).unref();
+  });
+}

@@ -94,6 +94,9 @@ const CHUNK = 20;
 export async function eraseUser(user: UserDocument): Promise<void> {
   const userId = user._id;
 
+  // 0. Cerrar sesiones antes que nada: una pestaña abierta no puede crear runs mientras se borra.
+  await invalidateUserSessions(user.id);
+
   // 1. Sus runs y todo lo que cuelga de ellas.
   const ownRunIds = (await Run.find({ author: userId }, '_id')).map((r) => r._id);
   await Promise.all([

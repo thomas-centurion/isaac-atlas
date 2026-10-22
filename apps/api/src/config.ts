@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 const DEV_SECRET = 'dev-only-insecure-secret-change-me';
+/** Valores de ejemplo que nunca deben llegar a producción. */
+const KNOWN_SECRETS = new Set([DEV_SECRET, 'change-me-in-dev']);
 
 /** Variables opcionales: un string vacío en el .env cuenta como "no definida". */
 const optional = z
@@ -54,8 +56,19 @@ const envSchema = z
       .transform((v) => v === 'true'),
   })
   .superRefine((env, ctx) => {
-    if (env.NODE_ENV === 'production' && env.SESSION_SECRET === DEV_SECRET) {
-      ctx.addIssue({ code: 'custom', message: 'SESSION_SECRET es obligatorio en producción' });
+    if (env.NODE_ENV !== 'production') return;
+    if (KNOWN_SECRETS.has(env.SESSION_SECRET) || env.SESSION_SECRET.length < 32) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'SESSION_SECRET debe ser un valor propio de al menos 32 caracteres en producción',
+      });
+    }
+    // Sin transporte de mail los links de verificación y reset (con su token) irían a los logs.
+    if (!env.BREVO_API_KEY && !env.SMTP_URL && !env.SMTP_HOST) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Falta un transporte de mail: BREVO_API_KEY, SMTP_URL o SMTP_HOST',
+      });
     }
   })
   .transform((env) => ({ ...env, PUBLIC_URL: env.PUBLIC_URL ?? env.WEB_ORIGIN }));
