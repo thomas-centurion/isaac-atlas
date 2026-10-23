@@ -10,3 +10,6 @@ coverage
 
 # Arte del juego generado por el script (no se redistribuye)
 apps/web/public/sprites/
+
+# Documentación interna (plan y guía de deploy), solo local
+docs/

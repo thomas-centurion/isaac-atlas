@@ -51,7 +51,7 @@ Abre la web en http://localhost:5173 (la API en :4000). `npm run dev` levanta Mo
 
 ## Deploy
 
-La guía completa está en [`docs/DEPLOY.md`](docs/DEPLOY.md): variables de entorno, MongoDB Atlas, Docker, Google/Steam en producción y envío de mails. El diseño y las decisiones del proyecto están en [`docs/PLAN.md`](docs/PLAN.md).
+El deploy es una imagen Docker (construida en local, porque el sprite sheet no va al repo) que corre en Render con MongoDB Atlas. Las variables de entorno están documentadas en `.env.example`.
 
 ## Licencia y contenido
 
