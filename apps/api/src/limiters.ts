@@ -39,6 +39,9 @@ export const apiLimiter = limiter({ windowMs: MINUTE, limit: 300 });
 /** Login, registro, olvidé mi contraseña, verificar email: lo que se puede atacar por fuerza bruta. */
 export const authLimiter = limiter({ windowMs: 15 * MINUTE, limit: 30 });
 
+/** Contar visitantes: cada navegador lo hace una vez; el tope frena a quien intente inflar el número. */
+export const visitLimiter = limiter({ windowMs: HOUR, limit: 10 });
+
 /** Crear, editar y borrar runs. */
 export const writeLimiter = limiter({ windowMs: HOUR, limit: 60, by: 'user' });
 

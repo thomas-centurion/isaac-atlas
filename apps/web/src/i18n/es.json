@@ -350,7 +350,7 @@
     },
     "cookies": {
       "title": "Cookies y registros",
-      "body": "Usamos una única cookie de sesión, necesaria para mantenerte conectado (dura hasta 30 días de inactividad). No usamos cookies de seguimiento ni de analítica. Tu IP se usa de forma temporal para limitar abusos y puede quedar en los registros técnicos del hosting."
+      "body": "Usamos una única cookie de sesión, necesaria para mantenerte conectado (dura hasta 30 días de inactividad). No usamos cookies de seguimiento ni de analítica. Tu IP se usa de forma temporal para limitar abusos y puede quedar en los registros técnicos del hosting. También guardamos en tu navegador una marca simple (sin identificador) para contarte una sola vez en el contador de visitantes."
     },
     "processors": {
       "title": "Con quién los compartimos",

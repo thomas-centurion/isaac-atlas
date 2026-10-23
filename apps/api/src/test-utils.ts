@@ -2,6 +2,7 @@ import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import { config } from './config.js';
 import { EmailToken } from './models/EmailToken.js';
+import { Counter } from './models/Counter.js';
 import { DailyPick, Verdict, Vote } from './models/Reactions.js';
 import { Report } from './models/Report.js';
 import { Run } from './models/Run.js';
@@ -38,6 +39,7 @@ export async function resetTestDb() {
     DailyPick.deleteMany({}),
     Report.deleteMany({}),
     EmailToken.deleteMany({}),
+    Counter.deleteMany({}),
     mongoose.connection.collection('sessions').deleteMany({}),
   ]);
 }

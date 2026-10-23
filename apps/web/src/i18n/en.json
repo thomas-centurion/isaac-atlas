@@ -350,7 +350,7 @@
     },
     "cookies": {
       "title": "Cookies and logs",
-      "body": "We use a single session cookie, required to keep you signed in (lasts up to 30 days of inactivity). We use no tracking or analytics cookies. Your IP is used temporarily to limit abuse and may remain in the hosting provider technical logs."
+      "body": "We use a single session cookie, required to keep you signed in (lasts up to 30 days of inactivity). We use no tracking or analytics cookies. Your IP is used temporarily to limit abuse and may remain in the hosting provider technical logs. We also keep a simple flag in your browser (no identifier) so you are counted only once in the visitor counter."
     },
     "processors": {
       "title": "Who we share it with",

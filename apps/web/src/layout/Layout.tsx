@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { LANGUAGES, setLanguage, type Language } from '../i18n';
 import { useLogout, useMe } from '../auth/useAuth';
 import { usePageVisibility } from '../hooks/usePageVisibility';
+import { useVisitors } from '../hooks/useVisitors';
 import { CONTACT_EMAIL } from '../site';
 import { ItemIcon } from '../ui/ItemIcon';
 import styles from './Layout.module.css';
@@ -33,6 +34,7 @@ export function Layout() {
   }, [pathname]);
 
   const { data: user, isPending: sessionPending } = useMe();
+  const { data: visitors } = useVisitors();
   // Render gratis duerme el servicio: si la primera respuesta tarda, se explica por qué.
   const [waking, setWaking] = useState(false);
   useEffect(() => {
@@ -151,8 +153,9 @@ export function Layout() {
             {t('footer.legal')} <Link to="/privacy">{t('footer.privacy')}</Link> ·{' '}
             <a href={`mailto:${CONTACT_EMAIL}`}>{t('footer.contact')}</a>
           </p>
-          <p className={styles.counter} aria-hidden="true">
-            {t('footer.visitors')} <span>000042</span>
+          <p className={styles.counter}>
+            {t('footer.visitors')}{' '}
+            <span>{visitors === undefined ? '······' : String(visitors).padStart(6, '0')}</span>
           </p>
         </div>
       </footer>

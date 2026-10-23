@@ -15,6 +15,7 @@ import { dailyRouter } from './routes/daily.js';
 import { adminRouter, reportRouter } from './routes/moderation.js';
 import { reactionsRouter } from './routes/reactions.js';
 import { usersRouter } from './routes/users.js';
+import { visitsRouter } from './routes/visits.js';
 import { apiLimiter } from './limiters.js';
 import { serveWeb } from './web.js';
 
@@ -88,6 +89,7 @@ export function createApp({ sessionStore }: AppDeps = {}) {
   app.use('/api/users', usersRouter);
   app.use('/api/admin', adminRouter);
   app.use('/api/seeds', seedsRouter);
+  app.use('/api/visits', visitsRouter);
   app.use('/api', (_req, _res, next) => next(new HttpError('not_found')));
 
   serveWeb(app);
