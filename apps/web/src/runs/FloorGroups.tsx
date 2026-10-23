@@ -1,5 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { ITEM_SOURCES, type ItemSource, type RunItem, type RunTrinket } from '@isaac-atlas/shared';
+import {
+  ITEM_SOURCES,
+  isSourceAvailable,
+  type ItemSource,
+  type RunItem,
+  type RunTrinket,
+} from '@isaac-atlas/shared';
 import { getItem, getTrinket } from '../catalog';
 import { useLang } from '../hooks/useLang';
 import { Button } from '../ui/Button';
@@ -98,7 +104,9 @@ export function FloorGroups({
                               onSourceChange(e.index, ev.target.value as ItemSource)
                             }
                           >
-                            {ITEM_SOURCES.map((s) => (
+                            {ITEM_SOURCES.filter(
+                              (s) => s === e.source || isSourceAvailable(s, e.floor),
+                            ).map((s) => (
                               <option key={s} value={s}>
                                 {t(`sources.${s}`)}
                               </option>

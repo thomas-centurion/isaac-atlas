@@ -23,6 +23,17 @@ describe('runInputSchema', () => {
     expect(run.notes).toBe('nice run');
   });
 
+  it('no admite tesoro ni tienda desde el Útero (piso 7), pero sí antes', () => {
+    const at = (floor: number, source: 'treasure' | 'shop' | 'devil') =>
+      runInputSchema.safeParse({ ...valid, items: [{ itemId: 153, floor, source }] }).success;
+    expect(at(6, 'treasure')).toBe(true);
+    expect(at(6, 'shop')).toBe(true);
+    expect(at(7, 'treasure')).toBe(false);
+    expect(at(8, 'shop')).toBe(false);
+    // Otros orígenes no cambian.
+    expect(at(8, 'devil')).toBe(true);
+  });
+
   it('rechaza seeds, personajes e ítems desconocidos', () => {
     expect(runInputSchema.safeParse({ ...valid, seed: 'ABCD 5234' }).success).toBe(false);
     expect(runInputSchema.safeParse({ ...valid, characterId: 999 }).success).toBe(false);

@@ -29,6 +29,15 @@ export const ITEM_SOURCES = [
   'other',
 ] as const;
 export const itemSourceSchema = z.enum(ITEM_SOURCES);
+
+/** Desde el Útero (piso 7) ya no aparecen salas del tesoro ni tiendas. */
+export const NO_TREASURE_SHOP_FROM_FLOOR = 7;
+
+/** ¿Puede un ítem de este origen encontrarse en este piso? */
+export function isSourceAvailable(source: ItemSource, floor: number): boolean {
+  if (source === 'treasure' || source === 'shop') return floor < NO_TREASURE_SHOP_FROM_FLOOR;
+  return true;
+}
 export type ItemSource = z.infer<typeof itemSourceSchema>;
 
 export const DIFFICULTIES = ['normal', 'hard', 'greed', 'greedier'] as const;
@@ -108,7 +117,8 @@ const outcomeSchema = z.object({
 export type RunOutcome = z.infer<typeof outcomeSchema>;
 
 /** Lo que el cliente envía para crear o reemplazar una run. */
-export const runInputSchema = z.object({
+/** Campos de una run. Sin las reglas entre campos: las respuestas leen runs viejas con esta base. */
+export const runBaseSchema = z.object({
   seed: seedSchema,
   gameVersion: z.enum(GAME_VERSIONS),
   characterId: z
@@ -122,6 +132,19 @@ export const runInputSchema = z.object({
   trinkets: z.array(runTrinketSchema).max(MAX_RUN_TRINKETS),
   outcome: outcomeSchema,
   notes: z.string().trim().max(MAX_NOTES_LENGTH),
+});
+
+/** Lo que el cliente envía al crear o editar: la base más las reglas entre campos. */
+export const runInputSchema = runBaseSchema.superRefine((run, ctx) => {
+  run.items.forEach((item, index) => {
+    if (!isSourceAvailable(item.source, item.floor)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['items', index, 'source'],
+        message: 'source not available on this floor',
+      });
+    }
+  });
 });
 export type RunInput = z.infer<typeof runInputSchema>;
 /** Forma "cruda" del formulario, antes de normalizar la seed. */
@@ -161,7 +184,7 @@ export const runViewerSchema = z.object({
 });
 export type RunViewer = z.infer<typeof runViewerSchema>;
 
-export const runSchema = runInputSchema.extend({
+export const runSchema = runBaseSchema.extend({
   id: z.string(),
   startItems: z.array(z.number().int()),
   author: z.object({ id: z.string(), username: z.string() }),
