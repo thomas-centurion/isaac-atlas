@@ -43,8 +43,6 @@ export const runSearchSchema = z.object({
   startItems: idList,
   /** La run incluyó todos estos ítems en algún momento. */
   items: idList,
-  /** La run no incluyó ninguno de estos ítems. */
-  exclude: idList,
   seed: z
     .string()
     .transform(normalizeSeed)
@@ -91,7 +89,6 @@ export interface SearchFilters {
   fullUnlocks?: boolean;
   startItems: number[];
   items: number[];
-  exclude: number[];
   seed?: string;
   author?: string;
   verdict?: VerdictKind;
@@ -101,7 +98,6 @@ export interface SearchFilters {
 export const EMPTY_FILTERS: SearchFilters = {
   startItems: [],
   items: [],
-  exclude: [],
   sort: DEFAULT_SORT,
 };
 
@@ -113,7 +109,6 @@ export function filtersToParams(filters: SearchFilters): URLSearchParams {
   if (filters.fullUnlocks !== undefined) params.set('fullUnlocks', String(filters.fullUnlocks));
   if (filters.startItems.length) params.set('startItems', filters.startItems.join(','));
   if (filters.items.length) params.set('items', filters.items.join(','));
-  if (filters.exclude.length) params.set('exclude', filters.exclude.join(','));
   if (filters.seed) params.set('seed', filters.seed);
   if (filters.verdict) params.set('verdict', filters.verdict);
   if (filters.author) params.set('author', filters.author);
@@ -133,7 +128,6 @@ export function filtersFromParams(params: URLSearchParams): SearchFilters {
     fullUnlocks,
     startItems,
     items,
-    exclude,
     seed,
     verdict,
     author,
@@ -146,7 +140,6 @@ export function filtersFromParams(params: URLSearchParams): SearchFilters {
     ...(fullUnlocks !== undefined ? { fullUnlocks } : {}),
     startItems,
     items,
-    exclude,
     ...(seed ? { seed } : {}),
     ...(verdict ? { verdict } : {}),
     ...(author ? { author } : {}),

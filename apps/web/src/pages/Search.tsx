@@ -26,8 +26,7 @@ function activeCount(f: SearchFilters): number {
       (v) => v !== undefined,
     ).length +
     f.startItems.length +
-    f.items.length +
-    f.exclude.length
+    f.items.length
   );
 }
 

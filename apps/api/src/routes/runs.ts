@@ -58,12 +58,7 @@ runsRouter.get(
     if (q.fullUnlocks !== undefined) filter.fullUnlocks = q.fullUnlocks;
     if (q.seed) filter.seed = q.seed;
     if (q.startItems.length) filter.startItems = { $all: q.startItems };
-    if (q.items.length || q.exclude.length) {
-      filter['items.itemId'] = {
-        ...(q.items.length ? { $all: q.items } : {}),
-        ...(q.exclude.length ? { $nin: q.exclude } : {}),
-      };
-    }
+    if (q.items.length) filter['items.itemId'] = { $all: q.items };
     if (q.verdict) filter[`stats.${q.verdict}`] = { $gte: MIN_VERDICT_VOTES };
 
     // hot y top ordenan por puntaje y desempatan por (createdAt, _id); new, solo por fecha.

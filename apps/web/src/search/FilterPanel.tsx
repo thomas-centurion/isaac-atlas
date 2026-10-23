@@ -20,7 +20,7 @@ import { TextField } from '../ui/TextField';
 import { ItemChips } from './ItemChips';
 import styles from './FilterPanel.module.css';
 
-type ItemList = 'startItems' | 'items' | 'exclude';
+type ItemList = 'startItems' | 'items';
 
 interface FilterPanelProps {
   filters: SearchFilters;
@@ -68,11 +68,7 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
 
   const addItem = (list: ItemList, id: number) => {
     if (filters[list].includes(id) || filters[list].length >= MAX_FILTER_ITEMS) return;
-    // "Tiene X" y "Sin X" se contradicen: agregar a uno lo saca del otro.
-    const conflicts: ItemList[] = list === 'exclude' ? ['items', 'startItems'] : ['exclude'];
-    const next = { ...filters, [list]: [...filters[list], id] };
-    for (const other of conflicts) next[other] = next[other].filter((x) => x !== id);
-    onChange(next);
+    onChange({ ...filters, [list]: [...filters[list], id] });
   };
   const removeItem = (list: ItemList, id: number) =>
     set({ [list]: filters[list].filter((x) => x !== id) });
@@ -80,13 +76,11 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
   const pickers: { list: ItemList; label: string; hint: string }[] = [
     { list: 'startItems', label: t('search.startsWith'), hint: t('search.startsWithHint') },
     { list: 'items', label: t('search.hasItems'), hint: t('search.hasItemsHint') },
-    { list: 'exclude', label: t('search.excludeItems'), hint: t('search.excludeItemsHint') },
   ];
 
   // "Más filtros" se abre solo si alguno de ellos está aplicado (así no hay filtros ocultos activos).
   const moreActive =
     filters.seed !== undefined ||
-    filters.difficulty !== undefined ||
     filters.fullUnlocks !== undefined ||
     filters.result !== undefined ||
     filters.verdict !== undefined;
@@ -101,7 +95,7 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
           type="button"
           className={styles.clear}
           disabled={!hasActiveFilters(filters)}
-          onClick={() => onChange({ startItems: [], items: [], exclude: [], sort: filters.sort })}
+          onClick={() => onChange({ startItems: [], items: [], sort: filters.sort })}
         >
           {t('search.clear')}
         </button>
@@ -130,6 +124,22 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
             </option>
           ))}
         </optgroup>
+      </Select>
+
+      <Select
+        label={t('run.difficulty')}
+        value={filters.difficulty ?? ''}
+        onChange={(e) => {
+          if (e.target.value === '') unset('difficulty');
+          else set({ difficulty: e.target.value as (typeof DIFFICULTIES)[number] });
+        }}
+      >
+        <option value="">{t('search.any')}</option>
+        {DIFFICULTIES.map((d) => (
+          <option key={d} value={d}>
+            {t(`difficulty.${d}`)}
+          </option>
+        ))}
       </Select>
 
       <div className={styles.pickers}>
@@ -165,22 +175,6 @@ export function FilterPanel({ filters, onChange, focusRef }: FilterPanelProps) {
             }
             onChange={(e) => onSeedChange(e.target.value)}
           />
-
-          <Select
-            label={t('run.difficulty')}
-            value={filters.difficulty ?? ''}
-            onChange={(e) => {
-              if (e.target.value === '') unset('difficulty');
-              else set({ difficulty: e.target.value as (typeof DIFFICULTIES)[number] });
-            }}
-          >
-            <option value="">{t('search.any')}</option>
-            {DIFFICULTIES.map((d) => (
-              <option key={d} value={d}>
-                {t(`difficulty.${d}`)}
-              </option>
-            ))}
-          </Select>
 
           <Select
             label={t('search.unlocks')}

@@ -33,8 +33,6 @@
     "startsWithHint": "Items from the first floor.",
     "hasItems": "Has",
     "hasItemsHint": "At any point of the run.",
-    "excludeItems": "Without",
-    "excludeItemsHint": "None of these items.",
     "clear": "Clear filters",
     "results": "Results",
     "noMatches": "No run matches those filters.",

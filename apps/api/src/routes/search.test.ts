@@ -141,38 +141,6 @@ describe('GET /api/runs — filtros', () => {
     expect(seedsOf(both)).toEqual(['B0TH1111']);
   });
 
-  it('exclude descarta runs que tengan alguno de esos ítems, en cualquier piso', async () => {
-    await makeRun({ seed: 'CLEAN111', items: [[MUTANT_SPIDER, 1]] });
-    await makeRun({
-      seed: 'TR0LL222',
-      items: [
-        [MUTANT_SPIDER, 1],
-        [SAD_ONION, 5],
-      ],
-    });
-    expect(seedsOf(await search({ exclude: SAD_ONION }))).toEqual(['CLEAN111']);
-  });
-
-  it('items y exclude se pueden combinar', async () => {
-    await makeRun({
-      seed: 'HASD6111',
-      items: [
-        [MUTANT_SPIDER, 1],
-        [D6, 2],
-      ],
-    });
-    await makeRun({
-      seed: 'HASB0TH2',
-      items: [
-        [MUTANT_SPIDER, 1],
-        [D6, 2],
-        [SAD_ONION, 3],
-      ],
-    });
-    const result = await search({ items: D6, exclude: SAD_ONION });
-    expect(seedsOf(result)).toEqual(['HASD6111']);
-  });
-
   it('busca por seed (aunque llegue en minúsculas y con espacio)', async () => {
     await makeRun({ seed: 'ABCD1234' });
     await makeRun({ seed: 'WXYZ6789' });

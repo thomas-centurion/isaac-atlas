@@ -33,8 +33,6 @@
     "startsWithHint": "Ítems del primer piso.",
     "hasItems": "Tiene",
     "hasItemsHint": "En cualquier momento de la run.",
-    "excludeItems": "Sin",
-    "excludeItemsHint": "Ninguno de estos ítems.",
     "clear": "Limpiar filtros",
     "results": "Resultados",
     "noMatches": "Ninguna run coincide con esos filtros.",

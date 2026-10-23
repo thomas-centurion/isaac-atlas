@@ -10,9 +10,8 @@ import {
 
 describe('runSearchSchema', () => {
   it('parsea listas de IDs separadas por coma y aplica defaults', () => {
-    const q = runSearchSchema.parse({ startItems: '153,105', exclude: '3' });
+    const q = runSearchSchema.parse({ startItems: '153,105' });
     expect(q.startItems).toEqual([153, 105]);
-    expect(q.exclude).toEqual([3]);
     expect(q.items).toEqual([]);
     expect(q.limit).toBe(20);
   });
@@ -45,7 +44,6 @@ describe('filtros ⇄ URL', () => {
     fullUnlocks: true,
     startItems: [153],
     items: [105, 3],
-    exclude: [],
     verdict: 'op',
     sort: 'top',
   };
