@@ -112,6 +112,7 @@ export function FloorGroups({
                         {(e.kind === 'item' ? onRemoveItem : onRemoveTrinket) ? (
                           <Button
                             variant="danger"
+                            className={styles.remove}
                             aria-label={`${t('run.remove')}: ${name}`}
                             onClick={() =>
                               (e.kind === 'item' ? onRemoveItem : onRemoveTrinket)?.(e.index)

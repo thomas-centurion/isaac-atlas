@@ -65,14 +65,16 @@
   overflow-wrap: anywhere;
 }
 
+/* El selector de origen ocupa su propia fila (si no, queda tan angosto que no se lee la opción) */
 .controls {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
 }
 
 .source {
-  flex: 1;
+  flex: 1 1 100%;
   min-width: 0;
   padding: 0.25rem 0.4rem;
   font-family: var(--font-body);
@@ -97,8 +99,18 @@
 
 /* Marca "Reroll": casilla en el formulario, distintivo en modo lectura */
 .reroll {
+  flex: 1;
   font-size: 0.8rem;
   white-space: nowrap;
+}
+
+/* Botón de quitar: chico, para no competir con el resto de los controles */
+.controls .remove {
+  min-height: 28px;
+  margin-left: auto;
+  padding: 0 0.6rem;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 0 0 var(--line-dark);
 }
 
 .rerollBadge {
