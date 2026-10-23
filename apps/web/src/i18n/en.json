@@ -265,7 +265,9 @@
     "emptyMine": "You have not logged any runs yet.",
     "author": "Author",
     "published": "Published",
-    "edited": "Edited"
+    "edited": "Edited",
+    "reroll": "Reroll",
+    "rerollHint": "Tick \"Reroll\" if the item came from rerolling another one (D6, D100…). The source stays the room or pool where it happened."
   },
   "floors": {
     "1": "Basement I / Downpour I",

@@ -169,6 +169,7 @@ export function RunForm({
         />
         <p className={styles.hint}>{t('run.fullUnlocksHint')}</p>
         <p className={styles.hint}>{t('run.innateHint')}</p>
+        <p className={styles.hint}>{t('run.rerollHint')}</p>
       </Panel>
 
       <Panel title={t('run.itemsTitle')}>
@@ -223,6 +224,9 @@ export function RunForm({
           onRemoveItem={(index) => dispatch({ type: 'removeItem', index })}
           onRemoveTrinket={(index) => dispatch({ type: 'removeTrinket', index })}
           onSourceChange={(index, source) => dispatch({ type: 'setItemSource', index, source })}
+          onRerollChange={(index, rerolled) =>
+            dispatch({ type: 'setItemRerolled', index, rerolled })
+          }
         />
       </Panel>
 

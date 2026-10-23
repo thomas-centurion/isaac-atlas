@@ -69,7 +69,10 @@ const runItemSchema = z.object({
     .int()
     .refine((id) => getItem(id) !== undefined, 'unknown item'),
   floor: floorSchema,
+  /** Sala o pool de donde salió el ítem. */
   source: itemSourceSchema,
+  /** El ítem salió de un reroll (D6, D100…): `source` sigue siendo el pool donde ocurrió. */
+  rerolled: z.boolean().optional(),
 });
 export type RunItem = z.infer<typeof runItemSchema>;
 

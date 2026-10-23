@@ -21,7 +21,12 @@ export function toRunDto(run: RunDocument, author: { id: string; username: strin
     characterId: run.characterId,
     difficulty: run.difficulty,
     fullUnlocks: run.fullUnlocks,
-    items: run.items.map((i) => ({ itemId: i.itemId, floor: i.floor, source: i.source })),
+    items: run.items.map((i) => ({
+      itemId: i.itemId,
+      floor: i.floor,
+      source: i.source,
+      ...(i.rerolled ? { rerolled: true } : {}),
+    })),
     trinkets: run.trinkets.map((t) => ({ trinketId: t.trinketId, floor: t.floor })),
     startItems: run.startItems,
     outcome: {

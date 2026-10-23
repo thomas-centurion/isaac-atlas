@@ -94,3 +94,19 @@
   margin: 0;
   color: var(--ink-dim);
 }
+
+/* Marca "Reroll": casilla en el formulario, distintivo en modo lectura */
+.reroll {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.rerollBadge {
+  padding: 0 var(--space-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--tear);
+}

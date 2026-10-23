@@ -55,6 +55,7 @@ export type DraftAction =
   | { type: 'addItem'; itemId: number }
   | { type: 'removeItem'; index: number }
   | { type: 'setItemSource'; index: number; source: ItemSource }
+  | { type: 'setItemRerolled'; index: number; rerolled: boolean }
   | { type: 'addTrinket'; trinketId: number }
   | { type: 'removeTrinket'; index: number }
   | { type: 'setCharacter'; characterId: number | null }
@@ -119,6 +120,17 @@ export function draftReducer(state: Draft, action: DraftAction): Draft {
           i === action.index ? { ...it, source: action.source } : it,
         ),
       };
+    case 'setItemRerolled':
+      return {
+        ...state,
+        items: state.items.map((it, i) => {
+          if (i !== action.index) return it;
+          // Solo se guarda la marca cuando es verdadera.
+          return action.rerolled
+            ? { ...it, rerolled: true }
+            : { itemId: it.itemId, floor: it.floor, source: it.source };
+        }),
+      };
     case 'addTrinket':
       return {
         ...state,
@@ -169,6 +181,7 @@ const storedItemSchema = z.object({
   itemId: z.number(),
   floor: floorSchema,
   source: itemSourceSchema,
+  rerolled: z.boolean().optional().catch(undefined),
 });
 const storedTrinketSchema = z.object({ trinketId: z.number(), floor: floorSchema });
 

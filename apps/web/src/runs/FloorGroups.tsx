@@ -3,6 +3,7 @@ import { ITEM_SOURCES, type ItemSource, type RunItem, type RunTrinket } from '@i
 import { getItem, getTrinket } from '../catalog';
 import { useLang } from '../hooks/useLang';
 import { Button } from '../ui/Button';
+import { Checkbox } from '../ui/Checkbox';
 import { ItemIcon } from '../ui/ItemIcon';
 import styles from './FloorGroups.module.css';
 
@@ -13,6 +14,7 @@ interface FloorGroupsProps {
   onRemoveItem?: (index: number) => void;
   onRemoveTrinket?: (index: number) => void;
   onSourceChange?: (index: number, source: ItemSource) => void;
+  onRerollChange?: (index: number, rerolled: boolean) => void;
 }
 
 interface Entry {
@@ -22,6 +24,7 @@ interface Entry {
   index: number;
   floor: number;
   source?: ItemSource;
+  rerolled?: boolean;
 }
 
 /** Ítems y trinkets agrupados por piso, en el orden en que se agarraron. */
@@ -31,6 +34,7 @@ export function FloorGroups({
   onRemoveItem,
   onRemoveTrinket,
   onSourceChange,
+  onRerollChange,
 }: FloorGroupsProps) {
   const { t } = useTranslation();
   const lang = useLang();
@@ -43,6 +47,7 @@ export function FloorGroups({
       index,
       floor: it.floor,
       source: it.source,
+      rerolled: it.rerolled,
     })),
     ...trinkets.map((tr, index) => ({
       key: `t-${index}`,
@@ -92,6 +97,17 @@ export function FloorGroups({
                           </select>
                         ) : e.source && e.source !== 'other' ? (
                           <span className={styles.sourceText}>{t(`sources.${e.source}`)}</span>
+                        ) : null}
+                        {e.kind === 'item' && onRerollChange ? (
+                          <Checkbox
+                            className={styles.reroll}
+                            label={t('run.reroll')}
+                            aria-label={`${t('run.reroll')}: ${name}`}
+                            checked={Boolean(e.rerolled)}
+                            onChange={(ev) => onRerollChange(e.index, ev.target.checked)}
+                          />
+                        ) : e.rerolled ? (
+                          <span className={styles.rerollBadge}>{t('run.reroll')}</span>
                         ) : null}
                         {(e.kind === 'item' ? onRemoveItem : onRemoveTrinket) ? (
                           <Button

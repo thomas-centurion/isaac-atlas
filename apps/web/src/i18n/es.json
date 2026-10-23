@@ -265,7 +265,9 @@
     "emptyMine": "Todavía no cargaste ninguna run.",
     "author": "Autor",
     "published": "Publicada",
-    "edited": "Editada"
+    "edited": "Editada",
+    "reroll": "Reroll",
+    "rerollHint": "Marcá \"Reroll\" si el ítem salió de rerollear otro (D6, D100…). El origen sigue siendo la sala o pool donde ocurrió."
   },
   "floors": {
     "1": "Sótano I / Aguacero I",

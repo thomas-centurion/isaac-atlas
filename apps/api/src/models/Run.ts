@@ -29,7 +29,7 @@ export interface RunAttrs {
   characterId: number;
   difficulty: Difficulty;
   fullUnlocks: boolean;
-  items: { itemId: number; floor: number; source: ItemSource }[];
+  items: { itemId: number; floor: number; source: ItemSource; rerolled?: boolean }[];
   trinkets: { trinketId: number; floor: number }[];
   /** Derivado de `items` (piso 1): indexado para "empieza con X". */
   startItems: number[];
@@ -60,6 +60,7 @@ const runSchema = new Schema<RunAttrs>(
             itemId: { type: Number, required: true },
             floor: { type: Number, required: true },
             source: { type: String, enum: ITEM_SOURCES, required: true },
+            rerolled: { type: Boolean },
           },
           { _id: false },
         ),

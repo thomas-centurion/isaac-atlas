@@ -57,6 +57,22 @@ describe('POST /api/runs', () => {
     expect(created.items).toHaveLength(2);
   });
 
+  it('guarda la marca de reroll por ítem y no la inventa donde no está', async () => {
+    const agent = await signUp('Alice');
+    const items = [
+      { itemId: 153, floor: 1, source: 'treasure', rerolled: true },
+      { itemId: 21, floor: 2, source: 'devil' },
+    ];
+    const res = await agent.post('/api/runs').send({ ...run, items });
+    expect(res.status).toBe(201);
+    const { run: created } = runResponseSchema.parse(res.body);
+    expect(created.items[0]).toMatchObject({ source: 'treasure', rerolled: true });
+    expect(created.items[1]?.rerolled).toBeUndefined();
+
+    const reread = runResponseSchema.parse((await agent.get(`/api/runs/${created.id}`)).body).run;
+    expect(reread.items[0]?.rerolled).toBe(true);
+  });
+
   it('rechaza datos inválidos (seed, ítem desconocido, sin ítems)', async () => {
     const agent = await signUp('Alice');
     const bad = [
