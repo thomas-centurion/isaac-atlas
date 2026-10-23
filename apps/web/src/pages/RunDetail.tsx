@@ -12,6 +12,7 @@ import { characterLabel } from '../runs/labels';
 import { ReportRun } from '../runs/ReportRun';
 import { VerdictChips, VoteBox } from '../runs/VoteControls';
 import { Badge } from '../ui/Badge';
+import { CharacterFace } from '../ui/CharacterFace';
 import { Button } from '../ui/Button';
 import { Notice } from '../ui/Notice';
 import { Panel } from '../ui/Panel';
@@ -54,25 +55,34 @@ export function RunDetail() {
     <div className={styles.layout}>
       <div className={styles.main}>
         <header className={styles.hero}>
-          <p className={styles.eyebrow}>
-            {character ? characterLabel(character, lang, t) : null}
-            {' · '}
-            {t(`difficulty.${run.difficulty}`)}
-          </p>
-          <div className={styles.seedRow}>
-            <h1 className={styles.seed}>{seed}</h1>
-            <Button variant="secondary" onClick={copySeed}>
-              {copied ? t('run.copied') : t('run.copySeed')}
-            </Button>
-          </div>
-          <div className={styles.badges}>
-            <Badge tone="op">{t(`results.${run.outcome.result}`)}</Badge>
-            {run.outcome.lastFloor ? <Badge>{t(`floors.${run.outcome.lastFloor}`)}</Badge> : null}
-            {run.outcome.finalBoss ? <Badge>{t(`bosses.${run.outcome.finalBoss}`)}</Badge> : null}
-            <Badge>Rep+</Badge>
-            <Badge tone={run.fullUnlocks ? 'troll' : 'hard'}>
-              {t(run.fullUnlocks ? 'run.unlocksFull' : 'run.unlocksPartial')}
-            </Badge>
+          <div className={styles.heroLayout}>
+            <CharacterFace id={run.characterId} scale={2} />
+            <div className={styles.heroText}>
+              <p className={styles.eyebrow}>
+                {character ? characterLabel(character, lang, t) : null}
+                {' · '}
+                {t(`difficulty.${run.difficulty}`)}
+              </p>
+              <div className={styles.seedRow}>
+                <h1 className={styles.seed}>{seed}</h1>
+                <Button variant="secondary" onClick={copySeed}>
+                  {copied ? t('run.copied') : t('run.copySeed')}
+                </Button>
+              </div>
+              <div className={styles.badges}>
+                <Badge tone="op">{t(`results.${run.outcome.result}`)}</Badge>
+                {run.outcome.lastFloor ? (
+                  <Badge>{t(`floors.${run.outcome.lastFloor}`)}</Badge>
+                ) : null}
+                {run.outcome.finalBoss ? (
+                  <Badge>{t(`bosses.${run.outcome.finalBoss}`)}</Badge>
+                ) : null}
+                <Badge>Rep+</Badge>
+                <Badge tone={run.fullUnlocks ? 'troll' : 'hard'}>
+                  {t(run.fullUnlocks ? 'run.unlocksFull' : 'run.unlocksPartial')}
+                </Badge>
+              </div>
+            </div>
           </div>
         </header>
 

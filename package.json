@@ -20,6 +20,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "catalog": "tsx --env-file=.env scripts/build-catalog.ts",
+    "faces": "tsx --env-file=.env scripts/build-faces.ts",
     "make-admin": "tsx --env-file=.env scripts/make-admin.ts",
     "format:check": "prettier --check .",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test"

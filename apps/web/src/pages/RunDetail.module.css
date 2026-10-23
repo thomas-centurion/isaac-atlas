@@ -138,3 +138,15 @@
     font-size: 1.2rem;
   }
 }
+
+/* Cara del personaje a la izquierda del encabezado */
+.heroLayout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.heroText {
+  flex: 1;
+  min-width: 0;
+}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { formatSeed, getCharacter, type Run } from '@isaac-atlas/shared';
 import { useLang } from '../hooks/useLang';
 import { Badge } from '../ui/Badge';
+import { CharacterFace } from '../ui/CharacterFace';
 import { ItemIcon } from '../ui/ItemIcon';
 import { characterLabel } from './labels';
 import { VerdictChips, VoteBox } from './VoteControls';
@@ -50,6 +51,7 @@ export function RunCard({
 
       <div className={styles.body}>
         <div className={styles.head}>
+          <CharacterFace id={run.characterId} />
           <Link to={`/runs/${run.id}`} className={styles.link}>
             {formatSeed(run.seed)}
           </Link>

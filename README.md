@@ -39,7 +39,7 @@ npm run dev
 
 Abre la web en http://localhost:5173 (la API en :4000). `npm run dev` levanta Mongo con Docker.
 
-> Los **sprites del juego no están en el repo**. Sin ellos la web funciona, pero los ítems se ven sin imagen. Si tenés el juego instalado, `npm run catalog` regenera el catálogo y el sprite sheet (ver `scripts/build-catalog.ts`).
+> Los **sprites del juego no están en el repo**. Sin ellos la web funciona, pero los ítems se ven sin imagen. Si tenés el juego instalado, `npm run catalog` regenera el catálogo y el sprite sheet de ítems (ver `scripts/build-catalog.ts`), y `npm run faces` el de caras de personajes. Ambos usan la variable `ISAAC_EXTRACTED`.
 
 ## Scripts útiles
 
