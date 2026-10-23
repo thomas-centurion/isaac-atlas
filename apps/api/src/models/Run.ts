@@ -29,8 +29,8 @@ export interface RunAttrs {
   characterId: number;
   difficulty: Difficulty;
   fullUnlocks: boolean;
-  items: { itemId: number; floor: number; source: ItemSource; rerolled?: boolean }[];
-  trinkets: { trinketId: number; floor: number }[];
+  items: { itemId: number; floor: number; source: ItemSource; rerolled?: boolean; alt?: boolean }[];
+  trinkets: { trinketId: number; floor: number; alt?: boolean }[];
   /** Derivado de `items` (piso 1): indexado para "empieza con X". */
   startItems: number[];
   outcome: { result: RunResult; lastFloor?: number; finalBoss?: string };
@@ -61,6 +61,7 @@ const runSchema = new Schema<RunAttrs>(
             floor: { type: Number, required: true },
             source: { type: String, enum: ITEM_SOURCES, required: true },
             rerolled: { type: Boolean },
+            alt: { type: Boolean },
           },
           { _id: false },
         ),
@@ -73,6 +74,7 @@ const runSchema = new Schema<RunAttrs>(
           {
             trinketId: { type: Number, required: true },
             floor: { type: Number, required: true },
+            alt: { type: Boolean },
           },
           { _id: false },
         ),

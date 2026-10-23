@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import {
+  ALT_PATH_MAX_FLOOR,
   FLOOR_MAX,
   FLOOR_MIN,
   difficultySchema,
@@ -28,6 +29,8 @@ export interface Draft {
   fullUnlocks: boolean;
   /** Piso actual: los ítems que se agregan quedan asignados a este piso. */
   floor: number;
+  /** Ruta del piso actual (solo cuenta hasta el piso 8): true = alterna. */
+  alt: boolean;
   items: RunItem[];
   trinkets: RunTrinket[];
   result: RunResult;
@@ -42,6 +45,7 @@ export const EMPTY_DRAFT: Draft = {
   difficulty: 'normal',
   fullUnlocks: true,
   floor: FLOOR_MIN,
+  alt: false,
   items: [],
   trinkets: [],
   result: 'death',
@@ -49,6 +53,9 @@ export const EMPTY_DRAFT: Draft = {
   finalBoss: null,
   notes: '',
 };
+
+/** Hasta el piso 8 cada ítem recuerda por qué ruta se agarró; después no hay dos rutas. */
+const pathMark = (state: Draft) => (state.floor <= ALT_PATH_MAX_FLOOR ? { alt: state.alt } : {});
 
 export type DraftAction =
   | { type: 'set'; patch: Partial<Draft> }
@@ -61,6 +68,7 @@ export type DraftAction =
   | { type: 'setCharacter'; characterId: number | null }
   | { type: 'setFullUnlocks'; value: boolean }
   | { type: 'changeFloor'; delta: 1 | -1 }
+  | { type: 'setAlt'; value: boolean }
   | { type: 'reset' };
 
 /**
@@ -109,7 +117,10 @@ export function draftReducer(state: Draft, action: DraftAction): Draft {
     case 'addItem':
       return {
         ...state,
-        items: [...state.items, { itemId: action.itemId, floor: state.floor, source: 'other' }],
+        items: [
+          ...state.items,
+          { itemId: action.itemId, floor: state.floor, source: 'other', ...pathMark(state) },
+        ],
       };
     case 'removeItem':
       return { ...state, items: state.items.filter((_, i) => i !== action.index) };
@@ -126,15 +137,19 @@ export function draftReducer(state: Draft, action: DraftAction): Draft {
         items: state.items.map((it, i) => {
           if (i !== action.index) return it;
           // Solo se guarda la marca cuando es verdadera.
-          return action.rerolled
-            ? { ...it, rerolled: true }
-            : { itemId: it.itemId, floor: it.floor, source: it.source };
+          if (action.rerolled) return { ...it, rerolled: true };
+          const next = { ...it };
+          delete next.rerolled;
+          return next;
         }),
       };
     case 'addTrinket':
       return {
         ...state,
-        trinkets: [...state.trinkets, { trinketId: action.trinketId, floor: state.floor }],
+        trinkets: [
+          ...state.trinkets,
+          { trinketId: action.trinketId, floor: state.floor, ...pathMark(state) },
+        ],
       };
     case 'removeTrinket':
       return { ...state, trinkets: state.trinkets.filter((_, i) => i !== action.index) };
@@ -147,6 +162,8 @@ export function draftReducer(state: Draft, action: DraftAction): Draft {
         ...state,
         floor: Math.min(FLOOR_MAX, Math.max(FLOOR_MIN, state.floor + action.delta)),
       };
+    case 'setAlt':
+      return { ...state, alt: action.value };
     case 'reset':
       return EMPTY_DRAFT;
   }
@@ -182,8 +199,13 @@ const storedItemSchema = z.object({
   floor: floorSchema,
   source: itemSourceSchema,
   rerolled: z.boolean().optional().catch(undefined),
+  alt: z.boolean().optional().catch(undefined),
 });
-const storedTrinketSchema = z.object({ trinketId: z.number(), floor: floorSchema });
+const storedTrinketSchema = z.object({
+  trinketId: z.number(),
+  floor: floorSchema,
+  alt: z.boolean().optional().catch(undefined),
+});
 
 // `.catch` en cada campo: un borrador viejo o corrupto se recupera parcialmente en vez de fallar.
 const storedSchema = z.object({
@@ -192,6 +214,7 @@ const storedSchema = z.object({
   difficulty: difficultySchema.catch(EMPTY_DRAFT.difficulty),
   fullUnlocks: z.boolean().catch(EMPTY_DRAFT.fullUnlocks),
   floor: floorSchema.catch(FLOOR_MIN),
+  alt: z.boolean().catch(false),
   // Entradas inválidas (o ítems que ya no existen en el catálogo) se descartan una por una.
   items: z
     .array(z.unknown())
@@ -227,6 +250,9 @@ export function loadDraft(): Draft {
   }
 }
 
+const lastFloorWithItems = (run: Run) =>
+  Math.max(FLOOR_MIN, ...run.items.map((i) => i.floor), ...run.trinkets.map((t) => t.floor));
+
 /** Borrador a partir de una run publicada (para editarla). */
 export function runToDraft(run: Run): Draft {
   return {
@@ -235,10 +261,9 @@ export function runToDraft(run: Run): Draft {
     difficulty: run.difficulty,
     fullUnlocks: run.fullUnlocks,
     // El piso actual arranca en el último donde hay algo cargado: lo nuevo suele ser lo siguiente.
-    floor: Math.max(
-      FLOOR_MIN,
-      ...run.items.map((i) => i.floor),
-      ...run.trinkets.map((t) => t.floor),
+    floor: lastFloorWithItems(run),
+    alt: [...run.items, ...run.trinkets].some(
+      (e) => e.floor === lastFloorWithItems(run) && e.alt === true,
     ),
     items: run.items,
     trinkets: run.trinkets,

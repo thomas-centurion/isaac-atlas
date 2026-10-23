@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type Dispatch, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ALT_PATH_MAX_FLOOR,
   DIFFICULTIES,
   FINAL_BOSSES,
   FLOOR_MAX,
@@ -26,6 +27,7 @@ import { TextArea } from '../ui/TextArea';
 import { TextField } from '../ui/TextField';
 import { draftToInput, type Draft, type DraftAction } from './draft';
 import { FloorGroups } from './FloorGroups';
+import { floorName } from './floors';
 import { ItemPicker } from './ItemPicker';
 import { characterLabel } from './labels';
 import styles from './RunForm.module.css';
@@ -183,7 +185,8 @@ export function RunForm({
             −
           </Button>
           <strong className={styles.floorLabel} aria-live="polite">
-            {draft.floor}. {t(`floors.${draft.floor}`)}
+            {draft.floor}.{' '}
+            {floorName(t, draft.floor, draft.floor <= ALT_PATH_MAX_FLOOR ? draft.alt : undefined)}
           </strong>
           <Button
             variant="secondary"
@@ -194,6 +197,18 @@ export function RunForm({
             +
           </Button>
         </div>
+
+        {draft.floor <= ALT_PATH_MAX_FLOOR ? (
+          <Tabs<'normal' | 'alt'>
+            label={t('run.path')}
+            value={draft.alt ? 'alt' : 'normal'}
+            onChange={(path) => dispatch({ type: 'setAlt', value: path === 'alt' })}
+            options={[
+              { value: 'normal', label: t('run.pathNormal') },
+              { value: 'alt', label: t('run.pathAlt') },
+            ]}
+          />
+        ) : null}
 
         <Tabs<PickerKind>
           label={t('run.pickerKind')}

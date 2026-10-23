@@ -73,6 +73,22 @@ describe('POST /api/runs', () => {
     expect(reread.items[0]?.rerolled).toBe(true);
   });
 
+  it('guarda la ruta (normal o alterna) por ítem y solo la admite hasta el piso 8', async () => {
+    const agent = await signUp('Alice');
+    const items = [
+      { itemId: 153, floor: 1, source: 'treasure', alt: true },
+      { itemId: 21, floor: 2, source: 'shop', alt: false },
+      { itemId: 33, floor: 3, source: 'boss' },
+    ];
+    const res = await agent.post('/api/runs').send({ ...run, items });
+    expect(res.status).toBe(201);
+    const created = runResponseSchema.parse(res.body).run;
+    expect(created.items.map((i) => i.alt)).toEqual([true, false, undefined]);
+
+    const late = { itemId: 153, floor: 10, source: 'other', alt: true };
+    expect((await agent.post('/api/runs').send({ ...run, items: [late] })).status).toBe(400);
+  });
+
   it('rechaza datos inválidos (seed, ítem desconocido, sin ítems)', async () => {
     const agent = await signUp('Alice');
     const bad = [

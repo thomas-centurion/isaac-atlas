@@ -267,7 +267,10 @@
     "published": "Published",
     "edited": "Edited",
     "reroll": "Reroll",
-    "rerollHint": "Tick \"Reroll\" if the item came from rerolling another one (D6, D100…). The source stays the room or pool where it happened."
+    "rerollHint": "Tick \"Reroll\" if the item came from rerolling another one (D6, D100…). The source stays the room or pool where it happened.",
+    "path": "Route",
+    "pathNormal": "Normal",
+    "pathAlt": "Alternate"
   },
   "floors": {
     "1": "Basement I / Downpour I",
@@ -380,5 +383,25 @@
   "notFoundPage": {
     "title": "Page not found",
     "body": "That address does not exist or was moved."
+  },
+  "floorsNormal": {
+    "1": "Basement I",
+    "2": "Basement II",
+    "3": "Caves I",
+    "4": "Caves II",
+    "5": "Depths I",
+    "6": "Depths II",
+    "7": "Womb I",
+    "8": "Womb II"
+  },
+  "floorsAlt": {
+    "1": "Downpour I",
+    "2": "Downpour II",
+    "3": "Mines I",
+    "4": "Mines II",
+    "5": "Mausoleum I",
+    "6": "Mausoleum II",
+    "7": "Corpse I",
+    "8": "Corpse II"
   }
 }

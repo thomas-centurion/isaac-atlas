@@ -58,7 +58,21 @@ describe('draftReducer', () => {
       { type: 'setItemSource', index: 1, source: 'shop' },
       { type: 'removeItem', index: 0 },
     );
-    expect(s.items).toEqual([{ itemId: 105, floor: 1, source: 'shop' }]);
+    expect(s.items).toEqual([{ itemId: 105, floor: 1, source: 'shop', alt: false }]);
+  });
+
+  it('recuerda la ruta por ítem hasta el piso 8 y no la guarda después', () => {
+    const s = reduce(
+      EMPTY_DRAFT,
+      { type: 'setAlt', value: true },
+      { type: 'addItem', itemId: 153 },
+      { type: 'setAlt', value: false },
+      { type: 'addItem', itemId: 105 },
+      ...Array.from({ length: 8 }, () => ({ type: 'changeFloor' as const, delta: 1 as const })),
+      { type: 'addItem', itemId: 21 },
+    );
+    expect(s.items.map((i) => i.alt)).toEqual([true, false, undefined]);
+    expect(s.items[2]?.floor).toBe(9);
   });
 });
 

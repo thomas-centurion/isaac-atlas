@@ -26,8 +26,13 @@ export function toRunDto(run: RunDocument, author: { id: string; username: strin
       floor: i.floor,
       source: i.source,
       ...(i.rerolled ? { rerolled: true } : {}),
+      ...(i.alt === undefined ? {} : { alt: i.alt }),
     })),
-    trinkets: run.trinkets.map((t) => ({ trinketId: t.trinketId, floor: t.floor })),
+    trinkets: run.trinkets.map((t) => ({
+      trinketId: t.trinketId,
+      floor: t.floor,
+      ...(t.alt === undefined ? {} : { alt: t.alt }),
+    })),
     startItems: run.startItems,
     outcome: {
       result: run.outcome.result,

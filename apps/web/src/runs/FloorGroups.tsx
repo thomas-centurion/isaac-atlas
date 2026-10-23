@@ -5,6 +5,7 @@ import { useLang } from '../hooks/useLang';
 import { Button } from '../ui/Button';
 import { Checkbox } from '../ui/Checkbox';
 import { ItemIcon } from '../ui/ItemIcon';
+import { floorName } from './floors';
 import styles from './FloorGroups.module.css';
 
 interface FloorGroupsProps {
@@ -23,6 +24,7 @@ interface Entry {
   id: number;
   index: number;
   floor: number;
+  alt?: boolean;
   source?: ItemSource;
   rerolled?: boolean;
 }
@@ -46,6 +48,7 @@ export function FloorGroups({
       id: it.itemId,
       index,
       floor: it.floor,
+      alt: it.alt,
       source: it.source,
       rerolled: it.rerolled,
     })),
@@ -55,22 +58,28 @@ export function FloorGroups({
       id: tr.trinketId,
       index,
       floor: tr.floor,
+      alt: tr.alt,
     })),
   ];
-  const floors = [...new Set(entries.map((e) => e.floor))].sort((a, b) => a - b);
+  // Un grupo por piso y ruta: "Sótano I" y "Aguacero I" son grupos distintos.
+  const groupKey = (e: Entry) =>
+    `${e.floor}-${e.alt === true ? 'alt' : e.alt === false ? 'normal' : 'any'}`;
+  const groups = [...new Map(entries.map((e) => [groupKey(e), e])).values()].sort(
+    (a, b) => a.floor - b.floor || Number(a.alt === true) - Number(b.alt === true),
+  );
 
   if (entries.length === 0) return <p className={styles.empty}>{t('run.noItemsYet')}</p>;
 
   return (
     <div>
-      {floors.map((floor) => (
-        <section key={floor} className={styles.group}>
+      {groups.map((group) => (
+        <section key={groupKey(group)} className={styles.group}>
           <h3>
-            {floor}. {t(`floors.${floor}`)}
+            {group.floor}. {floorName(t, group.floor, group.alt)}
           </h3>
           <ul className={styles.list}>
             {entries
-              .filter((e) => e.floor === floor)
+              .filter((e) => groupKey(e) === groupKey(group))
               .map((e) => {
                 const name =
                   (e.kind === 'item' ? getItem(e.id) : getTrinket(e.id))?.name[lang] ?? '';

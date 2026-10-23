@@ -267,7 +267,10 @@
     "published": "Publicada",
     "edited": "Editada",
     "reroll": "Reroll",
-    "rerollHint": "Marcá \"Reroll\" si el ítem salió de rerollear otro (D6, D100…). El origen sigue siendo la sala o pool donde ocurrió."
+    "rerollHint": "Marcá \"Reroll\" si el ítem salió de rerollear otro (D6, D100…). El origen sigue siendo la sala o pool donde ocurrió.",
+    "path": "Ruta",
+    "pathNormal": "Normal",
+    "pathAlt": "Alterna"
   },
   "floors": {
     "1": "Sótano I / Aguacero I",
@@ -380,5 +383,25 @@
   "notFoundPage": {
     "title": "Página no encontrada",
     "body": "Esa dirección no existe o fue movida."
+  },
+  "floorsNormal": {
+    "1": "Sótano I",
+    "2": "Sótano II",
+    "3": "Cuevas I",
+    "4": "Cuevas II",
+    "5": "Profundidades I",
+    "6": "Profundidades II",
+    "7": "Útero I",
+    "8": "Útero II"
+  },
+  "floorsAlt": {
+    "1": "Aguacero I",
+    "2": "Aguacero II",
+    "3": "Minas I",
+    "4": "Minas II",
+    "5": "Mausoleo I",
+    "6": "Mausoleo II",
+    "7": "Cadáver I",
+    "8": "Cadáver II"
   }
 }

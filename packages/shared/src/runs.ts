@@ -8,6 +8,8 @@ export const GAME_VERSIONS = ['rep+'] as const;
  *  9 Blue Womb, 10 Sheol/Cathedral, 11 Dark Room/Chest, 12 Void, 13 Home. */
 export const FLOOR_MIN = 1;
 export const FLOOR_MAX = 13;
+/** Hasta este piso hay dos rutas (Sótano/Aguacero, Cuevas/Minas…); después es una sola. */
+export const ALT_PATH_MAX_FLOOR = 8;
 export const floorSchema = z.number().int().min(FLOOR_MIN).max(FLOOR_MAX);
 
 export const ITEM_SOURCES = [
@@ -63,26 +65,39 @@ const seedSchema = z
   .transform(normalizeSeed)
   .refine(isValidSeedFormat, { message: 'invalid seed' });
 
-const runItemSchema = z.object({
-  itemId: z
-    .number()
-    .int()
-    .refine((id) => getItem(id) !== undefined, 'unknown item'),
-  floor: floorSchema,
-  /** Sala o pool de donde salió el ítem. */
-  source: itemSourceSchema,
-  /** El ítem salió de un reroll (D6, D100…): `source` sigue siendo el pool donde ocurrió. */
-  rerolled: z.boolean().optional(),
-});
+const runItemSchema = z
+  .object({
+    itemId: z
+      .number()
+      .int()
+      .refine((id) => getItem(id) !== undefined, 'unknown item'),
+    floor: floorSchema,
+    /** Sala o pool de donde salió el ítem. */
+    source: itemSourceSchema,
+    /** El ítem salió de un reroll (D6, D100…): `source` sigue siendo el pool donde ocurrió. */
+    rerolled: z.boolean().optional(),
+    /** Ruta alterna (true) o normal (false). Sin dato: runs anteriores, o pisos sin dos rutas. */
+    alt: z.boolean().optional(),
+  })
+  .refine(
+    (i) => i.alt === undefined || i.floor <= ALT_PATH_MAX_FLOOR,
+    'alt path only up to floor 8',
+  );
 export type RunItem = z.infer<typeof runItemSchema>;
 
-const runTrinketSchema = z.object({
-  trinketId: z
-    .number()
-    .int()
-    .refine((id) => getTrinket(id) !== undefined, 'unknown trinket'),
-  floor: floorSchema,
-});
+const runTrinketSchema = z
+  .object({
+    trinketId: z
+      .number()
+      .int()
+      .refine((id) => getTrinket(id) !== undefined, 'unknown trinket'),
+    floor: floorSchema,
+    alt: z.boolean().optional(),
+  })
+  .refine(
+    (t) => t.alt === undefined || t.floor <= ALT_PATH_MAX_FLOOR,
+    'alt path only up to floor 8',
+  );
 export type RunTrinket = z.infer<typeof runTrinketSchema>;
 
 const outcomeSchema = z.object({
